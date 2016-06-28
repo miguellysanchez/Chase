@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.voyager.chase"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            versionNameSuffix "-debug"
+            buildConfigField "String", "CHASE_MQTT_BROKER_URL", CHASE_MQTT_BROKER_URL_DEBUG
+            buildConfigField "String", "CHASE_MQTT_BROKER_PORT", CHASE_MQTT_BROKER_PORT_DEBUG
+            buildConfigField "String", "CHASE_MQTT_BROKER_USERNAME", CHASE_MQTT_BROKER_USERNAME_DEBUG
+            buildConfigField "String", "CHASE_MQTT_BROKER_PASSWORD", CHASE_MQTT_BROKER_PASSWORD_DEBUG
+        }
+
+        release {
+            debuggable false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "CHASE_MQTT_BROKER_URL", CHASE_MQTT_BROKER_URL_RELEASE
+            buildConfigField "String", "CHASE_MQTT_BROKER_PORT", CHASE_MQTT_BROKER_PORT_RELEASE
+            buildConfigField "String", "CHASE_MQTT_BROKER_USERNAME", CHASE_MQTT_BROKER_USERNAME_RELEASE
+            buildConfigField "String", "CHASE_MQTT_BROKER_PASSWORD", CHASE_MQTT_BROKER_PASSWORD_RELEASE
+            versionNameSuffix "-release"
+        }
+    }
+
+    sourceSets {
+        main.res.srcDirs = [
+
+                'src/main/res/drawables/common',
+                'src/main/res/drawables/game',
+                'src/main/res/drawables/home',
+
+                'src/main/res/drawablexml/common',
+                'src/main/res/drawablexml/game',
+                'src/main/res/drawablexml/home',
+
+                'src/main/res/layouts/game',
+                'src/main/res/layouts/home',
+                'src/main/res/layouts/common',
+
+                'src/main/res/drawables',
+                'src/main/res/drawablexml',
+                'src/main/res/layouts',
+                'src/main/res'
+        ]
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile files('libs/org.eclipse.paho.client.mqttv3-1.0.2.jar')
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.jakewharton:butterknife:8.1.0'
+    compile 'com.jakewharton.timber:timber:4.1.2'
+
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+}
