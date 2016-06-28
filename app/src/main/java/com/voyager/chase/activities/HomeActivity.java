@@ -2,7 +2,6 @@ package com.voyager.chase.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.voyager.chase.R;
 
@@ -12,7 +11,11 @@ import butterknife.OnClick;
 /**
  * Created by miguellysanchez on 6/26/16.
  */
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
+
+    @Override
+    protected void onMqttServiceConnected() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

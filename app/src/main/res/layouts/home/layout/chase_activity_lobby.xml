@@ -3,11 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/chase_activity_lobby_button_connect"
+    <TextView
+        android:id="@+id/chase_activity_lobby_textview_connection_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CONNECT"
+        android:text="Status"
         />
 
 </FrameLayout>

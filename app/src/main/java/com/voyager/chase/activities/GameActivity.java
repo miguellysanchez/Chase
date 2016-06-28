@@ -12,6 +12,11 @@ import com.voyager.chase.R;
 public class GameActivity extends BaseActivity {
 
     @Override
+    protected void onMqttServiceConnected() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chase_activity_game);

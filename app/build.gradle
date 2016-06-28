@@ -11,8 +11,12 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "BASE_MQTT_TOPIC" , BASE_MQTT_TOPIC
+
     }
     buildTypes {
+
         debug {
             debuggable true
             minifyEnabled false

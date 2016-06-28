@@ -8,12 +8,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.voyager.chase.BuildConfig;
+import com.voyager.chase.mqtt.listeners.MqttActionMessageListener;
+import com.voyager.chase.mqtt.listeners.MqttMessageCallbackListener;
+import com.voyager.chase.utility.BroadcastUtility;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
@@ -36,15 +37,29 @@ public class MqttService extends Service {
     private String mMqttClientId;
     private MqttAsyncClient mClient;
     private MqttCallback mMqttMessageCallback;
-    private LocalBroadcastManager mLocalBroadcastManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         isServiceRunning=true;
-        mMqttClientId = MqttAsyncClient.generateClientId();
-        mLocalBroadcastManager  = LocalBroadcastManager.getInstance(this);
+        initializeMqttClient();
         Timber.d("Service is created");
+    }
+
+    private void initializeMqttClient() {
+        try {
+            mMqttClientId = MqttAsyncClient.generateClientId();
+            Timber.d(">>>Trying to create new MQTT client");
+            mClient = new MqttAsyncClient(BROKER_URL, mMqttClientId, new MemoryPersistence());
+            Timber.d(">>>MQTT client created successfully!");
+            mMqttMessageCallback = (new MqttMessageCallbackListener(this));
+            mClient.setCallback(mMqttMessageCallback);
+        } catch (MqttException e) {
+            Timber.e("Unable to create client....stopping service");
+            stopSelf();
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -89,23 +104,20 @@ public class MqttService extends Service {
     public void connectToBroker(){
         if(!isConnectedToBroker()){
             try {
-                Timber.d("Creating new MQTT client");
-                mClient = new MqttAsyncClient(BROKER_URL, mMqttClientId, new MemoryPersistence());
-//                mClient.setCallback(mMqttCallback);
                 MqttConnectOptions connectOptions = new MqttConnectOptions();
                 connectOptions.setUserName(BROKER_USERNAME);
                 connectOptions.setPassword(BROKER_PASSWORD.toCharArray());
                 connectOptions.setCleanSession(false);
                 connectOptions.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1_1);
 
-                IMqttActionListener connectActionListener = MqttActionMessageListener.getConnectActionMessageListener(mLocalBroadcastManager);
+                IMqttActionListener connectActionListener = MqttActionMessageListener.getConnectActionMessageListener(this);
                 mClient.connect(connectOptions, null, connectActionListener);
             } catch (MqttException exception) {
                 Timber.e("Mqtt Connect Message exception: [%s] | %s", exception.getReasonCode(), exception.getMessage());
             }
-
         } else {
             Timber.w("Connect attempt failed, already connected to broker");
+            BroadcastUtility.broadcastIntent(this, new Intent(), "CONNECT", MqttActionMessageListener.MQTT_CALLBACK_VALUE_CONNECT_REDUNDANT);
         }
     }
 
