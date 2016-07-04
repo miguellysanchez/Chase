@@ -5,19 +5,20 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.voyager.chase.BuildConfig;
-import com.voyager.chase.mqtt.listeners.MqttActionMessageListener;
+import com.voyager.chase.mqtt.listeners.MqttControlMessageListener;
 import com.voyager.chase.mqtt.listeners.MqttMessageCallbackListener;
 import com.voyager.chase.utility.BroadcastUtility;
+import com.voyager.chase.utility.PreferenceUtility;
 
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+import java.nio.charset.Charset;
 
 import timber.log.Timber;
 
@@ -29,6 +30,7 @@ public class MqttService extends Service {
     private static final String BROKER_URL = BuildConfig.CHASE_MQTT_BROKER_URL + ":" + BuildConfig.CHASE_MQTT_BROKER_PORT;
     private static final String BROKER_USERNAME = BuildConfig.CHASE_MQTT_BROKER_USERNAME;
     private static final String BROKER_PASSWORD = BuildConfig.CHASE_MQTT_BROKER_PASSWORD;
+    private static final int QUALITY_OF_SERVICE = 2;
 
     private final LocalBinder mLocalBinder = new LocalBinder();
 
@@ -41,14 +43,13 @@ public class MqttService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        isServiceRunning=true;
-        initializeMqttClient();
+        isServiceRunning = true;
         Timber.d("Service is created");
     }
 
     private void initializeMqttClient() {
         try {
-            mMqttClientId = MqttAsyncClient.generateClientId();
+            mMqttClientId = PreferenceUtility.getInstance(this).getMqttClientId();
             Timber.d(">>>Trying to create new MQTT client");
             mClient = new MqttAsyncClient(BROKER_URL, mMqttClientId, new MemoryPersistence());
             Timber.d(">>>MQTT client created successfully!");
@@ -84,60 +85,95 @@ public class MqttService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mClient != null){
+        if (mClient != null) {
             disconnectFromBroker();
         }
-        isServiceRunning=false;
+        isServiceRunning = false;
     }
 
     public boolean isConnectedToBroker() {
-        boolean result;
-        if (mClient != null && mClient.isConnected()) {
-            result = true;
-        } else {
-            result = false;
-        }
-        Timber.d("Broker connection status: %s", String.valueOf(result));
-        return result;
+        boolean isConnectedToBroker;
+        isConnectedToBroker = mClient != null && mClient.isConnected();
+        Timber.d("Broker connection status: %s", String.valueOf(isConnectedToBroker));
+        return isConnectedToBroker;
     }
 
-    public void connectToBroker(){
-        if(!isConnectedToBroker()){
+    public void connectToBroker() {
+        MqttControlMessageListener connectControlListener = MqttControlMessageListener.getConnectControlMessageListener(this);
+        if (!isConnectedToBroker()) {
             try {
+                initializeMqttClient();
                 MqttConnectOptions connectOptions = new MqttConnectOptions();
                 connectOptions.setUserName(BROKER_USERNAME);
                 connectOptions.setPassword(BROKER_PASSWORD.toCharArray());
                 connectOptions.setCleanSession(false);
                 connectOptions.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1_1);
 
-                IMqttActionListener connectActionListener = MqttActionMessageListener.getConnectActionMessageListener(this);
-                mClient.connect(connectOptions, null, connectActionListener);
+                mClient.connect(connectOptions, null, connectControlListener);
             } catch (MqttException exception) {
                 Timber.e("Mqtt Connect Message exception: [%s] | %s", exception.getReasonCode(), exception.getMessage());
+                connectControlListener.onFailure(null, exception);
             }
         } else {
             Timber.w("Connect attempt failed, already connected to broker");
-            BroadcastUtility.broadcastIntent(this, new Intent(), "CONNECT", MqttActionMessageListener.MQTT_CALLBACK_VALUE_CONNECT_REDUNDANT);
+            connectControlListener.onExtraFailure(MqttControlMessageListener.MQTT_CALLBACK_VALUE_CONNECT_REDUNDANT, new Throwable("Connect attempt failed, already connected to broker"));
         }
     }
 
-    public void disconnectFromBroker(){
-        if(isConnectedToBroker()){
+    public void disconnectFromBroker() {
+        MqttControlMessageListener disconnectControlListener = MqttControlMessageListener.getDisconnectControlMessageListener(this);
+        if (isConnectedToBroker()) {
             try {
-                mClient.disconnect();
-            } catch (MqttException e) {
-                e.printStackTrace();
+                mClient.disconnect(null, disconnectControlListener);
+            } catch (MqttException exception) {
+                Timber.e("MQTT DISCONNECT Message Exception: [%s] | %s", exception.getReasonCode(), exception.getMessage());
+                disconnectControlListener.onFailure(null, exception);
             }
         } else {
             Timber.d("Cannot disconnect from broker. Client is either null or already disconnected");
+            BroadcastUtility.broadcastIntent(this, new Intent(), ControlMessage.DISCONNECT, MqttControlMessageListener.MQTT_CALLBACK_VALUE_DISCONNECT_REDUNDANT);
         }
     }
 
-    public MqttAsyncClient getMqttClient(){
-        return mClient;
+
+    public void publishToTopic(String topic, String message) {
+        byte[] byteArray = message.getBytes(Charset.forName("UTF-8"));
+        publishToTopic(topic, byteArray);
     }
 
-    public static boolean isServiceRunning(){
+    public void publishToTopic(String topic, byte[] payload) {
+        MqttControlMessageListener publishControlMessageListener = MqttControlMessageListener.getPublishControlMessageListener(this);
+        try{
+            mClient.publish(topic, payload, QUALITY_OF_SERVICE,true, null, publishControlMessageListener);
+        } catch (MqttException exception) {
+            Timber.e("MQTT PUBLISH Message Exception: [%s] | %s", exception.getReasonCode(), exception.getMessage());
+            publishControlMessageListener.onFailure(null, exception);        }
+    }
+
+    public void subscribeToTopic(String topic) {
+        MqttControlMessageListener subscribeControlMessageListener = MqttControlMessageListener.getSubscribeControlMessageListener(this);
+        try {
+            mClient.subscribe(topic, QUALITY_OF_SERVICE, null, subscribeControlMessageListener);
+        } catch (MqttException exception) {
+            Timber.e("MQTT SUBSCRIBE Message Exception: [%s] | %s", exception.getReasonCode(), exception.getMessage());
+            subscribeControlMessageListener.onFailure(null, exception);
+        }
+    }
+
+    public void unsubscribeFromTopic(String topic) {
+        MqttControlMessageListener unsubscribeControlMessageListener = MqttControlMessageListener.getUnsubscribeControlMessageListener(this);
+        try {
+            mClient.subscribe(topic, QUALITY_OF_SERVICE, null, unsubscribeControlMessageListener);
+        } catch (MqttException exception) {
+            Timber.e("MQTT UNSUBSCRIBE Message Exception: [%s] | %s", exception.getReasonCode(), exception.getMessage());
+        }
+    }
+
+    public String getMqttClientId() {
+        return mMqttClientId;
+    }
+
+    public static boolean isServiceRunning() {
         return isServiceRunning;
     }
 }

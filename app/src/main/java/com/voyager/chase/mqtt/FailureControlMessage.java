@@ -8,7 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 /**
  * Created by miguellysanchez on 6/27/16.
  */
-public class FailureActionMessage extends ActionMessage {
+public class FailureControlMessage extends ControlMessage {
 
     public static String KEY_ERROR_CODE = "error_code";
     public static String KEY_ERROR_MESSAGE = "error_message";
@@ -31,16 +31,16 @@ public class FailureActionMessage extends ActionMessage {
         return intent;
     }
 
-    public static FailureActionMessage fromIntent(Intent intent){
-        FailureActionMessage failureActionMessage = new FailureActionMessage();
-        failureActionMessage.setClientId(intent.getStringExtra(KEY_CLIENT_ID));
-        failureActionMessage.setMessageId(intent.getIntExtra(KEY_MESSAGE_ID,0));
-        failureActionMessage.setSessionPresent(intent.getBooleanExtra(KEY_IS_SESSION_PRESENT, false));
-        failureActionMessage.setTopicsList(intent.getStringArrayExtra(KEY_TOPICS_LIST));
+    public static FailureControlMessage fromIntent(Intent intent){
+        FailureControlMessage failureControlMessage = new FailureControlMessage();
+        failureControlMessage.setClientId(intent.getStringExtra(KEY_VALUE_STRING_CLIENT_ID));
+        failureControlMessage.setMessageId(intent.getIntExtra(KEY_VALUE_INT_MESSAGE_ID,0));
+        failureControlMessage.setSessionPresent(intent.getBooleanExtra(KEY_VALUE_BOOLEAN_IS_SESSION_PRESENT, false));
+        failureControlMessage.setTopicsList(intent.getStringArrayExtra(KEY_VALUE_STRING_ARRAY_TOPICS_LIST));
 
-        failureActionMessage.setErrorCode(intent.getIntExtra(KEY_ERROR_CODE, -1));
-        failureActionMessage.setErrorMessage(intent.getStringExtra(KEY_ERROR_MESSAGE));
-        return failureActionMessage;
+        failureControlMessage.setErrorCode(intent.getIntExtra(KEY_ERROR_CODE, -1));
+        failureControlMessage.setErrorMessage(intent.getStringExtra(KEY_ERROR_MESSAGE));
+        return failureControlMessage;
     }
 
     public int getErrorCode() {

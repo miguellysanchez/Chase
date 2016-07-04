@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
 
     <TextView
@@ -13,16 +14,21 @@
         android:textSize="48sp"
         android:text="Title" />
 
+
+    <TextView
+        android:id="@+id/chase_activity_home_textview_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"/>
+
     <Button
         android:id="@+id/chase_activity_home_button_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="Play"/>
     <Button
         android:id="@+id/chase_activity_home_button_quit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="Quit"/>
 </LinearLayout>

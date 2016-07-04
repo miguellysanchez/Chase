@@ -12,10 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.voyager.chase.mqtt.listeners.MqttActionMessageListener;
 import com.voyager.chase.mqtt.MqttService;
-import com.voyager.chase.mqtt.listeners.MqttMessageCallbackListener;
 import com.voyager.chase.utility.BroadcastUtility;
+import com.voyager.chase.utility.PreferenceUtility;
 
 
 /**
@@ -24,6 +23,7 @@ import com.voyager.chase.utility.BroadcastUtility;
 public abstract class BaseActivity extends AppCompatActivity {
 
     private MqttService mMqttService;
+    private PreferenceUtility mPreferenceUtility;
     private boolean isServiceBound = false;
 
     private BroadcastReceiver mMqttCallbackReceiver = new BroadcastReceiver() {
@@ -75,8 +75,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMqttCallbackReceiver);
     }
 
+    protected PreferenceUtility getPreferenceUtility(){
+        if(mPreferenceUtility==null){
+            mPreferenceUtility = PreferenceUtility.getInstance(this);
+        }
+        return mPreferenceUtility;
+    }
+
     protected MqttService getMqttService() {
         return mMqttService;
+    }
+
+    protected boolean isMqttServiceBound() {
+        return isServiceBound;
     }
 
     protected void executeMqttCallbackAction(Intent intent){

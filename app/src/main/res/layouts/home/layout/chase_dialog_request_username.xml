@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/chase_dialog_request_username_textview_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please input a username." />
+
+    <EditText
+        android:id="@+id/chase_dialog_request_username_edittext_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890">
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/chase_dialog_request_username_button_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="CONFIRM" />
+
+</LinearLayout>
