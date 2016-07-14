@@ -14,7 +14,7 @@ public class BroadcastUtility {
     public static final String KEY_INT_CALLBACK_VALUE = BroadcastUtility.class.getSimpleName() + ".CALLBACK_VALUE";
     public static final int CALLBACK_VALUE_NULL = 0;
 
-    public static void broadcastIntent(Context context, Intent intent, String callbackType, int callbackValue){
+    public static void broadcastCallbackIntent(Context context, Intent intent, String callbackType, int callbackValue){
         intent.setAction(KEY_STRING_CALLBACK_ACTION);
         intent.putExtra(KEY_STRING_CALLBACK_TYPE_VALUE, callbackType);
         intent.putExtra(KEY_INT_CALLBACK_VALUE, callbackValue);

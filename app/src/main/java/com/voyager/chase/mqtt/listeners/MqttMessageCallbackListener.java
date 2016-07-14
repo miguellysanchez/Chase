@@ -35,21 +35,21 @@ public class MqttMessageCallbackListener implements MqttCallback {
     public void connectionLost(Throwable throwable) {
         Timber.d("Mqtt Connection lost due to : %s" , throwable.getMessage());
         Intent intent = new Intent();
-        BroadcastUtility.broadcastIntent(mContext,intent, ControlMessage.CONNECTION_LOST, MQTT_CALLBACK_VALUE_CONNECTION_LOST);
+        BroadcastUtility.broadcastCallbackIntent(mContext,intent, ControlMessage.CONNECTION_LOST, MQTT_CALLBACK_VALUE_CONNECTION_LOST);
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
         Timber.d("Mqtt message received from topic[%s]|'%s'", topic , new String( mqttMessage.getPayload(), "UTF-8"));
         Intent intent = ArrivedMessage.toIntent(topic, mqttMessage);
-        BroadcastUtility.broadcastIntent(mContext, intent, MESSAGE_ARRIVED, MQTT_CALLBACK_VALUE_MESSAGE_ARRIVED);
+        BroadcastUtility.broadcastCallbackIntent(mContext, intent, MESSAGE_ARRIVED, MQTT_CALLBACK_VALUE_MESSAGE_ARRIVED);
     }
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
         Timber.d("Delivery complete to topics : %s" , iMqttDeliveryToken.getTopics()[0]);
         Intent intent = DeliveredMessage.toIntent(iMqttDeliveryToken);
-        BroadcastUtility.broadcastIntent(mContext, intent, DELIVERY_COMPLETE, MQTT_CALLBACK_DELIVERY_COMPLETE);
+        BroadcastUtility.broadcastCallbackIntent(mContext, intent, DELIVERY_COMPLETE, MQTT_CALLBACK_DELIVERY_COMPLETE);
 
     }
 

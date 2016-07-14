@@ -30,7 +30,7 @@
             android:name=".activities.GameActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.SkillSelectionActivity"
+            android:name=".activities.SkillSelectActivity"
             android:screenOrientation="portrait" />
         <service android:name=".mqtt.MqttService"/>
     </application>

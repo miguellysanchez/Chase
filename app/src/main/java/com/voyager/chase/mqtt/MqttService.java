@@ -131,7 +131,7 @@ public class MqttService extends Service {
             }
         } else {
             Timber.d("Cannot disconnect from broker. Client is either null or already disconnected");
-            BroadcastUtility.broadcastIntent(this, new Intent(), ControlMessage.DISCONNECT, MqttControlMessageListener.MQTT_CALLBACK_VALUE_DISCONNECT_REDUNDANT);
+            BroadcastUtility.broadcastCallbackIntent(this, new Intent(), ControlMessage.DISCONNECT, MqttControlMessageListener.MQTT_CALLBACK_VALUE_DISCONNECT_REDUNDANT);
         }
     }
 

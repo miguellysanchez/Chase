@@ -50,18 +50,18 @@ public class MqttControlMessageListener implements IMqttActionListener {
     @Override
     public void onSuccess(IMqttToken iMqttToken) {
         Intent intent = SuccessControlMessage.toIntent(iMqttToken);
-        BroadcastUtility.broadcastIntent(mContext, intent,callbackType, successCallbackValue);
+        BroadcastUtility.broadcastCallbackIntent(mContext, intent,callbackType, successCallbackValue);
     }
 
     @Override
     public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
         Intent intent = FailureControlMessage.toIntent(iMqttToken, throwable);
-        BroadcastUtility.broadcastIntent(mContext, intent, callbackType, failureCallbackValue);
+        BroadcastUtility.broadcastCallbackIntent(mContext, intent, callbackType, failureCallbackValue);
     }
 
     public void onExtraFailure(int callbackValue, Throwable throwable){
         Intent intent = FailureControlMessage.toIntent(null, throwable);
-        BroadcastUtility.broadcastIntent(mContext, intent, callbackType, callbackValue);
+        BroadcastUtility.broadcastCallbackIntent(mContext, intent, callbackType, callbackValue);
     }
 
     public static MqttControlMessageListener getConnectControlMessageListener(Context context){

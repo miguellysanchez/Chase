@@ -13,6 +13,7 @@ public class PreferenceUtility {
     private static final String FILENAME = "com.voyager.chase.preferences";
 
     private static final String KEY_STRING_MQTT_CLIENT_ID = "mqtt_client_id";
+    private static final String KEY_STRING_GAME_ROLE = "game_role";
 
     private final SharedPreferences mSharedPreferences;
     private static PreferenceUtility sInstance;
@@ -43,4 +44,14 @@ public class PreferenceUtility {
     public void setMqttClientId(String mqttClientId){
         mSharedPreferences.edit().putString(KEY_STRING_MQTT_CLIENT_ID, mqttClientId).commit();
     }
+
+    public String getGameRole(){
+        return mSharedPreferences.getString(KEY_STRING_GAME_ROLE, null);
+    }
+
+    public void setGameRole(String gameRole){
+        mSharedPreferences.edit().putString(KEY_STRING_GAME_ROLE, gameRole).commit();
+    }
+
+
 }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.voyager.chase.R;
+import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.mqtt.ArrivedMessage;
 import com.voyager.chase.mqtt.ControlMessage;
 import com.voyager.chase.mqtt.DeliveredMessage;
@@ -227,9 +228,14 @@ public class LobbyActivity extends BaseActivity {
                         mJoinState = LobbyJoiningPayload.JOIN_STATE_WAITING;
                     } else if(mJoinState == LobbyJoiningPayload.JOIN_STATE_WAITING){
                         mJoinState = LobbyJoiningPayload.JOIN_STATE_NULL;
-                        //// TODO: 7/3/16 Go to the next screen.
-                        Intent goToGameActivityIntent = new Intent(this, GameActivity.class);
-                        startActivity(goToGameActivityIntent);
+                        if(mJoinId.equals(getMqttService().getMqttClientId())){
+                            getPreferenceUtility().setGameRole(Player.SPY_ROLE);
+                        } else {
+                            getPreferenceUtility().setGameRole(Player.SENTRY_ROLE);
+                        }
+                        finish();
+                        Intent goToSkillSelectIntent = new Intent(this, SkillSelectActivity.class);
+                        startActivity(goToSkillSelectIntent);
                     }
                 }
 
