@@ -5,7 +5,16 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="white">#FFFFFFFF</color>
-    <color name="light_gray">#FFDDDDDD</color>
+    <color name="lighter_gray">#FFDDDDDD</color>
+    <color name="light_gray">#FFAAAAAA</color>
     <color name="gray">#FF888888</color>
+    <color name="very_light_blue">#FF88BBFF</color>
+    <color name="red">#FFFF0000</color>
+    <color name="green">#FF33AA88</color>
+    <color name="black">#FF000000</color>
+    <color name="bluish_gray">#FF666688</color>
+    <color name="transluscent_gray">#55AAAAAA</color>
+    <color name="transparent">#00000000</color>
+
 
 </resources>

@@ -53,6 +53,8 @@ android {
                 'src/main/res/layouts/game',
                 'src/main/res/layouts/home',
                 'src/main/res/layouts/common',
+                'src/main/res/layouts/skillselect',
+
 
                 'src/main/res/drawables',
                 'src/main/res/drawablexml',
@@ -73,6 +75,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.1.0'
     compile 'com.jakewharton.timber:timber:4.1.2'
     compile 'com.google.code.gson:gson:2.3'
+    compile 'org.greenrobot:eventbus:3.0.0'
 
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
 }

@@ -4,13 +4,66 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <GridView
+    <LinearLayout
+        android:id="@+id/chase_activity_game_linearlayout_level"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="2"
-        android:background="@color/gray"
-        android:numColumns="10"
-        android:verticalSpacing="3dp" />
+        android:background="@color/black"
+        android:orientation="horizontal"
+        android:padding="2dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lighter_gray">
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:text="HP: 1/2"
+            android:textColor="@color/green"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:text="AP: 3/3"
+            android:textColor="@color/red" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:padding="4dp"
+            android:text="Room: A"
+            android:textColor="@color/bluish_gray" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="SENTRY_ROLE" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,22 +77,38 @@
             android:layout_weight="3">
 
             <ListView
+                android:id="@+id/chase_activity_game_listview_skills"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></ListView>
+                android:layout_height="match_parent" />
 
             <LinearLayout
                 android:id="@+id/chase_activity_game_linearlayout_waiting"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/transluscent_gray"
+                android:gravity="center"
+                android:orientation="vertical">
 
+                <ProgressBar
+                    android:layout_width="80dp"
+                    android:layout_height="80dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waiting for other player..." />
 
 
             </LinearLayout>
-
-
         </FrameLayout>
 
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
         <ListView
+            android:id="@+id/chase_activity_game_listview_info"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="2" />

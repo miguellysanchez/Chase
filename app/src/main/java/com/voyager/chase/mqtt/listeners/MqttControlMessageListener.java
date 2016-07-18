@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.voyager.chase.mqtt.ControlMessage;
 import com.voyager.chase.mqtt.FailureControlMessage;
 import com.voyager.chase.mqtt.SuccessControlMessage;
-import com.voyager.chase.utility.BroadcastUtility;
+import com.voyager.chase.utility.MqttBroadcastUtility;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -50,18 +50,18 @@ public class MqttControlMessageListener implements IMqttActionListener {
     @Override
     public void onSuccess(IMqttToken iMqttToken) {
         Intent intent = SuccessControlMessage.toIntent(iMqttToken);
-        BroadcastUtility.broadcastCallbackIntent(mContext, intent,callbackType, successCallbackValue);
+        MqttBroadcastUtility.broadcastCallbackIntent(mContext, intent,callbackType, successCallbackValue);
     }
 
     @Override
     public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
         Intent intent = FailureControlMessage.toIntent(iMqttToken, throwable);
-        BroadcastUtility.broadcastCallbackIntent(mContext, intent, callbackType, failureCallbackValue);
+        MqttBroadcastUtility.broadcastCallbackIntent(mContext, intent, callbackType, failureCallbackValue);
     }
 
     public void onExtraFailure(int callbackValue, Throwable throwable){
         Intent intent = FailureControlMessage.toIntent(null, throwable);
-        BroadcastUtility.broadcastCallbackIntent(mContext, intent, callbackType, callbackValue);
+        MqttBroadcastUtility.broadcastCallbackIntent(mContext, intent, callbackType, callbackValue);
     }
 
     public static MqttControlMessageListener getConnectControlMessageListener(Context context){

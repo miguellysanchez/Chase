@@ -1,4 +1,4 @@
-package com.voyager.chase.dialog;
+package com.voyager.chase.home.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -66,7 +66,7 @@ public class RequestUsernameDialog extends Dialog {
         } else if(input.contains(" ")){
             mTextViewInfo.setText("Username cannot contain spaces");
         } else {
-            PreferenceUtility.getInstance(getContext()).setMqttClientId(input);
+            PreferenceUtility.getInstance(getContext()).setMqttUserId(input);
             dismiss();
         }
     }

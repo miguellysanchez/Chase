@@ -4,21 +4,23 @@ import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.skill.Skill;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by miguellysanchez on 7/7/16.
+ * Created by miguellysanchez on 7/18/16.
  */
-public class MoveSkill extends Skill {
+public class EndTurnSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles(World world) {
-        return null;
+        ArrayList<Tile> targetTiles = new ArrayList<>();
+        Tile currentTile = world.getRoom(getOwner().getCurrentRoomName()).getTileAtCoordinate(getOwner().getCurrentTileXCoordinate(), getOwner().getCurrentTileYCoordinate());
+        targetTiles.add(currentTile);
+        return targetTiles;
     }
 
     @Override
     public void useSkillOnTile(Tile selectedTile) {
-
+        getOwner().setActionPoints(0);
     }
 
     @Override

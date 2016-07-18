@@ -1,4 +1,4 @@
-package com.voyager.chase.activities;
+package com.voyager.chase.common;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -13,7 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.voyager.chase.mqtt.MqttService;
-import com.voyager.chase.utility.BroadcastUtility;
+import com.voyager.chase.utility.MqttBroadcastUtility;
 import com.voyager.chase.utility.PreferenceUtility;
 
 
@@ -50,7 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -62,7 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         IntentFilter mqttCallbackIntentFilter = new IntentFilter();
-        mqttCallbackIntentFilter.addAction(BroadcastUtility.KEY_STRING_CALLBACK_ACTION);
+        mqttCallbackIntentFilter.addAction(MqttBroadcastUtility.KEY_STRING_CALLBACK_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMqttCallbackReceiver, mqttCallbackIntentFilter);
     }
 

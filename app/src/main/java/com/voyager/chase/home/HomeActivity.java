@@ -1,21 +1,16 @@
-package com.voyager.chase.activities;
+package com.voyager.chase.home;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.voyager.chase.R;
-import com.voyager.chase.dialog.RequestUsernameDialog;
+import com.voyager.chase.lobby.LobbyActivity;
+import com.voyager.chase.home.dialog.RequestUsernameDialog;
 import com.voyager.chase.utility.PreferenceUtility;
 
 import butterknife.BindView;
@@ -40,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String username = PreferenceUtility.getInstance(this).getMqttClientId();
+        String username = PreferenceUtility.getInstance(this).getMqttUserId();
         if (!TextUtils.isEmpty(username)) {
             mTextViewUsername.setText(String.format("Welcome, %s", username));
         } else {
@@ -55,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 mTextViewUsername.setText(
-                        String.format("Welcome, %s", PreferenceUtility.getInstance(HomeActivity.this).getMqttClientId()));
+                        String.format("Welcome, %s", PreferenceUtility.getInstance(HomeActivity.this).getMqttUserId()));
             }
         });
         requestUsernameDialog.show();

@@ -14,18 +14,18 @@ public class LobbyJoiningPayload {
     public static final int JOIN_STATE_WAITING = 3;
     public static final int JOIN_STATE_COMPLETE = 4;
 
-    @SerializedName("client_id")
-    private String clientId;
+    @SerializedName("user_id")
+    private String userId;
 
     @SerializedName("status")
     private int status;
 
-    public String getClientId() {
-        return clientId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
     public int getStatus() {
         return status;

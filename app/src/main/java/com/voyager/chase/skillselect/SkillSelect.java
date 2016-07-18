@@ -1,4 +1,4 @@
-package com.voyager.chase.game.skill;
+package com.voyager.chase.skillselect;
 
 /**
  * Created by miguellysanchez on 7/13/16.

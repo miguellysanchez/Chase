@@ -12,7 +12,7 @@ public class Tile {
     private int xCoordinate;
     private int yCoordinate;
     private ArrayList<SkillItem> mSkillItemsList;
-    private ArrayList<Player> mPlayersList;
+    private Player mPlayer;
 
     private Tile(){}
 
@@ -46,4 +46,12 @@ public class Tile {
     }
 
     private String text;
+
+    public Player getPlayer() {
+        return mPlayer;
+    }
+
+    public void setPlayer(Player player) {
+        this.mPlayer = player;
+    }
 }

@@ -1,10 +1,12 @@
-package com.voyager.chase.game.skill;
+package com.voyager.chase.skillselect;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.voyager.chase.R;
@@ -23,12 +25,21 @@ public class SkillSelectAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private ArrayList<SkillSelect> mSkillSelectList;
+    private OnClickListener mOnClickListener;
+    private ArrayList<String> mSelectedSkillNames;
 
-    public SkillSelectAdapter(Context context) {
+    public interface OnClickListener {
+        void onClick(SkillSelect skillSelect);
+    }
+
+    public SkillSelectAdapter(Context context, OnClickListener onClickListener) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
         mSkillSelectList = new ArrayList<>();
+        mOnClickListener = onClickListener;
+        mSelectedSkillNames = new ArrayList<>();
     }
+
 
     public void setSkillSelectList(ArrayList<SkillSelect> skillSelectList) {
         if (skillSelectList != null) {
@@ -36,6 +47,7 @@ public class SkillSelectAdapter extends BaseAdapter {
         } else {
             Timber.e("Cannot set skill selection items to null list");
         }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -67,6 +79,8 @@ public class SkillSelectAdapter extends BaseAdapter {
 
         final SkillSelect skillSelect = mSkillSelectList.get(position);
 
+        holder.linearLayoutContainer.setBackgroundColor(ContextCompat.getColor(mContext,
+                skillSelect.isSelected() ? R.color.very_light_blue : R.color.white));
         holder.textViewSkillName.setText(skillSelect.getName());
         holder.textViewSkillCost.setText(skillSelect.getSkillCost() + " SP");
         String cooldownTurnsString = skillSelect.getCooldownTurns() <= 0 ? "NONE" : skillSelect.getCooldownTurns() + " Turns";
@@ -75,34 +89,40 @@ public class SkillSelectAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                toggleF(view);
-            }
-
-            private void toggleSkillSelectHighlight(View view) {
+                mOnClickListener.onClick(skillSelect);
                 if (skillSelect.isSelected()) {
-                    skillSelect.setSelected(false);
+                    holder.linearLayoutContainer.setBackgroundColor(ContextCompat.getColor(mContext, R.color.very_light_blue));
+                    mSelectedSkillNames.add(skillSelect.getName());
                 } else {
-                    skillSelect.set
+                    holder.linearLayoutContainer.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+                    mSelectedSkillNames.remove(skillSelect.getName());
                 }
             }
+
         });
 
 
         return convertView;
     }
 
+    public ArrayList<String> getSkillNamesSelectedList() {
+        return mSelectedSkillNames;
+    }
+
     static class ViewHolder {
-        @BindView(R.id.chase_listitem_skill_select_name)
+        @BindView(R.id.chase_listitem_skill_select_linearlayout_container)
+        LinearLayout linearLayoutContainer;
+
+        @BindView(R.id.chase_listitem_skill_select_textview_name)
         TextView textViewSkillName;
 
-        @BindView(R.id.chase_listitem_skill_select_cost)
+        @BindView(R.id.chase_listitem_skill_select_textview_cost)
         TextView textViewSkillCost;
 
-        @BindView(R.id.chase_listitem_skill_select_cooldown)
+        @BindView(R.id.chase_listitem_skill_select_textview_cooldown)
         TextView textViewCooldown;
 
-        @BindView(R.id.chase_listitem_skill_select_description)
+        @BindView(R.id.chase_listitem_skill_select_textview_description)
         TextView textViewDescription;
 
         ViewHolder(View view) {

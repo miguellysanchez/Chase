@@ -59,6 +59,10 @@ public class Room {
         return rowTilesList;
     }
 
+    public Tile[][] getAllTiles2DArray(){
+        return mTiles2DArray;
+    }
+
     public List<Tile> getAllTiles() {
         ArrayList<Tile> allTilesList = new ArrayList<>();
         for (Tile[] tilesArray : mTiles2DArray) {

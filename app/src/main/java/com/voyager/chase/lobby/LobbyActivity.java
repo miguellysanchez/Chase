@@ -1,4 +1,4 @@
-package com.voyager.chase.activities;
+package com.voyager.chase.lobby;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.voyager.chase.R;
+import com.voyager.chase.common.BaseActivity;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.mqtt.ArrivedMessage;
 import com.voyager.chase.mqtt.ControlMessage;
@@ -23,7 +24,8 @@ import com.voyager.chase.mqtt.Topics;
 import com.voyager.chase.mqtt.listeners.MqttControlMessageListener;
 import com.voyager.chase.mqtt.listeners.MqttMessageCallbackListener;
 import com.voyager.chase.mqtt.payload.LobbyJoiningPayload;
-import com.voyager.chase.utility.BroadcastUtility;
+import com.voyager.chase.skillselect.SkillSelectActivity;
+import com.voyager.chase.utility.MqttBroadcastUtility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -110,12 +112,15 @@ public class LobbyActivity extends BaseActivity {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+        mLinearLayoutOptions.setVisibility(View.GONE);
+        mJoinState = LobbyJoiningPayload.JOIN_STATE_NULL;
         getMqttService().disconnectFromBroker();
+        finish();
     }
 
     @OnClick(R.id.chase_activity_lobby_button_create_game)
     public void createGame() {
-        mJoinId = getMqttService().getMqttClientId();
+        mJoinId = getMqttService().getMqttUserId();
         findGameWithId(mJoinId);
     }
 
@@ -157,7 +162,7 @@ public class LobbyActivity extends BaseActivity {
 
     @Override
     protected void executeMqttCallbackAction(Intent intent) {
-        switch (intent.getIntExtra(BroadcastUtility.KEY_INT_CALLBACK_VALUE, BroadcastUtility.CALLBACK_VALUE_NULL)) {
+        switch (intent.getIntExtra(MqttBroadcastUtility.KEY_INT_CALLBACK_VALUE, MqttBroadcastUtility.CALLBACK_VALUE_NULL)) {
             case MqttControlMessageListener.MQTT_CALLBACK_VALUE_CONNECT_SUCCESS:
             case MqttControlMessageListener.MQTT_CALLBACK_VALUE_CONNECT_REDUNDANT:
                 mConnectionStatus.setText("Connected");
@@ -179,23 +184,16 @@ public class LobbyActivity extends BaseActivity {
                 mJoinState = LobbyJoiningPayload.JOIN_STATE_NULL;
                 break;
             }
-            case MqttControlMessageListener.MQTT_CALLBACK_VALUE_DISCONNECT_SUCCESS: {
-                mConnectionStatus.setText("Disconnected");
-                mLinearLayoutOptions.setVisibility(View.GONE);
-                mJoinState = LobbyJoiningPayload.JOIN_STATE_NULL;
-                finish();
-                break;
-            }
             case MqttControlMessageListener.MQTT_CALLBACK_VALUE_SUBSCRIBE_SUCCESS: {
                 String[] topicsList = intent.getStringArrayExtra(ControlMessage.KEY_VALUE_STRING_ARRAY_TOPICS_LIST);
                 String joinIdTopic = Topics.constructTopic(Topics.LOBBY_TOPIC, mJoinId);
                 if (joinIdTopic.equals(topicsList[0])) {
                     mJoinState = LobbyJoiningPayload.JOIN_STATE_SUBSCRIBED;
                     LobbyJoiningPayload payload = new LobbyJoiningPayload();
-                    payload.setClientId(getPreferenceUtility().getMqttClientId());
+                    payload.setUserId(getPreferenceUtility().getMqttUserId());
                     payload.setStatus(LobbyJoiningPayload.JOIN_STATE_WAITING);
                     String payloadJson = payload.toJson();
-                    getMqttService().publishToTopic(joinIdTopic, payloadJson);
+                    getMqttService().publishToTopic(joinIdTopic, payloadJson, true);
                 }
                 break;
             }
@@ -207,15 +205,15 @@ public class LobbyActivity extends BaseActivity {
                         Gson gson = new Gson();
                         LobbyJoiningPayload lobbyJoiningPayload = gson.fromJson(arrivedMessage.getPayload(), LobbyJoiningPayload.class);
                         int otherPlayerJoinStatus = lobbyJoiningPayload.getStatus();
-                        String fromClientId = lobbyJoiningPayload.getClientId();
+                        String fromClientId = lobbyJoiningPayload.getUserId();
                         if(mJoinState == LobbyJoiningPayload.JOIN_STATE_WAITING
                                 && otherPlayerJoinStatus == LobbyJoiningPayload.JOIN_STATE_WAITING
-                                && !fromClientId.equals(getPreferenceUtility().getMqttClientId())){
+                                && !fromClientId.equals(getPreferenceUtility().getMqttUserId())){
                             LobbyJoiningPayload payload = new LobbyJoiningPayload();
-                            payload.setClientId(getPreferenceUtility().getMqttClientId());
+                            payload.setUserId(getPreferenceUtility().getMqttUserId());
                             payload.setStatus(LobbyJoiningPayload.JOIN_STATE_WAITING);
                             String payloadJson = payload.toJson();
-                            getMqttService().publishToTopic(joinIdTopic, payloadJson);
+                            getMqttService().publishToTopic(joinIdTopic, payloadJson, true);
                         }
                     }
                 }
@@ -228,17 +226,17 @@ public class LobbyActivity extends BaseActivity {
                         mJoinState = LobbyJoiningPayload.JOIN_STATE_WAITING;
                     } else if(mJoinState == LobbyJoiningPayload.JOIN_STATE_WAITING){
                         mJoinState = LobbyJoiningPayload.JOIN_STATE_NULL;
-                        if(mJoinId.equals(getMqttService().getMqttClientId())){
+                        if(mJoinId.equals(getMqttService().getMqttUserId())){
                             getPreferenceUtility().setGameRole(Player.SPY_ROLE);
                         } else {
                             getPreferenceUtility().setGameRole(Player.SENTRY_ROLE);
                         }
+                        getPreferenceUtility().setGameSessionId(mJoinId);
                         finish();
                         Intent goToSkillSelectIntent = new Intent(this, SkillSelectActivity.class);
                         startActivity(goToSkillSelectIntent);
                     }
                 }
-
                 break;
             }
         }
