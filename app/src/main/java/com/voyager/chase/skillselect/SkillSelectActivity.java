@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.voyager.chase.R;
@@ -19,19 +20,19 @@ import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.skill.SkillsPool;
-import com.voyager.chase.mqtt.ArrivedMessage;
-import com.voyager.chase.mqtt.DeliveredMessage;
 import com.voyager.chase.mqtt.Topics;
-import com.voyager.chase.mqtt.listeners.MqttControlMessageListener;
-import com.voyager.chase.mqtt.listeners.MqttMessageCallbackListener;
+import com.voyager.chase.mqtt.event.IsConnectedCallback;
+import com.voyager.chase.mqtt.event.MqttCallbackEvent;
+import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
 import com.voyager.chase.mqtt.payload.SkillSelectPayload;
-import com.voyager.chase.utility.MqttBroadcastUtility;
+import com.voyager.chase.utility.MqttIssueActionUtility;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 
 /**
@@ -54,11 +55,6 @@ public class SkillSelectActivity extends BaseActivity {
     private ProgressDialog mWaitingProgressDialog;
     private String mGameRole;
     private SkillSelectAdapter mAdapter;
-
-    @Override
-    protected void onMqttServiceConnected() {
-        getMqttService().connectToBroker(Topics.getSessionStatusTopic(mGameSessionId), "Disconnected ungracefully.");
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,7 +151,7 @@ public class SkillSelectActivity extends BaseActivity {
         SkillSelectPayload skillSelectPayload = new SkillSelectPayload();
         skillSelectPayload.setIsWaiting(mIsWaiting);
         skillSelectPayload.setSenderRole(mGameRole);
-        getMqttService().publishToTopic(Topics.getSessionStatusTopic(mGameSessionId), skillSelectPayload.toJson(), false);
+        MqttIssueActionUtility.publish(Topics.getSessionStatusTopic(mGameSessionId), skillSelectPayload.toJson(), false);
     }
 
     private void attemptToStartGame() {
@@ -165,35 +161,59 @@ public class SkillSelectActivity extends BaseActivity {
     }
 
     @Override
-    protected void executeMqttCallbackAction(Intent intent) {
-        switch (intent.getIntExtra(MqttBroadcastUtility.KEY_INT_CALLBACK_VALUE, MqttBroadcastUtility.CALLBACK_VALUE_NULL)) {
-            case MqttControlMessageListener.MQTT_CALLBACK_VALUE_CONNECT_SUCCESS: {
-                getMqttService().subscribeToTopic(Topics.getSessionStatusTopic(mGameSessionId));
-                getMqttService().subscribeToTopic(Topics.getSessionInfoTopic(mGameSessionId));
-                getMqttService().subscribeToTopic(Topics.getSessionWorldUpdateTopic(mGameSessionId));
-                break;
+    protected void onStart() {
+        super.onStart();
+        MqttIssueActionUtility.checkIsConnected(new IsConnectedCallback() {
+            @Override
+            protected void onIsConnected() {
+                isConnectedToMqtt = true;
+                subscribeToGameSessionTopics();
             }
-            case MqttMessageCallbackListener.MQTT_CALLBACK_DELIVERY_COMPLETE: {
-                DeliveredMessage deliveredMessage = DeliveredMessage.fromIntent(intent);
-                if (Topics.getSessionStatusTopic(mGameSessionId).equals(deliveredMessage.getTopic())) {
-                    renderWaitingDialog();
-                }
+
+            @Override
+            protected void onIsDisconnected() {
+                isConnectedToMqtt = false;
+                MqttIssueActionUtility.connect();
             }
-            case MqttMessageCallbackListener.MQTT_CALLBACK_VALUE_MESSAGE_ARRIVED: {
-                ArrivedMessage arrivedMessage = ArrivedMessage.fromIntent(intent);
-                if (Topics.getSessionStatusTopic(mGameSessionId).equals(arrivedMessage.getTopic())
-                        && !TextUtils.isEmpty(arrivedMessage.getPayload())) {
-                    Gson gson = new Gson();
-                    SkillSelectPayload skillSelectPayload = gson.fromJson(arrivedMessage.getPayload(), SkillSelectPayload.class);
-                    if(!skillSelectPayload.getSenderRole().equals(mGameRole)) {
-                        mIsOtherPlayerWaiting = skillSelectPayload.isWaiting();
-                        attemptToStartGame();
-                    }
-                }
-                break;
-            }
-        }
+        });
     }
+
+    private void subscribeToGameSessionTopics() {
+        MqttIssueActionUtility.subscribe(Topics.getSessionStatusTopic(mGameSessionId));
+        MqttIssueActionUtility.subscribe(Topics.getSessionInfoTopic(mGameSessionId));
+        MqttIssueActionUtility.subscribe(Topics.getSessionWorldUpdateTopic(mGameSessionId));
+    }
+
+    //
+//    protected void executeMqttCallbackAction(Intent intent) {
+//        switch (intent.getIntExtra(MqttBroadcastUtility.KEY_INT_CALLBACK_VALUE, MqttBroadcastUtility.CALLBACK_VALUE_NULL)) {
+//            case MqttResolvedActionListener.MQTT_CALLBACK_VALUE_CONNECT_SUCCESS: {
+//                getMqttService().subscribeToTopic(Topics.getSessionStatusTopic(mGameSessionId));
+//                getMqttService().subscribeToTopic(Topics.getSessionInfoTopic(mGameSessionId));
+//                getMqttService().subscribeToTopic(Topics.getSessionWorldUpdateTopic(mGameSessionId));
+//                break;
+//            }
+//            case CustomMqttCallback.MQTT_CALLBACK_DELIVERY_COMPLETE: {
+//                DeliveredMessage deliveredMessage = DeliveredMessage.fromIntent(intent);
+//                if (Topics.getSessionStatusTopic(mGameSessionId).equals(deliveredMessage.getTopic())) {
+//                    renderWaitingDialog();
+//                }
+//            }
+//            case CustomMqttCallback.MQTT_CALLBACK_VALUE_MESSAGE_ARRIVED: {
+//                ArrivedMessage arrivedMessage = ArrivedMessage.fromIntent(intent);
+//                if (Topics.getSessionStatusTopic(mGameSessionId).equals(arrivedMessage.getTopic())
+//                        && !TextUtils.isEmpty(arrivedMessage.getPayload())) {
+//                    Gson gson = new Gson();
+//                    SkillSelectPayload skillSelectPayload = gson.fromJson(arrivedMessage.getPayload(), SkillSelectPayload.class);
+//                    if(!skillSelectPayload.getSenderRole().equals(mGameRole)) {
+//                        mIsOtherPlayerWaiting = skillSelectPayload.isWaiting();
+//                        attemptToStartGame();
+//                    }
+//                }
+//                break;
+//            }
+//        }
+//    }
 
     private void goToGameActivity() {
         mWaitingProgressDialog.setOnDismissListener(null);
@@ -201,7 +221,7 @@ public class SkillSelectActivity extends BaseActivity {
         Intent goToGameActivityIntent = new Intent(this, GameActivity.class);
         ArrayList<String> skillNamesSelectedList = new ArrayList<>();
         skillNamesSelectedList.add(SkillsPool.MOVE_SKILL_NAME);
-        if(Player.SPY_ROLE.equals(mGameRole)){
+        if (Player.SPY_ROLE.equals(mGameRole)) {
             skillNamesSelectedList.add(SkillsPool.SABOTAGE_SKILL_NAME);
         } else {
             skillNamesSelectedList.add(SkillsPool.ATTACK_SKILL_NAME);
@@ -214,7 +234,7 @@ public class SkillSelectActivity extends BaseActivity {
 
     private void renderWaitingDialog() {
         if (mIsWaiting) {
-            if(!mIsOtherPlayerWaiting) {
+            if (!mIsOtherPlayerWaiting) {
                 mWaitingProgressDialog.show();
             }
         } else {
@@ -230,6 +250,46 @@ public class SkillSelectActivity extends BaseActivity {
             mWaitingProgressDialog.cancel();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void executeMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent) {
+        switch (mqttResolvedActionEvent.getActionType()) {
+            case MqttResolvedActionEvent.CONNECT_ACTION_TYPE:
+                subscribeToGameSessionTopics();
+                break;
+            case MqttResolvedActionEvent.SUBSCRIBE_ACTION_TYPE:
+                if (!mqttResolvedActionEvent.isSuccess()) {
+                    subscribeToGameSessionTopics();
+                }
+                break;
+            case MqttResolvedActionEvent.PUBLISH_ACTION_TYPE:
+                if (!mqttResolvedActionEvent.isSuccess()) {
+                    Toast.makeText(this, "Unable to start game. Please try again", Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
+
+    @Override
+    protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
+        switch (mqttCallbackEvent.getMessageCallbackType()) {
+            case MqttCallbackEvent.ARRIVED_MESSAGE_CALLBACK_TYPE:
+                if (Topics.getSessionStatusTopic(mGameSessionId).equals(mqttCallbackEvent.getTopic())
+                        && !TextUtils.isEmpty(mqttCallbackEvent.getMessagePayload())) {
+                    Gson gson = new Gson();
+                    SkillSelectPayload skillSelectPayload = gson.fromJson(mqttCallbackEvent.getMessagePayload(), SkillSelectPayload.class);
+                    if (!skillSelectPayload.getSenderRole().equals(mGameRole)) {
+                        mIsOtherPlayerWaiting = skillSelectPayload.isWaiting();
+                        attemptToStartGame();
+                    }
+                }
+                break;
+            case MqttCallbackEvent.DELIVERED_MESSAGE_CALLBACK_TYPE:
+                if (Topics.getSessionStatusTopic(mGameSessionId).equals(mqttCallbackEvent.getTopic())) {
+                    renderWaitingDialog();
+                }
+                break;
         }
     }
 }

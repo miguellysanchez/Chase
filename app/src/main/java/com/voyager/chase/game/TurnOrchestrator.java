@@ -1,4 +1,4 @@
-package com.voyager.chase.game.executors;
+package com.voyager.chase.game;
 
 import android.content.Context;
 import android.content.Intent;

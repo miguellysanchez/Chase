@@ -1,20 +1,14 @@
 package com.voyager.chase.common;
 
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.voyager.chase.mqtt.MqttService;
-import com.voyager.chase.utility.MqttBroadcastUtility;
+import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
+import com.voyager.chase.mqtt.event.MqttCallbackEvent;
 import com.voyager.chase.utility.PreferenceUtility;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
 /**
@@ -22,74 +16,40 @@ import com.voyager.chase.utility.PreferenceUtility;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private MqttService mMqttService;
     private PreferenceUtility mPreferenceUtility;
-    private boolean isServiceBound = false;
-
-    private BroadcastReceiver mMqttCallbackReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            executeMqttCallbackAction(intent);
-        }
-    };
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder binder) {
-            mMqttService = ((MqttService.LocalBinder) binder).getService();
-            isServiceBound = true;
-            onMqttServiceConnected();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            isServiceBound = false;
-        }
-    };
-
-    protected abstract void onMqttServiceConnected();
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    protected boolean isConnectedToMqtt = false;
 
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, MqttService.class);
-        if(!MqttService.isServiceRunning()){
-            startService(intent);
-        }
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        IntentFilter mqttCallbackIntentFilter = new IntentFilter();
-        mqttCallbackIntentFilter.addAction(MqttBroadcastUtility.KEY_STRING_CALLBACK_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMqttCallbackReceiver, mqttCallbackIntentFilter);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
+        EventBus.getDefault().unregister(this);
         super.onStop();
-        if (isServiceBound) {
-            unbindService(mServiceConnection);
-        }
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMqttCallbackReceiver);
     }
 
-    protected PreferenceUtility getPreferenceUtility(){
-        if(mPreferenceUtility==null){
+    protected PreferenceUtility getPreferenceUtility() {
+        if (mPreferenceUtility == null) {
             mPreferenceUtility = PreferenceUtility.getInstance(this);
         }
         return mPreferenceUtility;
     }
 
-    protected MqttService getMqttService() {
-        return mMqttService;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent) {
+        executeMqttResolvedActionCallback(mqttResolvedActionEvent);
     }
 
-    protected boolean isMqttServiceBound() {
-        return isServiceBound;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMqttMessageCallback(final MqttCallbackEvent mqttCallbackEvent) {
+        executeMqttCallback(mqttCallbackEvent);
     }
 
-    protected void executeMqttCallbackAction(Intent intent){
+    protected abstract void executeMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent);
 
-    }
+    protected abstract void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent);
+
 }

@@ -9,10 +9,11 @@ import com.voyager.chase.common.BaseActivity;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
-import com.voyager.chase.game.executors.TurnOrchestrator;
 import com.voyager.chase.game.skill.Skill;
 import com.voyager.chase.game.skill.SkillsAdapter;
 import com.voyager.chase.game.skill.SkillsPool;
+import com.voyager.chase.mqtt.event.MqttCallbackEvent;
+import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
 
 import java.util.ArrayList;
 
@@ -37,10 +38,6 @@ public class GameActivity extends BaseActivity {
     private TurnOrchestrator mTurnOrchestrator;
 
     @Override
-    protected void onMqttServiceConnected() {
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chase_activity_game);
@@ -54,7 +51,7 @@ public class GameActivity extends BaseActivity {
         ArrayList<String> yourSkillsSelected = getIntent().getStringArrayListExtra(SkillsPool.YOUR_SKILLS_SELECTED);
         ArrayList<Skill> equippedSkills = new ArrayList<>();
         Timber.d("Your skills selected: %s", yourSkillsSelected.toString());
-        for(String skillName: yourSkillsSelected){
+        for (String skillName : yourSkillsSelected) {
             Skill skill = SkillsPool.getSkillForName(this, skillName, skillOwner);
             equippedSkills.add(skill);
         }
@@ -82,11 +79,20 @@ public class GameActivity extends BaseActivity {
             throw new IllegalStateException("Should not enter this part.");
         }
         LevelRenderer levelRenderer = new LevelRenderer(mLinearLayoutLevel, currentPlayer);
-        mTurnOrchestrator = new TurnOrchestrator(this, world,spy, sentry, levelRenderer);
+        mTurnOrchestrator = new TurnOrchestrator(this, world, spy, sentry, levelRenderer);
 
     }
 
 
     private void initializeGameState() {
+    }
+
+    @Override
+    public void executeMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent) {
+    }
+
+    @Override
+    protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
+
     }
 }

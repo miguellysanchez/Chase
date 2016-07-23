@@ -1,6 +1,9 @@
 package com.voyager.chase;
 
 import android.app.Application;
+import android.content.Intent;
+
+import com.voyager.chase.mqtt.MqttService;
 
 import timber.log.Timber;
 
@@ -20,5 +23,9 @@ public class ChaseApplication extends Application {
                 }
             });
         }
+        Intent startMqttServiceIntent = new Intent(this, MqttService.class);
+        startService(startMqttServiceIntent);
     }
+
+
 }
