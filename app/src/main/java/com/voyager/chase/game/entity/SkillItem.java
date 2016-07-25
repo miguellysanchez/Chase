@@ -15,6 +15,7 @@ public abstract class SkillItem extends Renderable{
     protected Player mOwner;
     protected HashMap<ItemTrigger, Tile> triggerTileHashMap;
     protected boolean isPassable = true;
+    protected boolean isInvulnerable = false;
 
     protected SkillItem(){
         uuidString = UUID.randomUUID().toString();

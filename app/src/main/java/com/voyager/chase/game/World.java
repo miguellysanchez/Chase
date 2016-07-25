@@ -1,5 +1,7 @@
 package com.voyager.chase.game;
 
+import com.google.common.collect.Multimap;
+import com.voyager.chase.game.entity.ItemTrigger;
 import com.voyager.chase.game.entity.Renderable;
 import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
@@ -11,10 +13,20 @@ import java.util.HashMap;
  * Created by miguellysanchez on 7/4/16.
  */
 public class World {
+    private static World sWorld;
     private HashMap<String, Room> mRoomsMap;
 
-    public World(){
+    private Multimap<String, Tile> mWorldItemsMap;
+
+    private World(){
         mRoomsMap = new HashMap<>();
+    }
+
+    public static World getInstance(){
+        if(sWorld == null){
+            return sampleCreateWorld();
+        }
+        return sWorld;
     }
 
     public Room getRoom(String name){
@@ -30,13 +42,13 @@ public class World {
     }
 
     public static World createWorld(){
+        sWorld = new World();
         //TODO add parse for world template based on JSON
-        World world = new World();
-        return world;
+        return sWorld;
     }
 
     public static World sampleCreateWorld(){
-        World world = new World();
+        sWorld = new World();
         String[] roomNames = new String[]{"A", "B", "C", "D", "E", "F"};
 
         for(String roomName : roomNames){
@@ -48,8 +60,8 @@ public class World {
                 }
             }
             Room room = Room.createRoom(roomName, tilesArrayList);
-            world.addRoom(roomName, room);
+            sWorld.addRoom(roomName, room);
         }
-        return world;
+        return sWorld;
     }
 }

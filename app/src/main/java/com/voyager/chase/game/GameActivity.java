@@ -47,7 +47,6 @@ public class GameActivity extends BaseActivity {
     @BindView(R.id.chase_activity_game_textview_role)
     TextView mTextViewRole;
 
-
     private TurnOrchestrator mTurnOrchestrator;
 
     @Override
@@ -56,14 +55,41 @@ public class GameActivity extends BaseActivity {
         setContentView(R.layout.chase_activity_game);
         ButterKnife.bind(this);
         mTextViewRole.setText(getPreferenceUtility().getGameRole());
-        constructGame();
+        constructGameWorld();
+        constructSkillList();
         initializeGameState();
     }
 
-    private void constructSkillList(Player skillOwner) {
+    private void constructGameWorld() {
+        //TODO construct game session object, contains world, mqtt handler
+        World world = World.getInstance();
+        Spy spy = Spy.createInstance();
+        Sentry sentry = Sentry.createInstance();
+        world.getRoom("A").getTileAtCoordinate(3, 3).setPlayer(spy);
+        world.getRoom("A").getTileAtCoordinate(5, 6).setPlayer(sentry);
+
+        world.getRoom("A").getTileAtCoordinate(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
+        world.getRoom("A").getTileAtCoordinate(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
+
+
+        LevelRenderer levelRenderer = new LevelRenderer(mLinearLayoutLevel);
+        levelRenderer.render(world);
+        mTurnOrchestrator = new TurnOrchestrator(this, levelRenderer);
+
+    }
+
+    private void constructSkillList() {
         ArrayList<String> yourSkillsSelected = getIntent().getStringArrayListExtra(SkillsPool.YOUR_SKILLS_SELECTED);
         ArrayList<Skill> equippedSkills = new ArrayList<>();
         Timber.d("Your skills selected: %s", yourSkillsSelected.toString());
+        Player skillOwner = null;
+        if (Player.SENTRY_ROLE.equals(getPreferenceUtility().getGameRole())) {
+            skillOwner = Sentry.getInstance();
+        } else if (Player.SPY_ROLE.equals((getPreferenceUtility().getGameRole()))) {
+            skillOwner = Spy.getInstance();
+        } else {
+            throw new IllegalStateException("Must have a game role assigned at this point. Cannot construct skills list");
+        }
         for (String skillName : yourSkillsSelected) {
             Skill skill = SkillsPool.getSkillForName(this, skillName, skillOwner);
             equippedSkills.add(skill);
@@ -71,32 +97,19 @@ public class GameActivity extends BaseActivity {
         SkillsAdapter adapter = new SkillsAdapter(this, new SkillsAdapter.OnClickListener() {
             @Override
             public void onClick(Skill skill) {
-                skill.triggerTargetSelection(mTurnOrchestrator.getWorld());
+                skill.onSkillSelected();
             }
         });
         adapter.setSkillList(equippedSkills);
-    }
-
-    private void constructGame() {
-        //TODO construct game session object, contains world, mqtt handler
-        World world = World.sampleCreateWorld();
-        Spy spy = Spy.createInstance();
-        Sentry sentry = Sentry.createInstance();
-        world.getRoom("A").getTileAtCoordinate(3,3).setPlayer(spy);
-        world.getRoom("A").getTileAtCoordinate(5,6).setPlayer(sentry);
-
-        world.getRoom("A").getTileAtCoordinate(5,6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
-        world.getRoom("A").getTileAtCoordinate(3,3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
-
-
-        LevelRenderer levelRenderer = new LevelRenderer(mLinearLayoutLevel);
-        levelRenderer.render(world);
-//        mTurnOrchestrator = new TurnOrchestrator(this, world, spy, sentry, levelRenderer);
-
+        mListViewSkills.setAdapter(adapter);
     }
 
 
     private void initializeGameState() {
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
     @Override
@@ -107,4 +120,6 @@ public class GameActivity extends BaseActivity {
     protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
 
     }
+
+
 }

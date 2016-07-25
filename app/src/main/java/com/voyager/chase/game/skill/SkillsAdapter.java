@@ -74,20 +74,20 @@ public class SkillsAdapter extends BaseAdapter {
         }
 
         final Skill skill = mSkillsList.get(position);
-        holder.textViewName.setText(skill.getSkillName());
-        if (skill.getCurrentCooldown() > 0) { //skill is not ready to be used/on cooldown
+        holder.textViewName.setText(""+skill.getSkillName());
+        if (skill.getCurrentCooldown() > 0 && skill.getSkillCooldown() > 0) { //skill is not ready to be used/on cooldown
             holder.textViewCooldown.setTextColor(ContextCompat.getColor(mContext, R.color.red));
-            holder.textViewCooldown.setText(skill.getCurrentCooldown());
+            holder.textViewCooldown.setText(skill.getCurrentCooldown() + " turns waiting");
             holder.linearLayoutContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Timber.d("Skill on cooldown!!!");
                 }
             });
         } else {
             holder.textViewCooldown.setTextColor(ContextCompat.getColor(mContext, R.color.very_light_blue));
-            if (skill.getCooldown() > 0) {
-                holder.textViewCooldown.setText("OK | " + skill.getCooldown() + " turns");
+            if (skill.getSkillCooldown() > 0) {
+                holder.textViewCooldown.setText("OK | " + skill.getSkillCooldown() + " turns");
             } else {
                 holder.textViewCooldown.setText("OK");
             }

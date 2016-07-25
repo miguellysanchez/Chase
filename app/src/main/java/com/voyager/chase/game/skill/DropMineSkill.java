@@ -1,15 +1,15 @@
-package com.voyager.chase.game.skill.sentry;
+package com.voyager.chase.game.skill;
 
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
-import com.voyager.chase.game.skill.Skill;
 
 import java.util.ArrayList;
 
 /**
- * Created by miguellysanchez on 7/17/16.
+ * Created by miguellysanchez on 7/25/16.
  */
-public class AlarmTrapSkill extends Skill {
+public class DropMineSkill extends Skill {
+
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         return null;
@@ -17,6 +17,7 @@ public class AlarmTrapSkill extends Skill {
 
     @Override
     public void useSkillOnTile(Tile selectedTile) {
+
     }
 
     @Override

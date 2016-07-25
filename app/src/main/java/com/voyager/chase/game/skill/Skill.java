@@ -1,36 +1,36 @@
 package com.voyager.chase.game.skill;
 
-import android.content.Context;
-import android.support.annotation.CallSuper;
-
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by miguellysanchez on 7/5/16.
  */
 public abstract class Skill {
 
-    protected int mCooldown;
+    protected int mSkillCooldown = 0;
     protected int mCurrentCooldown = 0;
     protected String mSkillName;
     protected Player mSkillOwner;
     protected String mSkillDescription;
 
-    public abstract ArrayList<Tile> getSelectableTiles(World world);
+    public abstract ArrayList<Tile> getSelectableTiles();
 
     public abstract void useSkillOnTile(Tile selectedTile);
 
-    public abstract void triggerTargetSelection(World world);
+    public abstract void onSkillSelected();
 
     public abstract void triggerSkillEffect(World world);
 
     public String getSkillName(){
         return mSkillName;
+    }
+
+    public void setSkillName(String skillName) {
+        this.mSkillName = skillName;
     }
 
     public void setOwner(Player player) {
@@ -41,8 +41,12 @@ public abstract class Skill {
         return mSkillOwner;
     }
 
-    public int getCooldown() {
-        return mCooldown;
+    public int getSkillCooldown() {
+        return mSkillCooldown;
+    }
+
+    public void setSkillCooldown(int skillCooldown) {
+        mSkillCooldown =  skillCooldown;
     }
 
     public int getCurrentCooldown() {
@@ -53,6 +57,9 @@ public abstract class Skill {
         return mSkillDescription;
     }
 
+    public void setDescription(String description) {
+        this.mSkillDescription = description;
+    }
     public int reduceCooldown(){
         if(mCurrentCooldown > 0) {
             mCurrentCooldown -= 1;
@@ -62,7 +69,8 @@ public abstract class Skill {
 
     public void addCooldown(){
         if(mCurrentCooldown == 0){
-            mCurrentCooldown += mCooldown;
+            mCurrentCooldown += mSkillCooldown;
         }
     }
+
 }

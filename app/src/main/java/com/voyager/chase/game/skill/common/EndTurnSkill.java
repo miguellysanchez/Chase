@@ -10,10 +10,11 @@ import java.util.ArrayList;
  * Created by miguellysanchez on 7/18/16.
  */
 public class EndTurnSkill extends Skill {
+
     @Override
-    public ArrayList<Tile> getSelectableTiles(World world) {
+    public ArrayList<Tile> getSelectableTiles() {
         ArrayList<Tile> targetTiles = new ArrayList<>();
-        Tile currentTile = world.getRoom(getOwner().getCurrentRoomName()).getTileAtCoordinate(getOwner().getCurrentTileXCoordinate(), getOwner().getCurrentTileYCoordinate());
+        Tile currentTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getTileAtCoordinate(getOwner().getCurrentTileXCoordinate(), getOwner().getCurrentTileYCoordinate());
         targetTiles.add(currentTile);
         return targetTiles;
     }
@@ -24,8 +25,8 @@ public class EndTurnSkill extends Skill {
     }
 
     @Override
-    public void triggerTargetSelection(World world) {
-
+    public void onSkillSelected() {
+        mSkillOwner.setActionPoints(0);
     }
 
     @Override

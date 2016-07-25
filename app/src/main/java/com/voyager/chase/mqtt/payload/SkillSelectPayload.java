@@ -15,7 +15,6 @@ public class SkillSelectPayload {
     @SerializedName("is_waiting")
     private boolean isWaiting;
 
-
     public boolean isWaiting() {
         return isWaiting;
     }

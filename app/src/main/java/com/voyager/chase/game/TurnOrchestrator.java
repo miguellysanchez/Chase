@@ -2,7 +2,6 @@ package com.voyager.chase.game;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
@@ -28,13 +27,17 @@ public class TurnOrchestrator {
     private Spy mSpy;
     private Sentry mSentry;
     private String mGameRole;
-    private LocalBroadcastManager mBroadcastManager;
     private Queue<Runnable> mRunnableQueue;
     private HashMap<TurnState, TurnStateHandler> mTurnStateHandlerList;
 
 
     private StartStateHandler mStartStateHandler;
     private UpkeepStateHandler mUpkeepStateHandler;
+//    private SelectSkillStateHandler mSelectSkillStateHandler;
+//    private TargetSkillHandler mTargetSkillStateHandler;
+//    private ResolveSkillStateHandler mResolveSkillStateHandler;
+//    private CheckQueueStateHandler mCheckQueueStateHandler;
+//    private SyncWorldStateHandler mSyncWorldStateHandler;
 
 
     public static final String TURN_STATE_INTENT_ACTION = "com.voyager.chase.turn_state";
@@ -45,10 +48,7 @@ public class TurnOrchestrator {
     private TurnOrchestrator() {
     }
 
-    public TurnOrchestrator(Context context, World world, Spy spy, Sentry sentry, LevelRenderer levelRenderer) {
-        mWorld = world;
-        mSpy = spy;
-        mSentry = sentry;
+    public TurnOrchestrator(Context context, LevelRenderer levelRenderer) {
         mGameRole = PreferenceUtility.getInstance(context).getGameRole();
         if (Player.SENTRY_ROLE.equals(mGameRole)) {
             mCurrentPlayer = mSentry;
@@ -58,7 +58,6 @@ public class TurnOrchestrator {
             throw new IllegalStateException("Should not enter this part.");
         }
         mRunnableQueue = new LinkedList<>();
-        mBroadcastManager = LocalBroadcastManager.getInstance(context);
         mTurnStateHandlerList = new HashMap<>();
     }
 
