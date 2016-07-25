@@ -3,18 +3,18 @@ package com.voyager.chase.mqtt.payload;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-
 /**
  * Created by miguellysanchez on 7/16/16.
  */
 public class SkillSelectPayload {
 
+
+    @SerializedName("user_id")
+    private String userId;
+
     @SerializedName("is_waiting")
     private boolean isWaiting;
 
-    @SerializedName("sender_role")
-    private String senderRole;
 
     public boolean isWaiting() {
         return isWaiting;
@@ -24,12 +24,12 @@ public class SkillSelectPayload {
         this.isWaiting = isWaiting;
     }
 
-    public void setSenderRole(String senderRole) {
-        this.senderRole = senderRole;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getSenderRole() {
-        return senderRole;
+    public String getUserId() {
+        return userId;
     }
 
     public String toJson() {

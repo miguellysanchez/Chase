@@ -9,6 +9,19 @@ public class Renderable {
     public static final int PROXIMITY_VISIBLE = 1;
     public static final int GLOBALLY_VISIBLE = 2;
 
-    protected int mOwnerVisibility;
-    protected int mNonOwnerVisibility;
+    protected int renderDrawableId;
+    protected int sentryVisibility;
+    protected int spyVisibility;
+
+    public int getSentryVisibility(){
+        return sentryVisibility;
+    }
+    
+    public int getSpyVisibility(){
+        return spyVisibility;
+    }
+
+    public int getRenderDrawableId(){
+        return renderDrawableId;
+    }
 }

@@ -19,11 +19,12 @@
         android:background="@color/lighter_gray">
 
         <TextView
+            android:id="@+id/chase_activity_game_textview_life"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:padding="4dp"
-            android:text="HP: 1/2"
+            android:text="LIFE: 1/2"
             android:textColor="@color/green"
             android:textStyle="bold" />
 
@@ -33,6 +34,7 @@
             android:background="@color/black" />
 
         <TextView
+            android:id="@+id/chase_activity_game_textview_action_points"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -46,6 +48,7 @@
             android:background="@color/black" />
 
         <TextView
+            android:id="@+id/chase_activity_game_textview_current_room"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -59,6 +62,7 @@
             android:background="@color/black" />
 
         <TextView
+            android:id="@+id/chase_activity_game_textview_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"

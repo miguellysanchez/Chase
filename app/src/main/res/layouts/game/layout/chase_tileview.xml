@@ -16,15 +16,13 @@
             android:id="@+id/chase_tileview_imageview_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:src="@mipmap/ic_launcher"/>
+            android:background="@color/transparent"/>
 
         <ImageView
             android:id="@+id/chase_tileview_imageview_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:src="@android:drawable/ic_btn_speak_now" />
+            android:background="@color/transparent" />
 
         <View
             android:id="@+id/chase_tileview_view_fog"

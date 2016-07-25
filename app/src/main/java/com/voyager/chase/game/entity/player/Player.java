@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 public abstract class Player extends Renderable{
 
-    public static final String SENTRY_ROLE = "sentry_role";
-    public static final String SPY_ROLE = "spy_role";
+    public static final String SENTRY_ROLE = "SENTRY";
+    public static final String SPY_ROLE = "SPY";
 
     private ArrayList<Skill> mSkillsList;
     protected int mLife = 1;

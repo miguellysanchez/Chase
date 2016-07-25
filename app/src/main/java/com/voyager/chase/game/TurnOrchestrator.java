@@ -1,18 +1,18 @@
 package com.voyager.chase.game;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.voyager.chase.game.LevelRenderer;
-import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
-import com.voyager.chase.game.skill.Skill;
+import com.voyager.chase.game.handlers.StartStateHandler;
+import com.voyager.chase.game.handlers.TurnStateHandler;
+import com.voyager.chase.game.handlers.UpkeepStateHandler;
 import com.voyager.chase.utility.PreferenceUtility;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -30,6 +30,12 @@ public class TurnOrchestrator {
     private String mGameRole;
     private LocalBroadcastManager mBroadcastManager;
     private Queue<Runnable> mRunnableQueue;
+    private HashMap<TurnState, TurnStateHandler> mTurnStateHandlerList;
+
+
+    private StartStateHandler mStartStateHandler;
+    private UpkeepStateHandler mUpkeepStateHandler;
+
 
     public static final String TURN_STATE_INTENT_ACTION = "com.voyager.chase.turn_state";
     public static final String KEY_STRING_EXTRA_TURN_STATE = "key_turn_state";
@@ -53,6 +59,7 @@ public class TurnOrchestrator {
         }
         mRunnableQueue = new LinkedList<>();
         mBroadcastManager = LocalBroadcastManager.getInstance(context);
+        mTurnStateHandlerList = new HashMap<>();
     }
 
     public void startTurnOrchestrator() {
@@ -63,7 +70,6 @@ public class TurnOrchestrator {
                 mCurrentState = TurnState.WAITING_STATE;
             }
 
-            advanceTurn();
         } else {
             Timber.e("Illegal State, cannot start orchestrator when already out of null state");
         }
@@ -91,46 +97,5 @@ public class TurnOrchestrator {
         WAITING_RENDER_STATE
     }
 
-    public void setTurnState(TurnState turnState) {
-        mCurrentState = turnState;
-    }
-
-    public void advanceTurn() {
-        switch (mCurrentState) {
-            case START_STATE:
-                if (!mCurrentPlayer.isTurnSkipped()) {
-                    mCurrentPlayer.setIsTurnSkipped(false);
-                } else {
-                    for (Skill skill : mCurrentPlayer.getSkills()) {
-                        skill.reduceCooldown();
-                    }
-                    mCurrentPlayer.recoverActionPoints();
-                }
-                setTurnState(TurnState.UPKEEP_STATE);
-                advanceTurn();
-                break;
-            case UPKEEP_STATE:
-                if (mCurrentPlayer.getActionPoints() <= 0) {
-                    setTurnState(TurnState.END_STATE);
-                } else {
-                    mCurrentPlayer.setActionPoints(mCurrentPlayer.getActionPoints() - 1);
-                    setTurnState(TurnState.SELECT_SKILL_STATE);
-                }
-                advanceTurn();
-                break;
-            case SELECT_SKILL_STATE:
-                broadcastTurnState();
-            case END_STATE:
-                break;
-
-        }
-
-    }
-
-    public void broadcastTurnState(){
-        Intent turnStateIntent = new Intent(TURN_STATE_INTENT_ACTION);
-        turnStateIntent.putExtra(KEY_STRING_EXTRA_TURN_STATE, mCurrentState);
-        mBroadcastManager.sendBroadcast(turnStateIntent);
-    }
 
 }

@@ -76,6 +76,8 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.1.2'
     compile 'com.google.code.gson:gson:2.3'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.google.guava:guava:19.0'
+
 
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
 }

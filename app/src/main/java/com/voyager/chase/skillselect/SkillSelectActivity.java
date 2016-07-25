@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 
 /**
@@ -49,6 +48,7 @@ public class SkillSelectActivity extends BaseActivity {
     @BindView(R.id.chase_activity_skill_select_button_start)
     Button mButtonStartGame;
 
+    private String mMqttUserId;
     private String mGameSessionId;
     private boolean mIsWaiting = false;
     private boolean mIsOtherPlayerWaiting = false;
@@ -61,6 +61,7 @@ public class SkillSelectActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chase_activity_skill_select);
         ButterKnife.bind(this);
+        mMqttUserId = getPreferenceUtility().getMqttUserId();
         mGameSessionId = getPreferenceUtility().getGameSessionId();
         mGameRole = getPreferenceUtility().getGameRole();
 
@@ -150,7 +151,7 @@ public class SkillSelectActivity extends BaseActivity {
     private void notifyWaitingStatusToOtherPlayer() {
         SkillSelectPayload skillSelectPayload = new SkillSelectPayload();
         skillSelectPayload.setIsWaiting(mIsWaiting);
-        skillSelectPayload.setSenderRole(mGameRole);
+        skillSelectPayload.setUserId(mMqttUserId);
         MqttIssueActionUtility.publish(Topics.getSessionStatusTopic(mGameSessionId), skillSelectPayload.toJson(), false);
     }
 
@@ -279,7 +280,7 @@ public class SkillSelectActivity extends BaseActivity {
                         && !TextUtils.isEmpty(mqttCallbackEvent.getMessagePayload())) {
                     Gson gson = new Gson();
                     SkillSelectPayload skillSelectPayload = gson.fromJson(mqttCallbackEvent.getMessagePayload(), SkillSelectPayload.class);
-                    if (!skillSelectPayload.getSenderRole().equals(mGameRole)) {
+                    if (!skillSelectPayload.getUserId().equals(mMqttUserId)) {
                         mIsOtherPlayerWaiting = skillSelectPayload.isWaiting();
                         attemptToStartGame();
                     }

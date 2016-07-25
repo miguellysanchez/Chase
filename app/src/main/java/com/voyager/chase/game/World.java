@@ -1,5 +1,6 @@
 package com.voyager.chase.game;
 
+import com.voyager.chase.game.entity.Renderable;
 import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
 
@@ -22,6 +23,10 @@ public class World {
 
     public void addRoom(String name, Room room){
         mRoomsMap.put(name, room);
+    }
+
+    public void removeRenderable(String renderableId){
+
     }
 
     public static World createWorld(){
