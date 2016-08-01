@@ -1,121 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/chase_activity_game_linearlayout_level"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="2"
-        android:background="@color/black"
-        android:orientation="horizontal"
-        android:padding="2dp" />
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/lighter_gray">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/chase_activity_game_textview_life"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
-            android:padding="4dp"
-            android:text="LIFE: 1/2"
-            android:textColor="@color/green"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/black" />
-
-        <TextView
-            android:id="@+id/chase_activity_game_textview_action_points"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="4dp"
-            android:text="AP: 3/3"
-            android:textColor="@color/red" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/black" />
-
-        <TextView
-            android:id="@+id/chase_activity_game_textview_current_room"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/chase_activity_game_linearlayout_level"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
             android:layout_weight="2"
-            android:padding="4dp"
-            android:text="Room: A"
-            android:textColor="@color/bluish_gray" />
+            android:background="@color/black"
+            android:orientation="horizontal"
+            android:padding="2dp" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/black" />
-
-        <TextView
-            android:id="@+id/chase_activity_game_textview_role"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="SENTRY_ROLE" />
-    </LinearLayout>
+            android:background="@color/lighter_gray">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/chase_activity_game_textview_life"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:padding="4dp"
+                android:text="LIFE: 1/2"
+                android:textColor="@color/green"
+                android:textStyle="bold" />
 
-        <FrameLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="3">
-
-            <ListView
-                android:id="@+id/chase_activity_game_listview_skills"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/chase_activity_game_linearlayout_waiting"
-                android:layout_width="match_parent"
+            <View
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/transluscent_gray"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:background="@color/black" />
 
-                <ProgressBar
-                    android:layout_width="80dp"
-                    android:layout_height="80dp" />
+            <TextView
+                android:id="@+id/chase_activity_game_textview_action_points"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:text="AP: 3/3"
+                android:textColor="@color/red" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/chase_activity_game_textview_current_room"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:padding="4dp"
+                android:text="Room: A"
+                android:textColor="@color/bluish_gray" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/chase_activity_game_textview_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="SENTRY_ROLE" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <ListView
+                    android:id="@+id/chase_activity_game_listview_skills"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <Button
+                    android:id="@+id/chase_activity_game_button_cancel_skill"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="CANCEL SKILL"
+                    android:visibility="visible" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Waiting for other player..." />
+                    android:id="@+id/chase_activity_game_textview_waiting"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bluish_gray"
+                    android:gravity="center"
+                    android:text="Waiting for other player..."
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/chase_activity_game_linearlayout_processing"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <ProgressBar
+                        android:layout_width="80dp"
+                        android:layout_height="80dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Working..."
+                        android:textColor="@color/black" />
 
 
-            </LinearLayout>
-        </FrameLayout>
+                </LinearLayout>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/black" />
+            </FrameLayout>
 
-        <ListView
-            android:id="@+id/chase_activity_game_listview_info"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="2" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
 
+            <ListView
+                android:id="@+id/chase_activity_game_listview_info"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:stackFromBottom="true" />
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/chase_activity_game_linearlayout_setting_up"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transluscent_gray"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Setting up game..." />
+    </LinearLayout>
+</FrameLayout>

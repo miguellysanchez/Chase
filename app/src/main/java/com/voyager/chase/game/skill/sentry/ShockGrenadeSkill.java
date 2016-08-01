@@ -6,9 +6,9 @@ import com.voyager.chase.game.skill.Skill;
 import java.util.ArrayList;
 
 /**
- * Created by miguellysanchez on 7/17/16.
+ * Created by miguellysanchez on 7/25/16.
  */
-public class AlarmTrapSkill extends Skill {
+public class ShockGrenadeSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         return null;
@@ -16,6 +16,7 @@ public class AlarmTrapSkill extends Skill {
 
     @Override
     public void useSkillOnTile(Tile selectedTile) {
+
     }
 
 }

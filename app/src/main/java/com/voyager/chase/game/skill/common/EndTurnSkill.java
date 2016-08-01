@@ -13,10 +13,7 @@ public class EndTurnSkill extends Skill {
 
     @Override
     public ArrayList<Tile> getSelectableTiles() {
-        ArrayList<Tile> targetTiles = new ArrayList<>();
-        Tile currentTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getTileAtCoordinate(getOwner().getCurrentTileXCoordinate(), getOwner().getCurrentTileYCoordinate());
-        targetTiles.add(currentTile);
-        return targetTiles;
+        return null;
     }
 
     @Override
@@ -24,13 +21,4 @@ public class EndTurnSkill extends Skill {
         getOwner().setActionPoints(0);
     }
 
-    @Override
-    public void onSkillSelected() {
-        mSkillOwner.setActionPoints(0);
-    }
-
-    @Override
-    public void triggerSkillEffect(World world) {
-
-    }
 }

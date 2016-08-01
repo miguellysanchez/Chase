@@ -10,7 +10,9 @@ public class Spy extends Player {
     public static final int STARTING_SKILL_POINTS = 100;
     public static final int DEFAULT_SPY_VISIBILITY = GLOBALLY_VISIBLE;
     public static final int DEFAULT_SENTRY_VISIBILITY = PROXIMITY_VISIBLE;
+    private static final int DEFAULT_OBJECTIVES_COUNT = 3;
     private static Spy sSpy;
+    private int objectivesRemaining = DEFAULT_OBJECTIVES_COUNT;
 
     private Spy() {
         mIdentity = Player.SPY_ROLE;
@@ -37,5 +39,13 @@ public class Spy extends Player {
     @Override
     public String getIdentity() {
         return Player.SPY_ROLE;
+    }
+
+    public int getObjectivesRemaining() {
+        return objectivesRemaining;
+    }
+
+    public void reduceObjectivesRemaining() {
+        objectivesRemaining = objectivesRemaining -1;
     }
 }

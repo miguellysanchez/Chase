@@ -4,6 +4,8 @@ import com.voyager.chase.game.entity.Renderable;
 import com.voyager.chase.game.skill.Skill;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by miguellysanchez on 7/5/16.
@@ -13,23 +15,20 @@ public abstract class Player extends Renderable{
     public static final String SENTRY_ROLE = "SENTRY";
     public static final String SPY_ROLE = "SPY";
 
-    private ArrayList<Skill> mSkillsList;
+    private HashMap<String, Skill> mSkillsMap;
     protected int mLife = 1;
     protected int mMaxLife = 2;
     protected int mActionPoints = 0;
     protected int mActionPointsRecovery = 0;
     protected String mIdentity;
     protected boolean mIsTurnSkipped = false;
-    private String mCurrentRoomName;
-    private int mCurrentTileXCoordinate;
-    private int mCurrentTileYCoordinate;
-    private ArrayList<Skill> skills;
+    private boolean mIsCurrentTurn = false;
 
     public int getLife() {
         return mLife;
     }
 
-    public void setLife(int newLife) {
+    protected void setLife(int newLife) {
         if (newLife > 0) {
             mLife = newLife;
         } else if (newLife > mMaxLife) {
@@ -39,9 +38,26 @@ public abstract class Player extends Renderable{
         }
     }
 
-    protected void setSkills(ArrayList<Skill> skillList) {
-        mSkillsList = skillList;
-        for (Skill skill : skillList) {
+    public void reduceLife(){
+        setLife(mLife - 1);
+    }
+
+    public void recoverLife(){
+        setLife(mLife+ 1);
+    }
+
+    public ArrayList<Skill> getSkillsList() {
+        return new ArrayList<>(mSkillsMap.values());
+    }
+
+    public HashMap<String, Skill> getSkillsMap(){
+        return mSkillsMap;
+    }
+
+    public void setSkills(HashMap<String, Skill> skillsMap) {
+        mSkillsMap = skillsMap;
+        for (Map.Entry<String, Skill> entry : skillsMap.entrySet()) {
+            Skill skill = entry.getValue();
             skill.setOwner(this);
         }
     }
@@ -68,32 +84,21 @@ public abstract class Player extends Renderable{
         mActionPoints = actionPoints;
     }
 
-    public ArrayList<Skill> getSkills() {
-        return skills;
+
+
+    public int getMaxLife() {
+        return mMaxLife;
     }
 
-
-    public String getCurrentRoomName() {
-        return mCurrentRoomName;
+    public int getActionPointsRecovery() {
+        return mActionPointsRecovery;
     }
 
-    public void setCurrentRoomName(String mCurrentRoomName) {
-        this.mCurrentRoomName = mCurrentRoomName;
+    public boolean getIsCurrentTurn() {
+        return mIsCurrentTurn;
     }
 
-    public int getCurrentTileXCoordinate() {
-        return mCurrentTileXCoordinate;
-    }
-
-    public void setCurrentTileXCoordinate(int mCurrentTileXCoordinate) {
-        this.mCurrentTileXCoordinate = mCurrentTileXCoordinate;
-    }
-
-    public int getCurrentTileYCoordinate() {
-        return mCurrentTileYCoordinate;
-    }
-
-    public void setCurrentTileYCoordinate(int mCurrentTileYCoordinate) {
-        this.mCurrentTileYCoordinate = mCurrentTileYCoordinate;
+    public void setIsCurrentTurn(boolean isCurrentTurn) {
+        this.mIsCurrentTurn = isCurrentTurn;
     }
 }

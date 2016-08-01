@@ -1,14 +1,14 @@
 package com.voyager.chase.game.entity;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import com.voyager.chase.game.entity.player.Player;
+import com.voyager.chase.game.entity.skillitem.ItemTrigger;
+import com.voyager.chase.game.entity.skillitem.SkillItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by miguellysanchez on 7/4/16.
@@ -22,6 +22,7 @@ public class Tile {
     private int xCoordinate;
     private int yCoordinate;
     private Multimap<String, SkillItem> mSkillItemsMultimap;
+    private HashMap<String, ItemTrigger> mItemTriggersMap;
     private HashMap<String, String> mVisibilityModifierMap;
     private Player mPlayer;
 
@@ -31,6 +32,7 @@ public class Tile {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         mSkillItemsMultimap  = ArrayListMultimap.create();
+        mItemTriggersMap = new HashMap<>();
         mVisibilityModifierMap = new HashMap<>();
     }
 
@@ -71,19 +73,54 @@ public class Tile {
         player.setCurrentTileYCoordinate(yCoordinate);
     }
 
+    public void removePlayer(){
+        mPlayer.setCurrentRoomName(null);
+        mPlayer.setCurrentTileXCoordinate(-1);
+        mPlayer.setCurrentTileYCoordinate(-1);
+        this.mPlayer = null;
+    }
+
     public ArrayList<SkillItem> getAllSkillItemsList(){
         return new ArrayList<>(mSkillItemsMultimap.values());
     }
 
-    public void removeItem(String uuid){
+    public void addSkillItem(SkillItem skillItem){
+        mSkillItemsMultimap.put(skillItem.getUuid(), skillItem);
+        skillItem.onAddedToTile();
     }
 
-    public Collection<String> getVisibilityModifierList() {
-        return mVisibilityModifierMap.values();
+    public void addItemTrigger(String uuid, ItemTrigger itemTrigger){
+        mItemTriggersMap.put(uuid, itemTrigger);
     }
 
     public void addVisibilityModifier(String uuid, String visibilityModifier){
         mVisibilityModifierMap.put(uuid, visibilityModifier);
     }
 
+
+    public void removeItem(String uuid){
+        for(SkillItem skillItem : mSkillItemsMultimap.get(uuid)){
+            skillItem.onRemovedFromTile();
+        }
+        mSkillItemsMultimap.removeAll(uuid);
+
+        mVisibilityModifierMap.remove(uuid);
+    }
+
+    public Collection<String> getVisibilityModifierList() {
+        return mVisibilityModifierMap.values();
+    }
+
+    public boolean containsObstacle() {
+        for(SkillItem skillItem : mSkillItemsMultimap.values()){
+            if(skillItem.isObstacle()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsPlayer(){
+        return mPlayer != null;
+    }
 }

@@ -1,7 +1,9 @@
 package com.voyager.chase.game.skill.common;
 
 import com.voyager.chase.game.World;
+import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
+import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.skill.Skill;
 
 import java.util.ArrayList;
@@ -11,11 +13,20 @@ import java.util.ArrayList;
  */
 public class MoveSkill extends Skill {
 
-
-
     @Override
     public ArrayList<Tile> getSelectableTiles() {
-        return null;
+        ArrayList<Tile> selectableTilesList = new ArrayList<>();
+        Player player = World.getUserPlayer();
+        String roomName = player.getCurrentRoomName();
+        int currentTileX = player.getCurrentTileXCoordinate();
+        int currentTileY = player.getCurrentTileYCoordinate();
+
+        safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX+1, currentTileY));
+        safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX-1, currentTileY));
+        safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX, currentTileY+1));
+        safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX, currentTileY-1));
+
+        return selectableTilesList;
     }
 
     @Override
@@ -23,13 +34,22 @@ public class MoveSkill extends Skill {
 
     }
 
-    @Override
-    public void onSkillSelected() {
-
+    private Tile checkTileAtCoordinates(String roomName, int x, int y) {
+        Tile checkingTile;
+        if (x >= 0 && x < Room.ROOM_WIDTH && y >= 0 && y < Room.ROOM_HEIGHT) {
+            checkingTile = World.getInstance().getRoom(roomName).getTileAtCoordinate(x, y);
+            if(checkingTile!=null && !checkingTile.containsObstacle() && !checkingTile.containsPlayer()){
+                return checkingTile;
+            }
+        }
+        return null;
     }
 
-    @Override
-    public void triggerSkillEffect(World world) {
-
+    private void safeAddToSelectableTiles(ArrayList<Tile> selectableTiles, Tile tile){
+        if(tile != null){
+            selectableTiles.add(tile);
+        }
     }
+
+
 }

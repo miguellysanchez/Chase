@@ -10,19 +10,21 @@ import android.widget.LinearLayout;
 
 import com.voyager.chase.game.entity.Renderable;
 import com.voyager.chase.game.entity.Room;
-import com.voyager.chase.game.entity.SkillItem;
+import com.voyager.chase.game.entity.skillitem.SkillItem;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
+import com.voyager.chase.game.event.TurnStateEvent;
+import com.voyager.chase.game.handlers.TargetSelectionStateHandler;
 import com.voyager.chase.game.views.TileView;
 import com.voyager.chase.utility.BenchmarkUtility;
 import com.voyager.chase.utility.PreferenceUtility;
 import com.voyager.chase.utility.TileUtility;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
 
-import timber.log.Timber;
+import java.util.ArrayList;
 
 /**
  * Created by miguellysanchez on 7/4/16.
@@ -59,8 +61,8 @@ public class LevelRenderer {
         }
     }
 
-    public void render(World world) {
-        Player player = null;
+    public void render() {
+        Player player;
         if (Player.SENTRY_ROLE.equals(mGameRole)) {
             player = Sentry.getInstance();
         } else if (Player.SPY_ROLE.equals(mGameRole)) {
@@ -69,7 +71,7 @@ public class LevelRenderer {
             throw new IllegalStateException("Should always have an assigned game role");
         }
         BenchmarkUtility.startOrStopBenchmarkTimer("keso");
-        Room currentRoom = world.getRoom(player.getCurrentRoomName());
+        Room currentRoom = World.getInstance().getRoom(player.getCurrentRoomName());
         Tile[][] tiles2DArray = currentRoom.getAllTiles2DArray();
         for (int x = 0; x < Room.ROOM_WIDTH; x++) {
             for (int y = 0; y < Room.ROOM_HEIGHT; y++) {
@@ -81,7 +83,7 @@ public class LevelRenderer {
         BenchmarkUtility.startOrStopBenchmarkTimer("keso");
     }
 
-    public void renderTileToView(Tile tile, TileView tileView, Player userPlayer) {
+    private void renderTileToView(Tile tile, TileView tileView, Player userPlayer) {
         boolean willRenderFog = true;
         if (TileUtility.isWithinRange(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate(), tile.getXCoordinate(), tile.getYCoordinate(), 2, 2)) {
             willRenderFog = false;
@@ -118,6 +120,10 @@ public class LevelRenderer {
             tileView.getImageViewSkillItems().setImageResource(android.R.color.transparent);
         }
 
+        if (shouldRender(null, tile, userPlayer)) {
+            willRenderFog = false;
+        }
+
         tileView.getViewFog().setVisibility(willRenderFog ? View.VISIBLE : View.GONE);
     }
 
@@ -131,12 +137,16 @@ public class LevelRenderer {
             if (tile.getVisibilityModifierList().contains(Tile.SPY_ONLY_GLOBAL_VISIBILITY)) {
                 return true;
             }
-            renderableVisibility = renderable.getSpyVisibility();
+            if (renderable != null) {
+                renderableVisibility = renderable.getSpyVisibility();
+            }
         } else if (Player.SENTRY_ROLE.equals(player.getIdentity())) {
             if (tile.getVisibilityModifierList().contains(Tile.SENTRY_ONLY_GLOBAL_VISIBILITY)) {
                 return true;
             }
-            renderableVisibility = renderable.getSentryVisibility();
+            if (renderable != null) {
+                renderableVisibility = renderable.getSentryVisibility();
+            }
         }
         switch (renderableVisibility) {
             case Renderable.HIDDEN:
@@ -150,5 +160,34 @@ public class LevelRenderer {
                 return true;
         }
         return false;
+    }
+
+    public void highlightTiles(ArrayList<Tile> tileArrayList){
+        for(final Tile tile : tileArrayList){
+            TileView targetTileView = mTileViewsArray[tile.getXCoordinate()][tile.getYCoordinate()];
+            targetTileView.setHighlightBackground(true);
+            targetTileView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TurnStateEvent targetTileSelectedEvent  = new TurnStateEvent();
+                    targetTileSelectedEvent.setAction(TargetSelectionStateHandler.ACTION_TARGETED);
+                    targetTileSelectedEvent.setTargetTile(tile);
+                    resetTargetHighlights();
+                    EventBus.getDefault().post(targetTileSelectedEvent);
+                }
+            });
+        }
+
+        //TODO highlight the corresponding
+    }
+
+    public void resetTargetHighlights(){
+        for (int x = 0; x < Room.ROOM_WIDTH; x++) {
+            for (int y = 0; y < Room.ROOM_HEIGHT; y++) {
+                TileView tileView = mTileViewsArray[x][y];
+                tileView.setOnClickListener(null);
+                tileView.setHighlightBackground(false);
+            }
+        }
     }
 }

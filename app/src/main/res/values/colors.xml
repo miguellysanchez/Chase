@@ -13,7 +13,8 @@
     <color name="green">#FF33AA88</color>
     <color name="black">#FF000000</color>
     <color name="bluish_gray">#FF666688</color>
-    <color name="transluscent_gray">#55AAAAAA</color>
+    <color name="azure">#FF3366FF</color>
+    <color name="transluscent_gray">#77AAAAAA</color>
     <color name="transparent">#00000000</color>
 
 

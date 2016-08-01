@@ -6,7 +6,28 @@ import com.voyager.chase.R;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.skill.common.EndTurnSkill;
 import com.voyager.chase.game.skill.common.MoveSkill;
+import com.voyager.chase.game.skill.common.SprintSkill;
 import com.voyager.chase.game.skill.sentry.AlarmTrapSkill;
+import com.voyager.chase.game.skill.sentry.AttackSkill;
+import com.voyager.chase.game.skill.sentry.FragGrenadeSkill;
+import com.voyager.chase.game.skill.sentry.MotionSensorSkill;
+import com.voyager.chase.game.skill.sentry.RecoverSkill;
+import com.voyager.chase.game.skill.sentry.RoomIlluminationBeaconSkill;
+import com.voyager.chase.game.skill.sentry.SearchDroneSkill;
+import com.voyager.chase.game.skill.sentry.ShockGrenadeSkill;
+import com.voyager.chase.game.skill.sentry.StunMineSkill;
+import com.voyager.chase.game.skill.sentry.SurveillanceBugSkill;
+import com.voyager.chase.game.skill.spy.BaitSkill;
+import com.voyager.chase.game.skill.spy.DeployBarrierSkill;
+import com.voyager.chase.game.skill.spy.DropMineSkill;
+import com.voyager.chase.game.skill.spy.EMPBlastSkill;
+import com.voyager.chase.game.skill.spy.EmergencyHealSkill;
+import com.voyager.chase.game.skill.spy.IlluminationBeaconSkill;
+import com.voyager.chase.game.skill.spy.PlantDecoySkill;
+import com.voyager.chase.game.skill.spy.SabotageSkill;
+import com.voyager.chase.game.skill.spy.ShrapnelBlastSkill;
+import com.voyager.chase.game.skill.spy.SnipeSkill;
+import com.voyager.chase.game.skill.spy.ToxicCloudSkill;
 
 /**
  * Created by miguellysanchez on 7/14/16.

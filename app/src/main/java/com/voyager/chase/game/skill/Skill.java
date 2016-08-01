@@ -21,10 +21,6 @@ public abstract class Skill {
 
     public abstract void useSkillOnTile(Tile selectedTile);
 
-    public abstract void onSkillSelected();
-
-    public abstract void triggerSkillEffect(World world);
-
     public String getSkillName(){
         return mSkillName;
     }
@@ -67,7 +63,7 @@ public abstract class Skill {
         return mCurrentCooldown;
     }
 
-    public void addCooldown(){
+    public void initiateCooldown(){
         if(mCurrentCooldown == 0){
             mCurrentCooldown += mSkillCooldown;
         }
