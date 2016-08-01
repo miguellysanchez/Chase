@@ -15,16 +15,16 @@ import timber.log.Timber;
 public class UpkeepStateHandler extends TurnStateHandler {
     @Override
     public void handleTurnStateEvent(TurnStateEvent event) {
-        Timber.d("On handle turn state event");
+        Timber.d("On handle UPKEEP turn state event");
 
         if (Spy.getInstance().getLife() <= 0 && Sentry.getInstance().getLife() <= 0) {
             //TODO draw win condition;
             return;
         } else if (Spy.getInstance().getLife() <= 0) {
-            //TODO draw sentry win condition;
+            //TODO  sentry win condition;
             return;
         } else if (Sentry.getInstance().getLife() <= 0 || Spy.getInstance().getObjectivesRemaining() <= 0) {
-            //TODO draw spy win condition;
+            //TODO  spy win condition;
             return;
         }
         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
@@ -32,7 +32,7 @@ public class UpkeepStateHandler extends TurnStateHandler {
         post(viewChangeEvent);
 
         TurnStateEvent turnStateEvent = new TurnStateEvent();
-        if(World.getUserPlayer().getActionPoints() > 0){
+        if (World.getUserPlayer().getActionPoints() > 0) {
             turnStateEvent.setTargetState(TurnState.SELECT_SKILL_STATE);
             turnStateEvent.setAction(SelectSkillStateHandler.ACTION_WAITING);
         } else {

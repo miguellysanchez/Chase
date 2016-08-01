@@ -16,7 +16,7 @@ public class SelectSkillStateHandler extends TurnStateHandler {
 
     @Override
     public void handleTurnStateEvent(TurnStateEvent event) {
-        Timber.d("On handle turn state event");
+        Timber.d("On handle SELECT SKILL turn state event");
         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
         switch (event.getAction()) {
             case ACTION_WAITING:

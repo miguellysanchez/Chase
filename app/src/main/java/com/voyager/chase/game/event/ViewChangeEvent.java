@@ -13,7 +13,6 @@ public class ViewChangeEvent {
     public static final String END_TURN_CONFIRMATION = "end_turn_confirmation";
     public static final String UPDATE_PLAYER_STATE = "update_player_state";
     public static final String SHOW_SKILL_SELECTION = "show_skill_selection";
-    public static final String HIDE_SKILL_SELECTION = "hide_skill_selection";
     public static final String PROCESSING = "processing";
     public static final String UPDATE_SKILLS_LIST = "updates_skills_list";
     public static final String SHOW_CANCEL_SKILL = "show_cancel_skill";
@@ -22,7 +21,6 @@ public class ViewChangeEvent {
     public static final String TOAST_NO_VALID_TARGETS = "toast_no_valid_targets'";
 
     private ArrayList<String> viewChangeTypeList;
-    private String viewChangeType;
     private ArrayList<Tile> tileArrayList;
 
     public ViewChangeEvent() {

@@ -13,7 +13,7 @@ public class Sentry extends Player {
     private static Sentry sSentry;
 
     private Sentry() {
-        mIdentity = Player.SENTRY_ROLE;
+        mRole = Player.SENTRY_ROLE;
         mMaxLife = 4;
         mLife = 3;
         mActionPointsRecovery = 3;
@@ -35,7 +35,7 @@ public class Sentry extends Player {
     }
 
     @Override
-    public String getIdentity() {
+    public String getRole() {
         return Player.SENTRY_ROLE;
     }
 }

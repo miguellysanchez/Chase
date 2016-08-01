@@ -1,31 +1,30 @@
 package com.voyager.chase.game.handlers;
 
 import com.voyager.chase.game.TurnState;
-import com.voyager.chase.game.World;
-import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.event.TurnStateEvent;
 import com.voyager.chase.game.event.ViewChangeEvent;
-import com.voyager.chase.game.skill.Skill;
 
 import timber.log.Timber;
 
 /**
- * Created by miguellysanchez on 7/27/16.
+ * Created by miguellysanchez on 8/1/16.
  */
-public class ResolveSkillStateHandler extends TurnStateHandler {
+public class RenderStateHandler extends TurnStateHandler {
     @Override
     public void handleTurnStateEvent(TurnStateEvent event) {
-        Timber.d("On handle RESOLVE SKILL turn state event");
-        Skill activatedSkill = event.getSelectedSkill();
-        activatedSkill.initiateCooldown();
-        activatedSkill.useSkillOnTile(event.getTargetTile());
-
-        Player userPlayer = World.getUserPlayer();
-        userPlayer.setActionPoints(userPlayer.getActionPoints() - 1);
+        Timber.d("On handle RENDER turn state event");
 
         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
         viewChangeEvent.addViewChangeType(ViewChangeEvent.UPDATE_PLAYER_STATE);
+        viewChangeEvent.addViewChangeType(ViewChangeEvent.RENDER_WORLD);
         post(viewChangeEvent);
+
+        //TODO Add a delay before checking queue for next world effect
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         TurnStateEvent turnStateEvent = new TurnStateEvent();
         turnStateEvent.setTargetState(TurnState.CHECK_QUEUE_STATE);

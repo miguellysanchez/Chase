@@ -61,7 +61,7 @@ public class SkillsPool {
         } else if (ATTACK_SKILL_NAME.equals(skillName)) {
             returnedSkill = new AttackSkill();
             description = "Damage other player and destroy all skill items (including yours) in any tile to the left, right, above or below the current position";
-        } else if (Player.SPY_ROLE.equals(player.getIdentity())) {
+        } else if (Player.SPY_ROLE.equals(player.getRole())) {
             int[] spyCooldownArray = context.getResources().getIntArray(R.array.chase_array_skill_select_cooldown_spy);
             String[] spyDescriptionArray = context.getResources().getStringArray(R.array.chase_array_skill_select_description_spy);
             
@@ -110,7 +110,7 @@ public class SkillsPool {
                 skillCooldown = spyCooldownArray[skillIndex];
                 description = spyDescriptionArray[skillIndex];
             }
-        } else if (Player.SENTRY_ROLE.equals(player.getIdentity())) {
+        } else if (Player.SENTRY_ROLE.equals(player.getRole())) {
             int[] sentryCooldownArray = context.getResources().getIntArray(R.array.chase_array_skill_select_cooldown_sentry);
             String[] sentryDescriptionArray = context.getResources().getStringArray(R.array.chase_array_skill_select_description_sentry);
 
@@ -153,7 +153,7 @@ public class SkillsPool {
             }
 
         } else {
-            throw new IllegalStateException("Cannot have player with no identity");
+            throw new IllegalStateException("Cannot have player with no role");
         }
 
         if (returnedSkill != null) { // assign skill name and the corresponding owner of that skill

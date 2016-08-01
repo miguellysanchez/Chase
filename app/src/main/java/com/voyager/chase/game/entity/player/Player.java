@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by miguellysanchez on 7/5/16.
  */
-public abstract class Player extends Renderable{
+public abstract class Player extends Renderable {
 
     public static final String SENTRY_ROLE = "SENTRY";
     public static final String SPY_ROLE = "SPY";
@@ -20,7 +20,7 @@ public abstract class Player extends Renderable{
     protected int mMaxLife = 2;
     protected int mActionPoints = 0;
     protected int mActionPointsRecovery = 0;
-    protected String mIdentity;
+    protected String mRole;
     protected boolean mIsTurnSkipped = false;
     private boolean mIsCurrentTurn = false;
 
@@ -38,19 +38,19 @@ public abstract class Player extends Renderable{
         }
     }
 
-    public void reduceLife(){
+    public void reduceLife() {
         setLife(mLife - 1);
     }
 
-    public void recoverLife(){
-        setLife(mLife+ 1);
+    public void recoverLife() {
+        setLife(mLife + 1);
     }
 
     public ArrayList<Skill> getSkillsList() {
         return new ArrayList<>(mSkillsMap.values());
     }
 
-    public HashMap<String, Skill> getSkillsMap(){
+    public HashMap<String, Skill> getSkillsMap() {
         return mSkillsMap;
     }
 
@@ -66,11 +66,11 @@ public abstract class Player extends Renderable{
         mActionPoints = mActionPointsRecovery;
     }
 
-    public int getActionPoints(){
+    public int getActionPoints() {
         return mActionPoints;
     }
 
-    public abstract String getIdentity();
+    public abstract String getRole();
 
     public boolean isTurnSkipped() {
         return mIsTurnSkipped;
@@ -80,11 +80,15 @@ public abstract class Player extends Renderable{
         mIsTurnSkipped = isTurnSkipped;
     }
 
-    public void setActionPoints(int actionPoints) {
-        mActionPoints = actionPoints;
+    public void setActionPoints(int newActionPoints) {
+        if (newActionPoints > 0) {
+            mActionPoints = newActionPoints;
+        } else if (newActionPoints > mActionPointsRecovery) {
+            mActionPoints = mActionPointsRecovery;
+        } else {
+            mActionPoints = 0;
+        }
     }
-
-
 
     public int getMaxLife() {
         return mMaxLife;

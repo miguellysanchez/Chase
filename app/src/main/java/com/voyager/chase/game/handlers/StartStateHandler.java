@@ -16,7 +16,7 @@ public class StartStateHandler extends TurnStateHandler {
 
     @Override
     public void handleTurnStateEvent(TurnStateEvent event) {
-        Timber.d("On handle turn state event");
+        Timber.d("On handle START turn state event");
 
         Player player = World.getUserPlayer();
         if (!player.isTurnSkipped()) {
@@ -25,7 +25,7 @@ public class StartStateHandler extends TurnStateHandler {
             }
             player.setActionPoints(player.getActionPointsRecovery());
         } else {
-            player.setIsTurnSkipped(true);
+            player.setIsTurnSkipped(false);
         }
         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
         viewChangeEvent.addViewChangeType(ViewChangeEvent.UPDATE_PLAYER_STATE);

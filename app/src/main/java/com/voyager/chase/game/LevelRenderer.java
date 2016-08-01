@@ -133,14 +133,14 @@ public class LevelRenderer {
         }
 
         int renderableVisibility = Renderable.HIDDEN;
-        if (Player.SPY_ROLE.equals(player.getIdentity())) {
+        if (Player.SPY_ROLE.equals(player.getRole())) {
             if (tile.getVisibilityModifierList().contains(Tile.SPY_ONLY_GLOBAL_VISIBILITY)) {
                 return true;
             }
             if (renderable != null) {
                 renderableVisibility = renderable.getSpyVisibility();
             }
-        } else if (Player.SENTRY_ROLE.equals(player.getIdentity())) {
+        } else if (Player.SENTRY_ROLE.equals(player.getRole())) {
             if (tile.getVisibilityModifierList().contains(Tile.SENTRY_ONLY_GLOBAL_VISIBILITY)) {
                 return true;
             }

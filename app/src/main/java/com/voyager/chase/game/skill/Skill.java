@@ -21,7 +21,7 @@ public abstract class Skill {
 
     public abstract void useSkillOnTile(Tile selectedTile);
 
-    public String getSkillName(){
+    public String getSkillName() {
         return mSkillName;
     }
 
@@ -42,7 +42,7 @@ public abstract class Skill {
     }
 
     public void setSkillCooldown(int skillCooldown) {
-        mSkillCooldown =  skillCooldown;
+        mSkillCooldown = skillCooldown;
     }
 
     public int getCurrentCooldown() {
@@ -56,15 +56,16 @@ public abstract class Skill {
     public void setDescription(String description) {
         this.mSkillDescription = description;
     }
-    public int reduceCooldown(){
-        if(mCurrentCooldown > 0) {
+
+    public int reduceCooldown() {
+        if (mCurrentCooldown > 0) {
             mCurrentCooldown -= 1;
         }
         return mCurrentCooldown;
     }
 
-    public void initiateCooldown(){
-        if(mCurrentCooldown == 0){
+    public void initiateCooldown() {
+        if (mCurrentCooldown == 0) {
             mCurrentCooldown += mSkillCooldown;
         }
     }

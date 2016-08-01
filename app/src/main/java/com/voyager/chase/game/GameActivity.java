@@ -17,12 +17,16 @@ import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.event.ViewChangeEvent;
 import com.voyager.chase.game.event.TurnStateEvent;
 import com.voyager.chase.game.handlers.CheckQueueStateHandler;
+import com.voyager.chase.game.handlers.CheckTriggerStateHandler;
+import com.voyager.chase.game.handlers.EndStateHandler;
+import com.voyager.chase.game.handlers.RenderStateHandler;
 import com.voyager.chase.game.handlers.ResolveSkillStateHandler;
 import com.voyager.chase.game.handlers.SelectSkillStateHandler;
 import com.voyager.chase.game.handlers.StartStateHandler;
 import com.voyager.chase.game.handlers.SyncWorldStateHandler;
 import com.voyager.chase.game.handlers.TargetSelectionStateHandler;
 import com.voyager.chase.game.handlers.TurnStateHandler;
+import com.voyager.chase.game.handlers.UpdateWorldStateHandler;
 import com.voyager.chase.game.handlers.UpkeepStateHandler;
 import com.voyager.chase.game.skill.Skill;
 import com.voyager.chase.game.skill.SkillsAdapter;
@@ -36,7 +40,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,9 +99,9 @@ public class GameActivity extends BaseActivity {
         if (!isGameStarted) {
             isGameStarted = true;
             TurnStateEvent event = new TurnStateEvent();
-            if (Player.SPY_ROLE.equals(World.getUserPlayer().getIdentity())) {
+            if (Player.SPY_ROLE.equals(World.getUserPlayer().getRole())) {
                 event.setTargetState(TurnState.START_STATE);
-            } else if (Player.SENTRY_ROLE.equals(World.getUserPlayer().getIdentity())) {
+            } else if (Player.SENTRY_ROLE.equals(World.getUserPlayer().getRole())) {
                 event.setTargetState(TurnState.WAITING_STATE);
             } else {
                 throw new IllegalStateException("Cannot start game with no user game role");
@@ -138,11 +141,11 @@ public class GameActivity extends BaseActivity {
         World.getUserPlayer().setSkills(equippedSkills);
 
         //TODO sample
-        world.getRoom("A").getTileAtCoordinate(0, 1).setPlayer(spy);
+        world.getRoom("A").getTileAtCoordinate(2, 3).setPlayer(spy);
         world.getRoom("A").getTileAtCoordinate(5, 6).setPlayer(sentry);
 
-        world.getRoom("A").getTileAtCoordinate(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
-        world.getRoom("A").getTileAtCoordinate(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
+//        world.getRoom("A").getTileAtCoordinate(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
+//        world.getRoom("A").getTileAtCoordinate(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
 
         mLevelRenderer = new LevelRenderer(mLinearLayoutLevel);
         mLevelRenderer.render();
@@ -172,7 +175,7 @@ public class GameActivity extends BaseActivity {
             }
         });
 
-        mTextViewRole.setText(World.getUserPlayer().getIdentity());
+        mTextViewRole.setText(World.getUserPlayer().getRole());
         setUserPlayerStateView();
         revealProcessingView();
     }
@@ -188,6 +191,10 @@ public class GameActivity extends BaseActivity {
         mTurnStateHandlerMap.put(TurnState.CHECK_QUEUE_STATE, new CheckQueueStateHandler());
         SyncWorldStateHandler syncWorldStateHandler = new SyncWorldStateHandler(getPreferenceUtility().getGameSessionId());
         mTurnStateHandlerMap.put(TurnState.SYNC_WORLD_STATE, syncWorldStateHandler);
+        mTurnStateHandlerMap.put(TurnState.UPDATE_WORLD_STATE, new UpdateWorldStateHandler());
+        mTurnStateHandlerMap.put(TurnState.RENDER_WORLD_STATE, new RenderStateHandler());
+        mTurnStateHandlerMap.put(TurnState.CHECK_TRIGGER_STATE, new CheckTriggerStateHandler());
+        mTurnStateHandlerMap.put(TurnState.END_STATE, new EndStateHandler());
     }
 
     private void initializeGameState() {

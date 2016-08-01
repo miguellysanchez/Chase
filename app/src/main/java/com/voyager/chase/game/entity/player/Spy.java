@@ -15,10 +15,10 @@ public class Spy extends Player {
     private int objectivesRemaining = DEFAULT_OBJECTIVES_COUNT;
 
     private Spy() {
-        mIdentity = Player.SPY_ROLE;
+        mRole = Player.SPY_ROLE;
         mLife = 1;
         mMaxLife = 2;
-        mActionPointsRecovery = 2;
+        mActionPointsRecovery = 20;
         renderDrawableId = R.drawable.chase_drawable_ic_spy;
         sentryVisibility = DEFAULT_SENTRY_VISIBILITY;
         spyVisibility = DEFAULT_SPY_VISIBILITY;
@@ -37,7 +37,7 @@ public class Spy extends Player {
     }
 
     @Override
-    public String getIdentity() {
+    public String getRole() {
         return Player.SPY_ROLE;
     }
 

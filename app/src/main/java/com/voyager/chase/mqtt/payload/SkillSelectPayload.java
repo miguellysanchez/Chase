@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SkillSelectPayload {
 
-
     @SerializedName("user_id")
     private String userId;
 

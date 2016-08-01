@@ -26,12 +26,13 @@ public class Tile {
     private HashMap<String, String> mVisibilityModifierMap;
     private Player mPlayer;
 
-    private Tile(){}
+    private Tile() {
+    }
 
-    public Tile(int xCoordinate, int yCoordinate){
+    public Tile(int xCoordinate, int yCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        mSkillItemsMultimap  = ArrayListMultimap.create();
+        mSkillItemsMultimap = ArrayListMultimap.create();
         mItemTriggersMap = new HashMap<>();
         mVisibilityModifierMap = new HashMap<>();
     }
@@ -52,58 +53,45 @@ public class Tile {
         return yCoordinate;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    private String text;
-
     public Player getPlayer() {
         return mPlayer;
     }
 
     public void setPlayer(Player player) {
         this.mPlayer = player;
-        player.setCurrentRoomName(mRoomName);
-        player.setCurrentTileXCoordinate(xCoordinate);
-        player.setCurrentTileYCoordinate(yCoordinate);
+        setLocationToRenderable(player);
     }
 
-    public void removePlayer(){
-        mPlayer.setCurrentRoomName(null);
-        mPlayer.setCurrentTileXCoordinate(-1);
-        mPlayer.setCurrentTileYCoordinate(-1);
+    public void removePlayer() {
+        removeLocationFromRenderable(mPlayer);
         this.mPlayer = null;
     }
 
-    public ArrayList<SkillItem> getAllSkillItemsList(){
+    public ArrayList<SkillItem> getAllSkillItemsList() {
         return new ArrayList<>(mSkillItemsMultimap.values());
     }
 
-    public void addSkillItem(SkillItem skillItem){
+    public void addSkillItem(SkillItem skillItem) {
         mSkillItemsMultimap.put(skillItem.getUuid(), skillItem);
+        setLocationToRenderable(skillItem);
         skillItem.onAddedToTile();
     }
 
-    public void addItemTrigger(String uuid, ItemTrigger itemTrigger){
+    public void addItemTrigger(String uuid, ItemTrigger itemTrigger) {
         mItemTriggersMap.put(uuid, itemTrigger);
     }
 
-    public void addVisibilityModifier(String uuid, String visibilityModifier){
+    public void addVisibilityModifier(String uuid, String visibilityModifier) {
         mVisibilityModifierMap.put(uuid, visibilityModifier);
     }
 
-
-    public void removeItem(String uuid){
-        for(SkillItem skillItem : mSkillItemsMultimap.get(uuid)){
+    public void removeItem(String uuid) {
+        for (SkillItem skillItem : mSkillItemsMultimap.get(uuid)) {
+            removeLocationFromRenderable(skillItem);
             skillItem.onRemovedFromTile();
         }
         mSkillItemsMultimap.removeAll(uuid);
-
+        mItemTriggersMap.remove(uuid);
         mVisibilityModifierMap.remove(uuid);
     }
 
@@ -111,16 +99,32 @@ public class Tile {
         return mVisibilityModifierMap.values();
     }
 
+    public Collection<ItemTrigger> getItemTriggerList() {
+        return mItemTriggersMap.values();
+    }
+
     public boolean containsObstacle() {
-        for(SkillItem skillItem : mSkillItemsMultimap.values()){
-            if(skillItem.isObstacle()){
+        for (SkillItem skillItem : mSkillItemsMultimap.values()) {
+            if (skillItem.isObstacle()) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean containsPlayer(){
+    public boolean containsPlayer() {
         return mPlayer != null;
+    }
+
+    private void setLocationToRenderable(Renderable renderable) {
+        renderable.setCurrentRoomName(mRoomName);
+        renderable.setCurrentTileXCoordinate(xCoordinate);
+        renderable.setCurrentTileYCoordinate(yCoordinate);
+    }
+
+    private void removeLocationFromRenderable(Renderable renderable) {
+        renderable.setCurrentRoomName(mRoomName);
+        renderable.setCurrentTileXCoordinate(-1);
+        renderable.setCurrentTileYCoordinate(-1);
     }
 }

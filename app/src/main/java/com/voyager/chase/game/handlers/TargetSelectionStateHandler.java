@@ -22,7 +22,7 @@ public class TargetSelectionStateHandler extends TurnStateHandler {
 
     @Override
     public void handleTurnStateEvent(TurnStateEvent event) {
-        Timber.d("On handle turn state event");
+        Timber.d("On handle TARGET SKILL turn state event");
 
         switch (event.getAction()) {
             case ACTION_WAITING:

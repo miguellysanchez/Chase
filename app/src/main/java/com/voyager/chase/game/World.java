@@ -70,7 +70,7 @@ public class World {
         return sWorld;
     }
 
-    public void addWorlEffectToQueue(WorldEffect worldEffect) {
+    public void addWorldEffectToQueue(WorldEffect worldEffect) {
         mWorldEffectQueue.add(worldEffect);
     }
 
@@ -90,7 +90,7 @@ public class World {
         getInstance().mUserPlayer = player;
     }
 
-    public Collection<Tile> removeAllWorldItemLocation(String uuidString){
+    public Collection<Tile> removeAllWorldItemLocations(String uuidString){
         return mWorldItemsLocationMap.removeAll(uuidString);
     }
 
