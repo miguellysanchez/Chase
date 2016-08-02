@@ -1,5 +1,7 @@
 package com.voyager.chase.game;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.voyager.chase.R;
 import com.voyager.chase.common.BaseActivity;
 import com.voyager.chase.game.entity.Tile;
@@ -16,23 +19,28 @@ import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.event.ViewChangeEvent;
 import com.voyager.chase.game.event.TurnStateEvent;
-import com.voyager.chase.game.handlers.CheckQueueStateHandler;
-import com.voyager.chase.game.handlers.CheckTriggerStateHandler;
-import com.voyager.chase.game.handlers.EndStateHandler;
-import com.voyager.chase.game.handlers.RenderStateHandler;
-import com.voyager.chase.game.handlers.ResolveSkillStateHandler;
-import com.voyager.chase.game.handlers.SelectSkillStateHandler;
-import com.voyager.chase.game.handlers.StartStateHandler;
-import com.voyager.chase.game.handlers.SyncWorldStateHandler;
-import com.voyager.chase.game.handlers.TargetSelectionStateHandler;
+import com.voyager.chase.game.handlers.active.CheckQueueStateHandler;
+import com.voyager.chase.game.handlers.active.CheckTriggerStateHandler;
+import com.voyager.chase.game.handlers.active.EndStateHandler;
+import com.voyager.chase.game.handlers.active.RenderStateHandler;
+import com.voyager.chase.game.handlers.active.ResolveSkillStateHandler;
+import com.voyager.chase.game.handlers.active.SelectSkillStateHandler;
+import com.voyager.chase.game.handlers.active.StartStateHandler;
+import com.voyager.chase.game.handlers.active.SyncWorldStateHandler;
+import com.voyager.chase.game.handlers.active.TargetSelectionStateHandler;
 import com.voyager.chase.game.handlers.TurnStateHandler;
-import com.voyager.chase.game.handlers.UpdateWorldStateHandler;
-import com.voyager.chase.game.handlers.UpkeepStateHandler;
+import com.voyager.chase.game.handlers.active.UpdateWorldStateHandler;
+import com.voyager.chase.game.handlers.active.UpkeepStateHandler;
+import com.voyager.chase.game.handlers.inactive.InactiveRenderStateHandler;
+import com.voyager.chase.game.handlers.inactive.InactiveUpdateWorldStateHandler;
+import com.voyager.chase.game.handlers.inactive.InactivePendingStateHandler;
 import com.voyager.chase.game.skill.Skill;
 import com.voyager.chase.game.skill.SkillsAdapter;
 import com.voyager.chase.game.skill.SkillsPool;
+import com.voyager.chase.mqtt.Topics;
 import com.voyager.chase.mqtt.event.MqttCallbackEvent;
 import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
+import com.voyager.chase.mqtt.payload.WorldEffectPayload;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -81,6 +89,7 @@ public class GameActivity extends BaseActivity {
     private HashMap<TurnState, TurnStateHandler> mTurnStateHandlerMap;
     private TurnState mCurrentState;
     private boolean isGameStarted = false;
+    private AlertDialog mEndTurnConfirmationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +111,8 @@ public class GameActivity extends BaseActivity {
             if (Player.SPY_ROLE.equals(World.getUserPlayer().getRole())) {
                 event.setTargetState(TurnState.START_STATE);
             } else if (Player.SENTRY_ROLE.equals(World.getUserPlayer().getRole())) {
-                event.setTargetState(TurnState.WAITING_STATE);
+                event.setTargetState(TurnState.INACTIVE_PENDING_STATE);
+                event.setAction(InactivePendingStateHandler.ACTION_WAITING);
             } else {
                 throw new IllegalStateException("Cannot start game with no user game role");
             }
@@ -157,7 +167,6 @@ public class GameActivity extends BaseActivity {
             public void onClick(Skill skill) {
                 TurnStateEvent turnStateEvent = new TurnStateEvent();
                 turnStateEvent.setAction(SelectSkillStateHandler.ACTION_SELECTED);
-//                turnStateEvent.setSelectedSkill(World.getUserPlayer().getSkillsMap().get(skill.getSkillName()));
                 turnStateEvent.setSelectedSkill(skill);
                 EventBus.getDefault().post(turnStateEvent);
             }
@@ -174,6 +183,20 @@ public class GameActivity extends BaseActivity {
                 EventBus.getDefault().post(cancelSkillEvent);
             }
         });
+
+        mEndTurnConfirmationDialog = new AlertDialog.Builder(this)
+                .setTitle("END OF TURN")
+                .setMessage("Out of ACTION POINTS (AP). Your turn has ended.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        TurnStateEvent confirmEndTurnEvent = new TurnStateEvent();
+                        confirmEndTurnEvent.setTargetState(TurnState.END_STATE);
+                        confirmEndTurnEvent.setAction(EndStateHandler.ACTION_CONFIRMED);
+                        EventBus.getDefault().post(confirmEndTurnEvent);
+                    }
+                }).create();
 
         mTextViewRole.setText(World.getUserPlayer().getRole());
         setUserPlayerStateView();
@@ -195,6 +218,10 @@ public class GameActivity extends BaseActivity {
         mTurnStateHandlerMap.put(TurnState.RENDER_WORLD_STATE, new RenderStateHandler());
         mTurnStateHandlerMap.put(TurnState.CHECK_TRIGGER_STATE, new CheckTriggerStateHandler());
         mTurnStateHandlerMap.put(TurnState.END_STATE, new EndStateHandler());
+
+        mTurnStateHandlerMap.put(TurnState.INACTIVE_PENDING_STATE, new InactivePendingStateHandler());
+        mTurnStateHandlerMap.put(TurnState.INACTIVE_UPDATE_WORLD_STATE, new InactiveUpdateWorldStateHandler());
+        mTurnStateHandlerMap.put(TurnState.INACTIVE_RENDER_STATE, new InactiveRenderStateHandler());
     }
 
     private void initializeGameState() {
@@ -202,15 +229,6 @@ public class GameActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-    }
-
-    @Override
-    public void executeMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent) {
-    }
-
-    @Override
-    protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
-
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -237,6 +255,7 @@ public class GameActivity extends BaseActivity {
                     mLinearlayoutSettingUp.setVisibility(View.GONE);
                     break;
                 case ViewChangeEvent.END_TURN_CONFIRMATION:
+                    mEndTurnConfirmationDialog.show();
                     break;
                 case ViewChangeEvent.UPDATE_PLAYER_STATE:
                     setUserPlayerStateView();
@@ -259,6 +278,9 @@ public class GameActivity extends BaseActivity {
                     break;
                 case ViewChangeEvent.UPDATE_SKILLS_LIST:
                     updateSkillsListView();
+                    break;
+                case ViewChangeEvent.WAITING_FOR_OTHER_PLAYER:
+                    revealWaitingForOtherPlayerView();
                     break;
                 case ViewChangeEvent.TOAST_NO_VALID_TARGETS:
                     Toast.makeText(GameActivity.this, "No valid targets for the selected skill", Toast.LENGTH_SHORT).show();
@@ -309,6 +331,55 @@ public class GameActivity extends BaseActivity {
     private void updateSkillsListView() {
         mSkillsAdapter.setSkillList(World.getUserPlayer().getSkillsList());
         mSkillsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void executeMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent) {
+    }
+
+    @Override
+    protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
+        String gameSessionId = getPreferenceUtility().getGameSessionId();
+        switch (mqttCallbackEvent.getMessageCallbackType()) {
+            case MqttCallbackEvent.ARRIVED_MESSAGE_CALLBACK_TYPE:
+                if (Topics.getSessionWorldUpdateTopic(gameSessionId)
+                        .equals(mqttCallbackEvent.getTopic())) {
+                    String worldEffectJson = mqttCallbackEvent.getMessagePayload();
+                    Gson gson = new Gson();
+                    WorldEffectPayload worldEffectPayload = gson.fromJson(worldEffectJson, WorldEffectPayload.class);
+                    if(worldEffectPayload.getSenderRole()!=null &&
+                            !World.getUserPlayer().getRole().equals(worldEffectPayload.getSenderRole())){
+                        World.getInstance().addWorldEffectToQueue(worldEffectPayload.getWorldEffect());
+
+                        TurnStateEvent turnStateEvent = new TurnStateEvent();
+                        turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
+                        turnStateEvent.setAction(InactivePendingStateHandler.ACTION_UPDATE);
+                        EventBus.getDefault().post(turnStateEvent);
+                    } else {
+                        Timber.i("Ignoring message from self");
+                    }
+                } else if (Topics.getSessionStatusTopic(gameSessionId)
+                        .equals(mqttCallbackEvent.getTopic())) {
+                    handleSessionTopicPayload(mqttCallbackEvent.getMessagePayload());
+                }
+                break;
+        }
+
+    }
+
+    private void handleSessionTopicPayload(String messagePayload) {
+//        if (messagePayload){
+//
+//        }
+    }
+
+    private void onOtherPlayerFinished() {
+        World.getUserPlayer().setIsCurrentTurn(true);
+        if (mCurrentState.equals(TurnState.INACTIVE_PENDING_STATE)) {
+
+        } else {
+
+        }
     }
 
 }

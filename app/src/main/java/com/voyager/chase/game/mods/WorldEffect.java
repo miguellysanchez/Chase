@@ -19,7 +19,6 @@ public class WorldEffect {
 //    public static final String ADD_ITEM_TRIGGER = "add_item_trigger";
 //    public static final String REMOVE_ITEM_TRIGGER = "remove_item_trigger";
 
-
     @SerializedName("affected_role")
     private String affectedRole;
     @SerializedName("effect_type")
@@ -34,7 +33,6 @@ public class WorldEffect {
     private int affectedY = -1;
     @SerializedName("affected_uuid")
     private String affectedUUID;
-
 
     public String getEffectType() {
         return effectType;

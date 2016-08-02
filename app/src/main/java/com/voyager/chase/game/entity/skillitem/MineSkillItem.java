@@ -6,6 +6,10 @@ import com.voyager.chase.game.entity.player.Player;
  * Created by miguellysanchez on 7/29/16.
  */
 public class MineSkillItem extends SkillItem {
+    protected MineSkillItem(Player player) {
+        super(player);
+    }
+
     @Override
     public void onTriggered(Player player) {
 

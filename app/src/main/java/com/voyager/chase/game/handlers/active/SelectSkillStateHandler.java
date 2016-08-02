@@ -1,8 +1,9 @@
-package com.voyager.chase.game.handlers;
+package com.voyager.chase.game.handlers.active;
 
 import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.event.TurnStateEvent;
 import com.voyager.chase.game.event.ViewChangeEvent;
+import com.voyager.chase.game.handlers.TurnStateHandler;
 
 import timber.log.Timber;
 

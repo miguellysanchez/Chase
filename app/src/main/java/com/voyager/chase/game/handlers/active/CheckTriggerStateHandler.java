@@ -1,4 +1,4 @@
-package com.voyager.chase.game.handlers;
+package com.voyager.chase.game.handlers.active;
 
 import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.World;
@@ -6,6 +6,7 @@ import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.skillitem.ItemTrigger;
 import com.voyager.chase.game.event.TurnStateEvent;
+import com.voyager.chase.game.handlers.TurnStateHandler;
 
 import java.util.Collection;
 

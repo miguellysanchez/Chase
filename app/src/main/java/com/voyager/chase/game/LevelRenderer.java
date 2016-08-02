@@ -16,7 +16,7 @@ import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.event.TurnStateEvent;
-import com.voyager.chase.game.handlers.TargetSelectionStateHandler;
+import com.voyager.chase.game.handlers.active.TargetSelectionStateHandler;
 import com.voyager.chase.game.views.TileView;
 import com.voyager.chase.utility.BenchmarkUtility;
 import com.voyager.chase.utility.PreferenceUtility;

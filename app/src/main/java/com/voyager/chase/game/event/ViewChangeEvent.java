@@ -19,6 +19,7 @@ public class ViewChangeEvent {
     public static final String SHOW_TARGET_HIGHLIGHTS = "show_target_highlights";
     public static final String HIDE_TARGET_HIGHLIGHTS = "hide_target_highlights";
     public static final String TOAST_NO_VALID_TARGETS = "toast_no_valid_targets'";
+    public static final String WAITING_FOR_OTHER_PLAYER = "waiting_for_other_player";
 
     private ArrayList<String> viewChangeTypeList;
     private ArrayList<Tile> tileArrayList;

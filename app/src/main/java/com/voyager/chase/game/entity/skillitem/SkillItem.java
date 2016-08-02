@@ -18,7 +18,8 @@ public abstract class SkillItem extends Renderable {
     protected boolean isObstacle = false;
     protected boolean isInvulnerable = false;
 
-    protected SkillItem(){
+    protected SkillItem(Player player){
+        mOwner = player;
         uuidString = UUID.randomUUID().toString();
     }
 

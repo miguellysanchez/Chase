@@ -50,10 +50,6 @@ public abstract class Player extends Renderable {
         return new ArrayList<>(mSkillsMap.values());
     }
 
-    public HashMap<String, Skill> getSkillsMap() {
-        return mSkillsMap;
-    }
-
     public void setSkills(HashMap<String, Skill> skillsMap) {
         mSkillsMap = skillsMap;
         for (Map.Entry<String, Skill> entry : skillsMap.entrySet()) {

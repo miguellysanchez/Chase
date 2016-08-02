@@ -1,8 +1,9 @@
-package com.voyager.chase.game.handlers;
+package com.voyager.chase.game.handlers.active;
 
 import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.event.TurnStateEvent;
+import com.voyager.chase.game.handlers.TurnStateHandler;
 import com.voyager.chase.game.mods.WorldEffect;
 
 import timber.log.Timber;
@@ -22,7 +23,7 @@ public class CheckQueueStateHandler extends TurnStateHandler {
             turnStateEvent.setTargetState(TurnState.CHECK_TRIGGER_STATE);
         } else {
             turnStateEvent.setTargetState(TurnState.SYNC_WORLD_STATE);
-            WorldEffect worldEffect = World.getInstance().getNextWorldEffectFromQueue();
+            WorldEffect worldEffect = World.getInstance().dequeueFromWorldEffectQueue();
             turnStateEvent.setWorldEffect(worldEffect);
             Timber.d(">>>>>>>>WORLD EFFECT: %s", worldEffect.toString());
         }

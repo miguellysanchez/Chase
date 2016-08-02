@@ -61,7 +61,7 @@ public class EffectInterpreter {
                 player.reduceLife();
                 break;
             case WorldEffect.RECOVER_PLAYER_LIFE:
-                player.recoverActionPoints();
+                player.recoverLife();
                 break;
             case WorldEffect.SKIP_PLAYER_TURN:
                 player.setIsTurnSkipped(true);

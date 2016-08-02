@@ -1,4 +1,4 @@
-package com.voyager.chase.game.handlers;
+package com.voyager.chase.game.handlers.active;
 
 import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.World;
@@ -6,6 +6,7 @@ import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.event.TurnStateEvent;
 import com.voyager.chase.game.event.ViewChangeEvent;
+import com.voyager.chase.game.handlers.TurnStateHandler;
 
 import timber.log.Timber;
 
@@ -37,6 +38,7 @@ public class UpkeepStateHandler extends TurnStateHandler {
             turnStateEvent.setAction(SelectSkillStateHandler.ACTION_WAITING);
         } else {
             turnStateEvent.setTargetState(TurnState.END_STATE);
+            turnStateEvent.setAction(EndStateHandler.ACTION_WAITING);
         }
         post(turnStateEvent);
     }

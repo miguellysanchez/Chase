@@ -74,7 +74,7 @@ public class World {
         mWorldEffectQueue.add(worldEffect);
     }
 
-    public WorldEffect getNextWorldEffectFromQueue() {
+    public WorldEffect dequeueFromWorldEffectQueue() {
         return mWorldEffectQueue.remove();
     }
 

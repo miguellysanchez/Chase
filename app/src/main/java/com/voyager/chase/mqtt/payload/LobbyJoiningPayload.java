@@ -12,7 +12,6 @@ public class LobbyJoiningPayload {
     public static final int JOIN_STATE_REGISTERING = 1;
     public static final int JOIN_STATE_SUBSCRIBED = 2;
     public static final int JOIN_STATE_WAITING = 3;
-    public static final int JOIN_STATE_COMPLETE = 4;
 
     @SerializedName("user_id")
     private String userId;
