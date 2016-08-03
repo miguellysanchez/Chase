@@ -2,7 +2,6 @@ package com.voyager.chase.game.skill.spy;
 
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
-import com.voyager.chase.game.entity.construct.ConstructsPool;
 import com.voyager.chase.game.mods.WorldEffect;
 import com.voyager.chase.game.skill.Skill;
 
@@ -16,7 +15,13 @@ public class DropMineSkill extends Skill {
 
     @Override
     public ArrayList<Tile> getSelectableTiles() {
-        return null;
+        Tile currentTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName())
+                .getTileAtCoordinates(mSkillOwner.getCurrentTileXCoordinate(), mSkillOwner.getCurrentTileYCoordinate());
+        if(currentTile.isUntargetable()){
+            return new ArrayList<>();
+        } else {
+            return null;
+        }
     }
 
     @Override

@@ -21,7 +21,7 @@ public class MineConstruct extends Construct {
     }
 
     @Override
-    public boolean onTriggered(Player player) {
+    protected boolean onTriggered(Player player) {
         if(!mOwner.getRole().equals(player.getRole())){
             WorldEffect damagePlayerEffect = new WorldEffect();
             damagePlayerEffect.setEffectType(WorldEffect.MODIFY_PLAYER);
@@ -41,7 +41,7 @@ public class MineConstruct extends Construct {
     @Override
     public void onAddedToTile() {
         Tile currentTile = World.getInstance().getRoom(getCurrentRoomName())
-                .getTileAtCoordinate(getCurrentTileXCoordinate(), getCurrentTileYCoordinate());
+                .getTileAtCoordinates(getCurrentTileXCoordinate(), getCurrentTileYCoordinate());
         currentTile.addTrigger(uuidString, new Trigger(this));
         World.getInstance().addWorldItemLocation(uuidString, currentTile);
     }

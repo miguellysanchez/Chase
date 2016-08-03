@@ -9,22 +9,18 @@ import java.util.UUID;
  * Created by miguellysanchez on 7/5/16.
  */
 public abstract class Construct extends Renderable {
-    protected String uuidString;
+    protected String uuidString = "UUID";
     protected Player mOwner;
-    protected boolean hasBeenTriggered = false;
+    protected boolean isReusable = false;
     protected boolean isObstacle = false;
     protected boolean isInvulnerable = false;
     protected boolean isUntargetable = false;
 
-    public boolean invokeTrigger(Player player){
-        if(!hasBeenTriggered){
-            hasBeenTriggered = onTriggered(player);
-            return hasBeenTriggered;
-        }
-        return false;
+    public boolean invokeTrigger(Player player) {
+        return onTriggered(player);
     }
 
-    public abstract boolean onTriggered(Player player);
+    protected abstract boolean onTriggered(Player player);
 
     public abstract void onAddedToTile();
 
@@ -49,6 +45,7 @@ public abstract class Construct extends Renderable {
     public void setUUID(String uuidString) {
         this.uuidString = uuidString;
     }
+
     public Player getOwner() {
         return mOwner;
     }
@@ -56,9 +53,4 @@ public abstract class Construct extends Renderable {
     public void setOwner(Player mOwner) {
         this.mOwner = mOwner;
     }
-
-    public boolean getHasBeenTriggered() {
-        return hasBeenTriggered;
-    }
-
 }

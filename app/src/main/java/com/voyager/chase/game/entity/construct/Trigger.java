@@ -8,13 +8,22 @@ import com.voyager.chase.game.entity.player.Player;
 public class Trigger {
 
     private Construct creator;
+    private boolean hasBeenTriggered = false;
 
     public Trigger(Construct construct) {
         creator = construct;
     }
 
     public boolean invokeTrigger(Player player){
-        return creator.invokeTrigger(player);
+        if(!hasBeenTriggered) {
+            hasBeenTriggered = true;
+            return creator.invokeTrigger(player);
+        }
+        return false;
+    }
+
+    public void resetTrigger(){
+        hasBeenTriggered = false;
     }
 
 }

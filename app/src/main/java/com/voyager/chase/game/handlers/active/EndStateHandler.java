@@ -32,8 +32,6 @@ public class EndStateHandler extends TurnStateHandler {
                 post(viewChangeEvent);
                 break;
             case ACTION_CONFIRMED:
-                World.getUserPlayer().setIsCurrentTurn(false);
-
                 TurnStateEvent pendingStateEvent = new TurnStateEvent();
                 pendingStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
                 pendingStateEvent.setAction(InactivePendingStateHandler.ACTION_WAITING);

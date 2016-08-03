@@ -44,7 +44,7 @@ public class AttackSkill extends Skill {
         for (Construct construct : constructList) {
             WorldEffect removeConstructEffect = new WorldEffect();
             removeConstructEffect.setEffectType(WorldEffect.REMOVE_CONSTRUCT);
-            removeConstructEffect.setEffectContent(construct.getUUID());
+            removeConstructEffect.setAffectedUUID(construct.getUUID());
             World.getInstance().addWorldEffectToQueue(removeConstructEffect);
         }
     }
@@ -52,7 +52,7 @@ public class AttackSkill extends Skill {
     private Tile checkTileAtCoordinates(String roomName, int x, int y) {
         Tile checkingTile;
         if (x >= 0 && x < Room.ROOM_WIDTH && y >= 0 && y < Room.ROOM_HEIGHT) {
-            checkingTile = World.getInstance().getRoom(roomName).getTileAtCoordinate(x, y);
+            checkingTile = World.getInstance().getRoom(roomName).getTileAtCoordinates(x, y);
             if (checkingTile != null && !checkingTile.isUntargetable()) {
                 return checkingTile;
             }

@@ -46,7 +46,7 @@ public class MoveSkill extends Skill {
     private Tile checkTileAtCoordinates(String roomName, int x, int y) {
         Tile checkingTile;
         if (x >= 0 && x < Room.ROOM_WIDTH && y >= 0 && y < Room.ROOM_HEIGHT) {
-            checkingTile = World.getInstance().getRoom(roomName).getTileAtCoordinate(x, y);
+            checkingTile = World.getInstance().getRoom(roomName).getTileAtCoordinates(x, y);
             if(checkingTile!=null && !checkingTile.containsObstacle() && !checkingTile.containsPlayer()){
                 return checkingTile;
             }

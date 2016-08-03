@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.voyager.chase.R;
 import com.voyager.chase.common.BaseActivity;
 import com.voyager.chase.game.entity.Tile;
+import com.voyager.chase.game.entity.construct.TeleporterEntryConstruct;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
@@ -100,7 +101,6 @@ public class GameActivity extends BaseActivity {
         constructGameWorld();
         initializeViews();
         initializeTurnStateHandlers();
-        initializeGameState();
     }
 
     @Override
@@ -133,10 +133,8 @@ public class GameActivity extends BaseActivity {
         Spy spy = Spy.createInstance();
         Sentry sentry = Sentry.createInstance();
         if (Player.SPY_ROLE.equals(getPreferenceUtility().getGameRole())) {
-            spy.setIsCurrentTurn(true);
             World.setUserPlayer(spy);
         } else if (Player.SENTRY_ROLE.equals(getPreferenceUtility().getGameRole())) {
-            sentry.setIsCurrentTurn(false);
             World.setUserPlayer(sentry);
         } else {
             throw new IllegalStateException("Must have a game role assigned at this point. Cannot construct skills list");
@@ -151,12 +149,7 @@ public class GameActivity extends BaseActivity {
         }
         World.getUserPlayer().setSkills(equippedSkills);
 
-        //TODO sample
-        world.getRoom("A").getTileAtCoordinate(2, 3).setPlayer(spy);
-        world.getRoom("A").getTileAtCoordinate(3, 3).setPlayer(sentry);
-
-//        world.getRoom("A").getTileAtCoordinate(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
-//        world.getRoom("A").getTileAtCoordinate(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
+        initializeGameState();
 
         mLevelRenderer = new LevelRenderer(mLinearLayoutLevel);
         mLevelRenderer.render();
@@ -225,6 +218,17 @@ public class GameActivity extends BaseActivity {
     }
 
     private void initializeGameState() {
+        World world = World.getInstance();
+        Spy spy = Spy.getInstance();
+        Sentry sentry = Sentry.getInstance();
+        //TODO sample
+        world.getRoom("A").getTileAtCoordinates(2, 3).setPlayer(spy);
+        world.getRoom("A").getTileAtCoordinates(3, 3).setPlayer(sentry);
+
+        world.getRoom("A").getTileAtCoordinates(1,1).addConstruct(new TeleporterEntryConstruct("B", 9,9));
+
+//        world.getRoom("A").getTileAtCoordinates(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
+//        world.getRoom("A").getTileAtCoordinates(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
     }
 
     @Override

@@ -31,9 +31,9 @@ public class EffectInterpreter {
                     throw new IllegalStateException("No player matched for the world effect.");
                 }
                 World.getInstance().getRoom(player.getCurrentRoomName())
-                        .getTileAtCoordinate(player.getCurrentTileXCoordinate(), player.getCurrentTileYCoordinate()).removePlayer();
+                        .getTileAtCoordinates(player.getCurrentTileXCoordinate(), player.getCurrentTileYCoordinate()).removePlayer();
                 World.getInstance().getRoom(worldEffect.getAffectedRoom())
-                        .getTileAtCoordinate(worldEffect.getAffectedX(), worldEffect.getAffectedY()).setPlayer(player);
+                        .getTileAtCoordinates(worldEffect.getAffectedX(), worldEffect.getAffectedY()).setPlayer(player);
                 break;
             case WorldEffect.MODIFY_PLAYER:
                 Timber.d("[MODIFY_PLAYER]: %s" , worldEffect.toString());
@@ -51,7 +51,7 @@ public class EffectInterpreter {
                 Timber.d("[ADD_CONSTRUCT]: %s" , worldEffect.toString());
 
                 Construct construct = ConstructsPool.getConstruct(context, worldEffect.getEffectContent(), worldEffect.getAffectedRole(), worldEffect.getAffectedUUID());
-                Tile targetTile = World.getInstance().getRoom(worldEffect.getAffectedRoom()).getTileAtCoordinate( worldEffect.getAffectedX(), worldEffect.getAffectedY());
+                Tile targetTile = World.getInstance().getRoom(worldEffect.getAffectedRoom()).getTileAtCoordinates( worldEffect.getAffectedX(), worldEffect.getAffectedY());
                 World.getInstance().addWorldItemLocation(construct.getUUID(),targetTile);
                 targetTile.addConstruct(construct);
                 break;

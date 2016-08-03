@@ -135,9 +135,9 @@ public class LevelRenderer {
     }
 
     private boolean shouldRender(Renderable renderable, Tile tile, Player player) {
-        if(true) {
-            return true;
-        }
+//        if(true) {
+//            return true;
+//        }
         if (tile.getVisibilityModifierList().contains(Tile.GLOBAL_VISIBILITY)) {
             return true;
         }

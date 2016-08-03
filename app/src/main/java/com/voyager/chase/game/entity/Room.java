@@ -43,7 +43,7 @@ public class Room {
         mRoomName = roomName;
     }
 
-    public Tile getTileAtCoordinate(int x, int y) {
+    public Tile getTileAtCoordinates(int x, int y) {
         return mTiles2DArray[x][y];
     }
 

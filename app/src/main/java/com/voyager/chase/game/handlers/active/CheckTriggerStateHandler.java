@@ -22,7 +22,7 @@ public class CheckTriggerStateHandler extends TurnStateHandler {
 
         Player userPlayer = World.getUserPlayer();
         Tile currentTile = World.getInstance().getRoom(userPlayer.getCurrentRoomName())
-                .getTileAtCoordinate(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate());
+                .getTileAtCoordinates(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate());
         TurnStateEvent turnStateEvent = new TurnStateEvent();
         Collection<Trigger> triggerList = currentTile.getTriggerList();
         if (triggerList == null || triggerList.isEmpty()) {
@@ -32,6 +32,9 @@ public class CheckTriggerStateHandler extends TurnStateHandler {
             if(wilReturnToQueue) {
                 turnStateEvent.setTargetState(TurnState.CHECK_QUEUE_STATE);
             } else {
+                for(Trigger trigger : triggerList){
+                    trigger.resetTrigger();
+                }
                 turnStateEvent.setTargetState(TurnState.UPKEEP_STATE);
             }
         }

@@ -20,13 +20,13 @@ public class UpkeepStateHandler extends TurnStateHandler {
 
         if (Spy.getInstance().getLife() <= 0 && Sentry.getInstance().getLife() <= 0) {
             //TODO draw win condition;
-            return;
+//            return;
         } else if (Spy.getInstance().getLife() <= 0) {
             //TODO  sentry win condition;
-            return;
+//            return;
         } else if (Sentry.getInstance().getLife() <= 0 || Spy.getInstance().getObjectivesRemaining() <= 0) {
             //TODO  spy win condition;
-            return;
+//            return;
         }
         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
         viewChangeEvent.addViewChangeType(ViewChangeEvent.UPDATE_SKILLS_LIST);

@@ -22,7 +22,6 @@ public abstract class Player extends Renderable {
     protected int mActionPointsRecovery = 0;
     protected String mRole;
     protected boolean mIsTurnSkipped = false;
-    private boolean mIsCurrentTurn = false;
 
     public int getLife() {
         return mLife;
@@ -92,13 +91,5 @@ public abstract class Player extends Renderable {
 
     public int getActionPointsRecovery() {
         return mActionPointsRecovery;
-    }
-
-    public boolean getIsCurrentTurn() {
-        return mIsCurrentTurn;
-    }
-
-    public void setIsCurrentTurn(boolean isCurrentTurn) {
-        this.mIsCurrentTurn = isCurrentTurn;
     }
 }
