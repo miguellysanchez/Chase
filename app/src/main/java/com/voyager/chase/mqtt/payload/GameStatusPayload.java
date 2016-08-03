@@ -10,11 +10,14 @@ public class GameStatusPayload {
 
     public static final String DISCONNECTED = "disconnected";
     public static final String TURN_FINISHED = "turn_finished";
+    public static final String SHOW_RESULTS = "show_results";
 
     @SerializedName("sender_role")
     private String senderRole;
     @SerializedName("action")
     private String action;
+    @SerializedName("disconnection_graceful")
+    private boolean disconnectionGraceful = false;
 
     public String getSenderRole() {
         return senderRole;
@@ -35,5 +38,13 @@ public class GameStatusPayload {
     public String toJson() {
         Gson gson = new Gson();
         return gson.toJson(this);
+    }
+
+    public boolean isDisconnectionGraceful() {
+        return disconnectionGraceful;
+    }
+
+    public void setDisconnectionGraceful(boolean disconnectionGraceful) {
+        this.disconnectionGraceful = disconnectionGraceful;
     }
 }

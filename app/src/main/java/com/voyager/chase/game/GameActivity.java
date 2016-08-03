@@ -43,6 +43,7 @@ import com.voyager.chase.mqtt.event.MqttCallbackEvent;
 import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
 import com.voyager.chase.mqtt.payload.GameStatusPayload;
 import com.voyager.chase.mqtt.payload.WorldEffectPayload;
+import com.voyager.chase.utility.MqttIssueActionUtility;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -91,13 +92,16 @@ public class GameActivity extends BaseActivity {
     private HashMap<TurnState, TurnStateHandler> mTurnStateHandlerMap;
     private TurnState mCurrentState;
     private boolean isGameStarted = false;
+    private AlertDialog mForfeitGameConfirmationDialog;
     private AlertDialog mEndTurnConfirmationDialog;
+    private String mGameSessionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chase_activity_game);
         ButterKnife.bind(this);
+        mGameSessionId = getPreferenceUtility().getGameSessionId();
         constructGameWorld();
         initializeViews();
         initializeTurnStateHandlers();
@@ -181,6 +185,7 @@ public class GameActivity extends BaseActivity {
         mEndTurnConfirmationDialog = new AlertDialog.Builder(this)
                 .setTitle("END OF TURN")
                 .setMessage("Out of ACTION POINTS (AP). Your turn has ended.")
+                .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -191,6 +196,27 @@ public class GameActivity extends BaseActivity {
                         EventBus.getDefault().post(confirmEndTurnEvent);
                     }
                 }).create();
+        mEndTurnConfirmationDialog.setCanceledOnTouchOutside(false);
+
+        mForfeitGameConfirmationDialog = new AlertDialog.Builder(this)
+                .setTitle("QUITTING GAME")
+                .setMessage("Are you sure you want to quit the game?")
+                .setCancelable(false)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        forfeitGame();
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        mForfeitGameConfirmationDialog.setCanceledOnTouchOutside(true);
 
         mTextViewRole.setText(World.getUserPlayer().getRole());
         setUserPlayerStateView();
@@ -225,7 +251,8 @@ public class GameActivity extends BaseActivity {
         world.getRoom("A").getTileAtCoordinates(2, 3).setPlayer(spy);
         world.getRoom("A").getTileAtCoordinates(3, 3).setPlayer(sentry);
 
-        world.getRoom("A").getTileAtCoordinates(1,1).addConstruct(new TeleporterEntryConstruct("B", 9,9));
+        world.getRoom("A").getTileAtCoordinates(1, 1).addConstruct(new TeleporterEntryConstruct("B", 9, 9));
+        world.getRoom("B").getTileAtCoordinates(7, 8).addConstruct(new TeleporterEntryConstruct("A", 4, 4));
 
 //        world.getRoom("A").getTileAtCoordinates(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
 //        world.getRoom("A").getTileAtCoordinates(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
@@ -233,6 +260,7 @@ public class GameActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        mForfeitGameConfirmationDialog.show();
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -337,22 +365,31 @@ public class GameActivity extends BaseActivity {
         mSkillsAdapter.notifyDataSetChanged();
     }
 
+    private void forfeitGame() {
+        GameStatusPayload forfeitGamePayload = new GameStatusPayload();
+        forfeitGamePayload.setSenderRole(getPreferenceUtility().getGameRole());
+        forfeitGamePayload.setAction(GameStatusPayload.DISCONNECTED);
+        forfeitGamePayload.setDisconnectionGraceful(true);
+        MqttIssueActionUtility.publish(Topics.getSessionStatusTopic(mGameSessionId), forfeitGamePayload.toJson(), false);
+        MqttIssueActionUtility.disconnect();
+        //TODO Show you have forfeited screen. ResultsActivity
+    }
+
     @Override
     public void executeMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent) {
     }
 
     @Override
     protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
-        String gameSessionId = getPreferenceUtility().getGameSessionId();
         switch (mqttCallbackEvent.getMessageCallbackType()) {
             case MqttCallbackEvent.ARRIVED_MESSAGE_CALLBACK_TYPE:
-                if (Topics.getSessionWorldUpdateTopic(gameSessionId)
+                if (Topics.getSessionWorldUpdateTopic(mGameSessionId)
                         .equals(mqttCallbackEvent.getTopic())) {
                     String worldEffectJson = mqttCallbackEvent.getMessagePayload();
                     Gson gson = new Gson();
                     WorldEffectPayload worldEffectPayload = gson.fromJson(worldEffectJson, WorldEffectPayload.class);
-                    if(worldEffectPayload.getSenderRole()!=null &&
-                            !World.getUserPlayer().getRole().equals(worldEffectPayload.getSenderRole())){
+                    if (worldEffectPayload.getSenderRole() != null &&
+                            !World.getUserPlayer().getRole().equals(worldEffectPayload.getSenderRole())) {
                         World.getInstance().addWorldEffectToQueue(worldEffectPayload.getWorldEffect());
 
                         TurnStateEvent turnStateEvent = new TurnStateEvent();
@@ -362,25 +399,40 @@ public class GameActivity extends BaseActivity {
                     } else {
                         Timber.i("Ignoring message from self");
                     }
-                } else if (Topics.getSessionStatusTopic(gameSessionId)
+                } else if (Topics.getSessionStatusTopic(mGameSessionId)
                         .equals(mqttCallbackEvent.getTopic())) {
                     Timber.d("HANDLING SESSION STATUS MESSAGE: %s", mqttCallbackEvent.getMessagePayload());
-                    handleSessionTopicPayload(mqttCallbackEvent.getMessagePayload());
+                    handleSessionTopicMessageReceived(mqttCallbackEvent.getMessagePayload());
                 }
                 break;
         }
 
     }
 
-    private void handleSessionTopicPayload(String message) {
+    private void handleSessionTopicMessageReceived(String message) {
         Gson gson = new Gson();
-        GameStatusPayload gameStatusPayload = gson.fromJson(message,GameStatusPayload.class);
-        if (!getPreferenceUtility().getGameRole().equals(gameStatusPayload.getSenderRole())){
-            if(GameStatusPayload.TURN_FINISHED.equals(gameStatusPayload.getAction())){
-                TurnStateEvent turnStateEvent = new TurnStateEvent();
-                turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
-                turnStateEvent.setAction(InactivePendingStateHandler.ACTION_OTHER_PLAYER_FINISHED);
-                EventBus.getDefault().post(turnStateEvent);
+        GameStatusPayload gameStatusPayload = gson.fromJson(message, GameStatusPayload.class);
+        if (!getPreferenceUtility().getGameRole().equals(gameStatusPayload.getSenderRole())) {
+            switch (gameStatusPayload.getAction()) {
+                case GameStatusPayload.TURN_FINISHED:
+                    if (GameStatusPayload.TURN_FINISHED.equals(gameStatusPayload.getAction())) {
+                        TurnStateEvent turnStateEvent = new TurnStateEvent();
+                        turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
+                        turnStateEvent.setAction(InactivePendingStateHandler.ACTION_OTHER_PLAYER_FINISHED);
+                        EventBus.getDefault().post(turnStateEvent);
+                    }
+                    break;
+                case GameStatusPayload.DISCONNECTED:
+                    MqttIssueActionUtility.disconnect();
+                    if (gameStatusPayload.isDisconnectionGraceful()) {
+                        //TODO Show dialog that partner has forfeited match. Show win game screen afterwards.
+                    } else {
+                        //TODO Show dialog that partner was disconnected;
+                    }
+                    break;
+                case GameStatusPayload.SHOW_RESULTS:
+                    //TODO show resultActivity with payload results
+                    break;
             }
         }
     }
