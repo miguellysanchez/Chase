@@ -45,10 +45,12 @@ import com.voyager.chase.mqtt.payload.GameStatusPayload;
 import com.voyager.chase.mqtt.payload.WorldEffectPayload;
 import com.voyager.chase.utility.MqttIssueActionUtility;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -260,7 +262,9 @@ public class GameActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        mForfeitGameConfirmationDialog.show();
+        if (!mForfeitGameConfirmationDialog.isShowing()) {
+            mForfeitGameConfirmationDialog.show();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -371,8 +375,6 @@ public class GameActivity extends BaseActivity {
         forfeitGamePayload.setAction(GameStatusPayload.DISCONNECTED);
         forfeitGamePayload.setDisconnectionGraceful(true);
         MqttIssueActionUtility.publish(Topics.getSessionStatusTopic(mGameSessionId), forfeitGamePayload.toJson(), false);
-        MqttIssueActionUtility.disconnect();
-        //TODO Show you have forfeited screen. ResultsActivity
     }
 
     @Override
@@ -405,6 +407,21 @@ public class GameActivity extends BaseActivity {
                     handleSessionTopicMessageReceived(mqttCallbackEvent.getMessagePayload());
                 }
                 break;
+            case MqttCallbackEvent.DELIVERED_MESSAGE_CALLBACK_TYPE:
+                if (mqttCallbackEvent.getTopic().equals(Topics.getSessionStatusTopic(mGameSessionId))) {
+                    try {
+                        String rawPayload = new String(mqttCallbackEvent.getMqttDeliveryToken()
+                                .getMessage().getPayload(), "UTF-8");
+                        Gson gson = new Gson();
+                        GameStatusPayload gameStatusPayload = gson.fromJson(rawPayload, GameStatusPayload.class);
+                        if (GameStatusPayload.DISCONNECTED.equals(gameStatusPayload.getAction())) {
+                            MqttIssueActionUtility.disconnect();
+                            //TODO show loss results page
+                        }
+                    } catch (MqttException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
         }
 
     }
