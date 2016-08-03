@@ -8,6 +8,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class GameStatusPayload {
 
+    public static final String DISCONNECTED = "disconnected";
+    public static final String TURN_FINISHED = "turn_finished";
+
     @SerializedName("sender_role")
     private String senderRole;
     @SerializedName("action")

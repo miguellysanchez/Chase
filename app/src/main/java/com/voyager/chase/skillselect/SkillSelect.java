@@ -5,7 +5,6 @@ package com.voyager.chase.skillselect;
  */
 public class SkillSelect {
 
-    private String mSkillCode;
     private String mName;
     private int mCooldownTurns;
     private int mSkillCost;
@@ -15,8 +14,7 @@ public class SkillSelect {
     private SkillSelect() {
     }
 
-    public SkillSelect(String skillCode, String name, int skillCost, int cooldownTurns, String description) {
-        mSkillCode = skillCode;
+    public SkillSelect(String name, int skillCost, int cooldownTurns, String description) {
         mName = name;
         mSkillCost = skillCost;
         mCooldownTurns = cooldownTurns;
@@ -24,9 +22,6 @@ public class SkillSelect {
         isSelected = false;
     }
 
-    public String getSkillCode() {
-        return mSkillCode;
-    }
 
     public String getName() {
         return mName;

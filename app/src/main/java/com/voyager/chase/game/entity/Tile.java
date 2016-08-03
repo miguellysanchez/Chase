@@ -3,8 +3,8 @@ package com.voyager.chase.game.entity;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.entity.skillitem.ItemTrigger;
-import com.voyager.chase.game.entity.skillitem.SkillItem;
+import com.voyager.chase.game.entity.construct.Trigger;
+import com.voyager.chase.game.entity.construct.Construct;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,8 +21,8 @@ public class Tile {
     private String mRoomName;
     private int xCoordinate;
     private int yCoordinate;
-    private Multimap<String, SkillItem> mSkillItemsMultimap;
-    private HashMap<String, ItemTrigger> mItemTriggersMap;
+    private Multimap<String, Construct> mConstructsMultimap;
+    private HashMap<String, Trigger> mTriggersMap;
     private HashMap<String, String> mVisibilityModifierMap;
     private Player mPlayer;
 
@@ -32,8 +32,8 @@ public class Tile {
     public Tile(int xCoordinate, int yCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        mSkillItemsMultimap = ArrayListMultimap.create();
-        mItemTriggersMap = new HashMap<>();
+        mConstructsMultimap = ArrayListMultimap.create();
+        mTriggersMap = new HashMap<>();
         mVisibilityModifierMap = new HashMap<>();
     }
 
@@ -67,18 +67,18 @@ public class Tile {
         this.mPlayer = null;
     }
 
-    public ArrayList<SkillItem> getAllSkillItemsList() {
-        return new ArrayList<>(mSkillItemsMultimap.values());
+    public ArrayList<Construct> getAllConstructsList() {
+        return new ArrayList<>(mConstructsMultimap.values());
     }
 
-    public void addSkillItem(SkillItem skillItem) {
-        mSkillItemsMultimap.put(skillItem.getUuid(), skillItem);
-        setLocationToRenderable(skillItem);
-        skillItem.onAddedToTile();
+    public void addConstruct(Construct construct) {
+        mConstructsMultimap.put(construct.getUUID(), construct);
+        setLocationToRenderable(construct);
+        construct.onAddedToTile();
     }
 
-    public void addItemTrigger(String uuid, ItemTrigger itemTrigger) {
-        mItemTriggersMap.put(uuid, itemTrigger);
+    public void addTrigger(String uuid, Trigger trigger) {
+        mTriggersMap.put(uuid, trigger);
     }
 
     public void addVisibilityModifier(String uuid, String visibilityModifier) {
@@ -86,12 +86,12 @@ public class Tile {
     }
 
     public void removeItem(String uuid) {
-        for (SkillItem skillItem : mSkillItemsMultimap.get(uuid)) {
-            removeLocationFromRenderable(skillItem);
-            skillItem.onRemovedFromTile();
+        for (Construct construct : mConstructsMultimap.get(uuid)) {
+            removeLocationFromRenderable(construct);
+            construct.onRemovedFromTile();
         }
-        mSkillItemsMultimap.removeAll(uuid);
-        mItemTriggersMap.remove(uuid);
+        mConstructsMultimap.removeAll(uuid);
+        mTriggersMap.remove(uuid);
         mVisibilityModifierMap.remove(uuid);
     }
 
@@ -99,13 +99,13 @@ public class Tile {
         return mVisibilityModifierMap.values();
     }
 
-    public Collection<ItemTrigger> getItemTriggerList() {
-        return mItemTriggersMap.values();
+    public Collection<Trigger> getTriggerList() {
+        return mTriggersMap.values();
     }
 
     public boolean containsObstacle() {
-        for (SkillItem skillItem : mSkillItemsMultimap.values()) {
-            if (skillItem.isObstacle()) {
+        for (Construct construct : mConstructsMultimap.values()) {
+            if (construct.isObstacle()) {
                 return true;
             }
         }
@@ -114,6 +114,15 @@ public class Tile {
 
     public boolean containsPlayer() {
         return mPlayer != null;
+    }
+
+    public boolean isUntargetable(){
+        for (Construct construct : mConstructsMultimap.values()) {
+            if (construct.isUntargetable()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setLocationToRenderable(Renderable renderable) {

@@ -16,6 +16,7 @@
     <color name="azure">#FF3366FF</color>
     <color name="transluscent_gray">#77AAAAAA</color>
     <color name="transparent">#00000000</color>
+    <color name="light_yellow">#FFFFFFAA</color>
 
 
 </resources>

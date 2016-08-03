@@ -4,7 +4,7 @@ import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.entity.skillitem.ItemTrigger;
+import com.voyager.chase.game.entity.construct.Trigger;
 import com.voyager.chase.game.event.TurnStateEvent;
 import com.voyager.chase.game.handlers.TurnStateHandler;
 
@@ -24,15 +24,26 @@ public class CheckTriggerStateHandler extends TurnStateHandler {
         Tile currentTile = World.getInstance().getRoom(userPlayer.getCurrentRoomName())
                 .getTileAtCoordinate(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate());
         TurnStateEvent turnStateEvent = new TurnStateEvent();
-        Collection<ItemTrigger> triggerList = currentTile.getItemTriggerList();
+        Collection<Trigger> triggerList = currentTile.getTriggerList();
         if (triggerList == null || triggerList.isEmpty()) {
             turnStateEvent.setTargetState(TurnState.UPKEEP_STATE);
         } else {
-            for (ItemTrigger itemTrigger : triggerList) {
-                itemTrigger.onTriggered(userPlayer);
+            boolean wilReturnToQueue = validateTriggerActivation(triggerList, userPlayer);
+            if(wilReturnToQueue) {
+                turnStateEvent.setTargetState(TurnState.CHECK_QUEUE_STATE);
+            } else {
+                turnStateEvent.setTargetState(TurnState.UPKEEP_STATE);
             }
-            turnStateEvent.setTargetState(TurnState.CHECK_QUEUE_STATE);
         }
         post(turnStateEvent);
+    }
+
+    private boolean validateTriggerActivation(Collection<Trigger> triggerList, Player userPlayer) {
+        boolean result = false;
+        for (Trigger trigger : triggerList) {
+            boolean triggerResult = trigger.invokeTrigger(userPlayer);
+            result = triggerResult || result;
+        }
+        return result;
     }
 }

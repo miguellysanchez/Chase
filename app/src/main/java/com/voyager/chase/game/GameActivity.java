@@ -40,6 +40,7 @@ import com.voyager.chase.game.skill.SkillsPool;
 import com.voyager.chase.mqtt.Topics;
 import com.voyager.chase.mqtt.event.MqttCallbackEvent;
 import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
+import com.voyager.chase.mqtt.payload.GameStatusPayload;
 import com.voyager.chase.mqtt.payload.WorldEffectPayload;
 
 import org.greenrobot.eventbus.EventBus;
@@ -152,7 +153,7 @@ public class GameActivity extends BaseActivity {
 
         //TODO sample
         world.getRoom("A").getTileAtCoordinate(2, 3).setPlayer(spy);
-        world.getRoom("A").getTileAtCoordinate(5, 6).setPlayer(sentry);
+        world.getRoom("A").getTileAtCoordinate(3, 3).setPlayer(sentry);
 
 //        world.getRoom("A").getTileAtCoordinate(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
 //        world.getRoom("A").getTileAtCoordinate(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
@@ -212,15 +213,14 @@ public class GameActivity extends BaseActivity {
         mTurnStateHandlerMap.put(TurnState.TARGET_SELECTION_STATE, new TargetSelectionStateHandler());
         mTurnStateHandlerMap.put(TurnState.RESOLVE_SKILL_STATE, new ResolveSkillStateHandler());
         mTurnStateHandlerMap.put(TurnState.CHECK_QUEUE_STATE, new CheckQueueStateHandler());
-        SyncWorldStateHandler syncWorldStateHandler = new SyncWorldStateHandler(getPreferenceUtility().getGameSessionId());
-        mTurnStateHandlerMap.put(TurnState.SYNC_WORLD_STATE, syncWorldStateHandler);
-        mTurnStateHandlerMap.put(TurnState.UPDATE_WORLD_STATE, new UpdateWorldStateHandler());
+        mTurnStateHandlerMap.put(TurnState.SYNC_WORLD_STATE, new SyncWorldStateHandler(getPreferenceUtility().getGameSessionId()));
+        mTurnStateHandlerMap.put(TurnState.UPDATE_WORLD_STATE, new UpdateWorldStateHandler(this));
         mTurnStateHandlerMap.put(TurnState.RENDER_WORLD_STATE, new RenderStateHandler());
         mTurnStateHandlerMap.put(TurnState.CHECK_TRIGGER_STATE, new CheckTriggerStateHandler());
-        mTurnStateHandlerMap.put(TurnState.END_STATE, new EndStateHandler());
+        mTurnStateHandlerMap.put(TurnState.END_STATE, new EndStateHandler(getPreferenceUtility().getGameSessionId()));
 
         mTurnStateHandlerMap.put(TurnState.INACTIVE_PENDING_STATE, new InactivePendingStateHandler());
-        mTurnStateHandlerMap.put(TurnState.INACTIVE_UPDATE_WORLD_STATE, new InactiveUpdateWorldStateHandler());
+        mTurnStateHandlerMap.put(TurnState.INACTIVE_UPDATE_WORLD_STATE, new InactiveUpdateWorldStateHandler(this));
         mTurnStateHandlerMap.put(TurnState.INACTIVE_RENDER_STATE, new InactiveRenderStateHandler());
     }
 
@@ -360,6 +360,7 @@ public class GameActivity extends BaseActivity {
                     }
                 } else if (Topics.getSessionStatusTopic(gameSessionId)
                         .equals(mqttCallbackEvent.getTopic())) {
+                    Timber.d("HANDLING SESSION STATUS MESSAGE: %s", mqttCallbackEvent.getMessagePayload());
                     handleSessionTopicPayload(mqttCallbackEvent.getMessagePayload());
                 }
                 break;
@@ -367,19 +368,16 @@ public class GameActivity extends BaseActivity {
 
     }
 
-    private void handleSessionTopicPayload(String messagePayload) {
-//        if (messagePayload){
-//
-//        }
-    }
-
-    private void onOtherPlayerFinished() {
-        World.getUserPlayer().setIsCurrentTurn(true);
-        if (mCurrentState.equals(TurnState.INACTIVE_PENDING_STATE)) {
-
-        } else {
-
+    private void handleSessionTopicPayload(String message) {
+        Gson gson = new Gson();
+        GameStatusPayload gameStatusPayload = gson.fromJson(message,GameStatusPayload.class);
+        if (!getPreferenceUtility().getGameRole().equals(gameStatusPayload.getSenderRole())){
+            if(GameStatusPayload.TURN_FINISHED.equals(gameStatusPayload.getAction())){
+                TurnStateEvent turnStateEvent = new TurnStateEvent();
+                turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
+                turnStateEvent.setAction(InactivePendingStateHandler.ACTION_OTHER_PLAYER_FINISHED);
+                EventBus.getDefault().post(turnStateEvent);
+            }
         }
     }
-
 }

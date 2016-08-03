@@ -7,6 +7,8 @@ import com.voyager.chase.game.event.ViewChangeEvent;
 import com.voyager.chase.game.handlers.TurnStateHandler;
 import com.voyager.chase.game.mods.WorldEffect;
 
+import timber.log.Timber;
+
 /**
  * Created by miguellysanchez on 8/1/16.
  */
@@ -53,7 +55,7 @@ public class InactivePendingStateHandler extends TurnStateHandler {
                 isOtherPlayerFinished = false;
                 TurnStateEvent startStateEvent = new TurnStateEvent();
                 startStateEvent.setTargetState(TurnState.START_STATE);
-
+                post(startStateEvent);
             }
         }
     }

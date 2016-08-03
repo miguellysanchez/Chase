@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 public class WorldEffect {
     public static final String MOVE_PLAYER = "move_player";
     public static final String MODIFY_PLAYER = "modify_player";
+    public static final String ADD_CONSTRUCT = "add_construct";
+    public static final String REMOVE_CONSTRUCT = "remove_construct";
 
-    public static final String ADD_SKILL_ITEM = "add_skill_item";
-    public static final String REMOVE_SKILL_ITEM = "remove_skill_item";
     public static final String REDUCE_PLAYER_LIFE = "reduce_player_life";
     public static final String RECOVER_PLAYER_LIFE = "recover_player_life";
     public static final String SKIP_PLAYER_TURN = "skip_player_turn";
@@ -88,5 +88,18 @@ public class WorldEffect {
 
     public void setAffectedUUID(String affectedUUID) {
         this.affectedUUID = affectedUUID;
+    }
+
+    @Override
+    public String toString() {
+        return "WorldEffect{" +
+                "affectedRole='" + affectedRole + '\'' +
+                ", effectType='" + effectType + '\'' +
+                ", effectContent='" + effectContent + '\'' +
+                ", affectedRoom='" + affectedRoom + '\'' +
+                ", affectedX=" + affectedX +
+                ", affectedY=" + affectedY +
+                ", affectedUUID='" + affectedUUID + '\'' +
+                '}';
     }
 }

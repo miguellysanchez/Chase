@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/chase_tileview_framelayout_player_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="2dp"

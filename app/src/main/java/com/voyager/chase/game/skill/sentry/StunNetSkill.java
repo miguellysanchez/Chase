@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by miguellysanchez on 7/25/16.
  */
-public class StunMineSkill extends Skill {
+public class StunNetSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         return null;

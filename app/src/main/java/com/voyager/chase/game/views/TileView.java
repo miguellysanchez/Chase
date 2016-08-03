@@ -4,13 +4,11 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.voyager.chase.R;
-import com.voyager.chase.game.entity.Tile;
-
-import timber.log.Timber;
 
 /**
  * Created by miguellysanchez on 7/4/16.
@@ -18,8 +16,9 @@ import timber.log.Timber;
 public class TileView extends LinearLayout {
 
     LinearLayout linearLayoutContainer;
+    FrameLayout frameLayoutPlayerIndicator;
     ImageView imageViewPlayer;
-    ImageView imageViewSkillItems;
+    ImageView imageViewConstructs;
     View viewFog;
 
     public TileView(Context context) {
@@ -35,14 +34,19 @@ public class TileView extends LinearLayout {
     private void init() {
         inflate(getContext(), R.layout.chase_tileview, this);
         linearLayoutContainer = (LinearLayout) findViewById(R.id.chase_tileview_linearlayout_container);
+        frameLayoutPlayerIndicator = (FrameLayout) findViewById(R.id.chase_tileview_framelayout_player_indicator);
         imageViewPlayer = (ImageView) findViewById(R.id.chase_tileview_imageview_player);
-        imageViewSkillItems = (ImageView) findViewById(R.id.chase_tileview_imageview_item);
+        imageViewConstructs = (ImageView) findViewById(R.id.chase_tileview_imageview_item);
         viewFog = findViewById(R.id.chase_tileview_view_fog);
     }
 
 
     public LinearLayout getLinearLayoutContainer() {
         return linearLayoutContainer;
+    }
+
+    public FrameLayout getFrameLayoutPlayerIndicator(){
+        return frameLayoutPlayerIndicator;
     }
 
     public ImageView getImageViewPlayer() {
@@ -53,12 +57,12 @@ public class TileView extends LinearLayout {
         this.imageViewPlayer = imageViewPlayer;
     }
 
-    public ImageView getImageViewSkillItems() {
-        return imageViewSkillItems;
+    public ImageView getImageViewConstructs() {
+        return imageViewConstructs;
     }
 
-    public void setImageViewSkillItems(ImageView imageViewSkillItems) {
-        this.imageViewSkillItems = imageViewSkillItems;
+    public void setImageViewConstructs(ImageView imageViewConstructs) {
+        this.imageViewConstructs = imageViewConstructs;
     }
 
     public View getViewFog() {

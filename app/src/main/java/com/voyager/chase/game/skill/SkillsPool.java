@@ -15,7 +15,7 @@ import com.voyager.chase.game.skill.sentry.RecoverSkill;
 import com.voyager.chase.game.skill.sentry.RoomIlluminationBeaconSkill;
 import com.voyager.chase.game.skill.sentry.SearchDroneSkill;
 import com.voyager.chase.game.skill.sentry.ShockGrenadeSkill;
-import com.voyager.chase.game.skill.sentry.StunMineSkill;
+import com.voyager.chase.game.skill.sentry.StunNetSkill;
 import com.voyager.chase.game.skill.sentry.SurveillanceBugSkill;
 import com.voyager.chase.game.skill.spy.BaitSkill;
 import com.voyager.chase.game.skill.spy.DeployBarrierSkill;
@@ -57,7 +57,7 @@ public class SkillsPool {
             description = "Reduces AP to 0. Ends the current turn.";
         } else if (SABOTAGE_SKILL_NAME.equals(skillName)) {
             returnedSkill = new SabotageSkill();
-            description = "Destroys all skill items/objective in any adjacent tile. Destroy all objectives to win!";
+            description = "Destroys all constructs/objective in any adjacent tile. Destroy all objectives to win!";
         } else if (ATTACK_SKILL_NAME.equals(skillName)) {
             returnedSkill = new AttackSkill();
             description = "Damage other player and destroy all skill items (including yours) in any tile to the left, right, above or below the current position";
@@ -122,7 +122,7 @@ public class SkillsPool {
                 returnedSkill = new RecoverSkill();
                 skillIndex = 1;
             } else if (sentryRoleSkillNames[2].equals(skillName)) {
-                returnedSkill = new StunMineSkill();
+                returnedSkill = new StunNetSkill();
                 skillIndex = 2;
             } else if (sentryRoleSkillNames[3].equals(skillName)) {
                 returnedSkill = new MotionSensorSkill();

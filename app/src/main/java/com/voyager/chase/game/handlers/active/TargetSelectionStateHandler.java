@@ -1,7 +1,9 @@
 package com.voyager.chase.game.handlers.active;
 
 import com.voyager.chase.game.TurnState;
+import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
+import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.event.TurnStateEvent;
 import com.voyager.chase.game.event.ViewChangeEvent;
 import com.voyager.chase.game.handlers.TurnStateHandler;
@@ -33,7 +35,10 @@ public class TargetSelectionStateHandler extends TurnStateHandler {
                 Timber.d("Selected skill '%s'. Assessing target", selectedSkill.getSkillName() );
                 ArrayList<Tile> selectableTiles = selectedSkill.getSelectableTiles();
                 if(selectableTiles == null){//when skill does not need a target
-                    goToResolveSkillState(null);
+                    Player userPlayer = World.getUserPlayer();
+                    Tile currentTile = World.getInstance().getRoom(userPlayer.getCurrentRoomName()).getTileAtCoordinate(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate());
+                    Timber.d(">>>>>>>>>>TILE: %s | %s|%s" , userPlayer.getCurrentRoomName(), ""+userPlayer.getCurrentTileXCoordinate(), ""+userPlayer.getCurrentTileYCoordinate());
+                    goToResolveSkillState(currentTile);
                 } else if(selectableTiles.isEmpty()){ // when no valid targets
                     viewChangeEvent = new ViewChangeEvent();
                     viewChangeEvent.addViewChangeType(ViewChangeEvent.TOAST_NO_VALID_TARGETS);

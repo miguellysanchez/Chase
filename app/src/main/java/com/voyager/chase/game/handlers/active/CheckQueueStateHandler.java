@@ -25,7 +25,7 @@ public class CheckQueueStateHandler extends TurnStateHandler {
             turnStateEvent.setTargetState(TurnState.SYNC_WORLD_STATE);
             WorldEffect worldEffect = World.getInstance().dequeueFromWorldEffectQueue();
             turnStateEvent.setWorldEffect(worldEffect);
-            Timber.d(">>>>>>>>WORLD EFFECT: %s", worldEffect.toString());
+            Timber.d(">>>>>DEQUEUEING WORLD EFFECT: %s", worldEffect.toString());
         }
         post(turnStateEvent);
     }

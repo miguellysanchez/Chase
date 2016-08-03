@@ -41,7 +41,7 @@ public class SkillsAdapter extends BaseAdapter {
         if (skillsList != null) {
             mSkillsList = skillsList;
         } else {
-            Timber.e("Cannot set skill items to null list");
+            Timber.e("Cannot set construct to null list");
         }
         notifyDataSetChanged();
     }

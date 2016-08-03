@@ -24,6 +24,7 @@ import com.voyager.chase.mqtt.Topics;
 import com.voyager.chase.mqtt.event.IsConnectedCallback;
 import com.voyager.chase.mqtt.event.MqttCallbackEvent;
 import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
+import com.voyager.chase.mqtt.payload.GameStatusPayload;
 import com.voyager.chase.mqtt.payload.SkillSelectPayload;
 import com.voyager.chase.utility.MqttIssueActionUtility;
 
@@ -99,7 +100,6 @@ public class SkillSelectActivity extends BaseActivity {
         }
         for (int i = 0; i < skillNames.length; i++) {
             SkillSelect skillSelect = new SkillSelect(
-                    "",
                     skillNames[i],
                     skillCosts[i],
                     cooldowns[i],
@@ -164,19 +164,11 @@ public class SkillSelectActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        MqttIssueActionUtility.checkIsConnected(new IsConnectedCallback() {
-            @Override
-            protected void onIsConnected() {
-                isConnectedToMqtt = true;
-                subscribeToGameSessionTopics();
-            }
-
-            @Override
-            protected void onIsDisconnected() {
-                isConnectedToMqtt = false;
-                MqttIssueActionUtility.connect();
-            }
-        });
+        GameStatusPayload disconnectedPayload = new GameStatusPayload();
+        disconnectedPayload.setSenderRole(mGameRole);
+        disconnectedPayload.setAction(GameStatusPayload.DISCONNECTED);
+        String onPartnerDisconnectedPayload = disconnectedPayload.toJson();
+        MqttIssueActionUtility.connect(Topics.getSessionStatusTopic(mGameSessionId), onPartnerDisconnectedPayload);
     }
 
     private void subscribeToGameSessionTopics() {
@@ -184,37 +176,6 @@ public class SkillSelectActivity extends BaseActivity {
         MqttIssueActionUtility.subscribe(Topics.getSessionInfoTopic(mGameSessionId));
         MqttIssueActionUtility.subscribe(Topics.getSessionWorldUpdateTopic(mGameSessionId));
     }
-
-    //
-//    protected void executeMqttCallbackAction(Intent intent) {
-//        switch (intent.getIntExtra(MqttBroadcastUtility.KEY_INT_CALLBACK_VALUE, MqttBroadcastUtility.CALLBACK_VALUE_NULL)) {
-//            case MqttResolvedActionListener.MQTT_CALLBACK_VALUE_CONNECT_SUCCESS: {
-//                getMqttService().subscribeToTopic(Topics.getSessionStatusTopic(mGameSessionId));
-//                getMqttService().subscribeToTopic(Topics.getSessionInfoTopic(mGameSessionId));
-//                getMqttService().subscribeToTopic(Topics.getSessionWorldUpdateTopic(mGameSessionId));
-//                break;
-//            }
-//            case CustomMqttCallback.MQTT_CALLBACK_DELIVERY_COMPLETE: {
-//                DeliveredMessage deliveredMessage = DeliveredMessage.fromIntent(intent);
-//                if (Topics.getSessionStatusTopic(mGameSessionId).equals(deliveredMessage.getTopic())) {
-//                    renderWaitingDialog();
-//                }
-//            }
-//            case CustomMqttCallback.MQTT_CALLBACK_VALUE_MESSAGE_ARRIVED: {
-//                ArrivedMessage arrivedMessage = ArrivedMessage.fromIntent(intent);
-//                if (Topics.getSessionStatusTopic(mGameSessionId).equals(arrivedMessage.getTopic())
-//                        && !TextUtils.isEmpty(arrivedMessage.getPayload())) {
-//                    Gson gson = new Gson();
-//                    SkillSelectPayload skillSelectPayload = gson.fromJson(arrivedMessage.getPayload(), SkillSelectPayload.class);
-//                    if(!skillSelectPayload.getSenderRole().equals(mGameRole)) {
-//                        mIsOtherPlayerWaiting = skillSelectPayload.isWaiting();
-//                        attemptToStartGame();
-//                    }
-//                }
-//                break;
-//            }
-//        }
-//    }
 
     private void goToGameActivity() {
         mWaitingProgressDialog.setOnDismissListener(null);
@@ -258,7 +219,11 @@ public class SkillSelectActivity extends BaseActivity {
     public void executeMqttResolvedActionCallback(MqttResolvedActionEvent mqttResolvedActionEvent) {
         switch (mqttResolvedActionEvent.getActionType()) {
             case MqttResolvedActionEvent.CONNECT_ACTION_TYPE:
-                subscribeToGameSessionTopics();
+                if(mqttResolvedActionEvent.isSuccess()) {
+                    subscribeToGameSessionTopics();
+                } else {
+                    //TODO reconnect
+                }
                 break;
             case MqttResolvedActionEvent.SUBSCRIBE_ACTION_TYPE:
                 if (!mqttResolvedActionEvent.isSuccess()) {
