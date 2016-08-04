@@ -5,8 +5,13 @@ import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.construct.Construct;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.event.ViewChangeEvent;
+import com.voyager.chase.game.worldeffect.WorldEffect;
 import com.voyager.chase.game.skill.Skill;
+import com.voyager.chase.mqtt.payload.GameInfoPayload;
+import com.voyager.chase.utility.TileUtility;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -32,6 +37,7 @@ public class AttackSkill extends Skill {
 
     @Override
     public void useSkillOnTile(Tile selectedTile) {
+        GameInfoPayload playerDamageInfo = new GameInfoPayload();
         if (selectedTile.containsPlayer()) {
             Player attackedPlayer = selectedTile.getPlayer();
             WorldEffect playerDamageWorldEffect = new WorldEffect();
@@ -39,23 +45,42 @@ public class AttackSkill extends Skill {
             playerDamageWorldEffect.setAffectedRole(attackedPlayer.getRole());
             playerDamageWorldEffect.setEffectContent(WorldEffect.REDUCE_PLAYER_LIFE);
             World.getInstance().addWorldEffectToQueue(playerDamageWorldEffect);
+
+            playerDamageInfo.setSenderRole(mSkillOwner.getRole());
+            playerDamageInfo.setSenderMessage("Your ATTACK hit the " + selectedTile.getPlayer().getRole() + "!");
+            playerDamageInfo.setNonSenderMessage("You were ATTACKED, and lost 1 life.");
+            ViewChangeEvent playerDamagedEvent = new ViewChangeEvent();
+            playerDamagedEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);
+            playerDamagedEvent.setGameInfoUpdate(playerDamageInfo.toJson());
+            EventBus.getDefault().post(playerDamagedEvent);
         }
+
+        GameInfoPayload constructDestroyedInfo;
         ArrayList<Construct> constructList = selectedTile.getAllConstructsList();
         for (Construct construct : constructList) {
-            WorldEffect removeConstructEffect = new WorldEffect();
-            removeConstructEffect.setEffectType(WorldEffect.REMOVE_CONSTRUCT);
-            removeConstructEffect.setAffectedUUID(construct.getUUID());
-            World.getInstance().addWorldEffectToQueue(removeConstructEffect);
+            if (!construct.isInvulnerable()) {
+                WorldEffect removeConstructEffect = new WorldEffect();
+                removeConstructEffect.setEffectType(WorldEffect.REMOVE_CONSTRUCT);
+                removeConstructEffect.setAffectedUUID(construct.getUUID());
+                World.getInstance().addWorldEffectToQueue(removeConstructEffect);
+
+                constructDestroyedInfo = new GameInfoPayload();
+                constructDestroyedInfo.setSenderRole(mSkillOwner.getRole());
+                constructDestroyedInfo.setSenderMessage(
+                        "Your ATTACK hit the " + construct.getOwner().getRole() + "'s " + construct.getConstructName());
+                ViewChangeEvent constructDestroyedEvent = new ViewChangeEvent();
+                constructDestroyedEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);
+                constructDestroyedEvent.setGameInfoUpdate(constructDestroyedInfo.toJson());
+                EventBus.getDefault().post(constructDestroyedEvent);
+            }
         }
     }
 
     private Tile checkTileAtCoordinates(String roomName, int x, int y) {
         Tile checkingTile;
-        if (x >= 0 && x < Room.ROOM_WIDTH && y >= 0 && y < Room.ROOM_HEIGHT) {
+        if (TileUtility.isWithinRoom(x, y)) {
             checkingTile = World.getInstance().getRoom(roomName).getTileAtCoordinates(x, y);
-            if (checkingTile != null && !checkingTile.isUntargetable()) {
-                return checkingTile;
-            }
+            return checkingTile;
         }
         return null;
     }

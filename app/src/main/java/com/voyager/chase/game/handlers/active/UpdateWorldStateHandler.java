@@ -2,7 +2,7 @@ package com.voyager.chase.game.handlers.active;
 
 import android.content.Context;
 
-import com.voyager.chase.game.EffectInterpreter;
+import com.voyager.chase.game.worldeffect.EffectInterpreter;
 import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.event.TurnStateEvent;
 import com.voyager.chase.game.handlers.TurnStateHandler;

@@ -2,7 +2,7 @@ package com.voyager.chase.mqtt.payload;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.worldeffect.WorldEffect;
 
 /**
  * Created by miguellysanchez on 8/1/16.

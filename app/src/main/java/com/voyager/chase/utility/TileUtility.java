@@ -1,5 +1,7 @@
 package com.voyager.chase.utility;
 
+import com.voyager.chase.game.entity.Room;
+
 /**
  * Created by miguellysanchez on 7/25/16.
  */
@@ -17,5 +19,9 @@ public class TileUtility {
 
     private static boolean isWithinRangeY(int sourceY, int targetY, int rangeY) {
         return targetY >= sourceY - rangeY && targetY <= sourceY + rangeY;
+    }
+
+    public static boolean isWithinRoom(int tileX, int tileY) {
+        return tileX >= 0 && tileX < Room.ROOM_WIDTH && tileY >= 0 && tileY < Room.ROOM_HEIGHT;
     }
 }

@@ -1,4 +1,4 @@
-package com.voyager.chase.game.mods;
+package com.voyager.chase.game.worldeffect;
 
 import com.google.gson.annotations.SerializedName;
 

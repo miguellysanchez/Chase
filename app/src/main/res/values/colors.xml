@@ -9,6 +9,7 @@
     <color name="light_gray">#FFAAAAAA</color>
     <color name="gray">#FF888888</color>
     <color name="very_light_blue">#FF88BBFF</color>
+    <color name="light_red">#FFFF3044</color>
     <color name="red">#FFFF0000</color>
     <color name="green">#FF33AA88</color>
     <color name="black">#FF000000</color>
@@ -17,6 +18,8 @@
     <color name="transluscent_gray">#77AAAAAA</color>
     <color name="transparent">#00000000</color>
     <color name="light_yellow">#FFFFFFAA</color>
+    <color name="sky_blue">#FF33ABDE</color>
+
 
 
 </resources>

@@ -75,7 +75,7 @@ public class TileView extends LinearLayout {
 
     public void setHighlightBackground(boolean isHighlighted) {
         if (isHighlighted) {
-            linearLayoutContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.azure));
+            linearLayoutContainer.setBackgroundResource(R.drawable.chase_drawable_tile_highlighted);
         } else {
             linearLayoutContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black));
         }

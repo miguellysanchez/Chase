@@ -3,6 +3,7 @@ package com.voyager.chase.game;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -20,6 +21,8 @@ import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.event.ViewChangeEvent;
 import com.voyager.chase.game.event.TurnStateEvent;
+import com.voyager.chase.game.gameinfo.GameInfo;
+import com.voyager.chase.game.gameinfo.GameInfoAdapter;
 import com.voyager.chase.game.handlers.active.CheckQueueStateHandler;
 import com.voyager.chase.game.handlers.active.CheckTriggerStateHandler;
 import com.voyager.chase.game.handlers.active.EndStateHandler;
@@ -41,6 +44,7 @@ import com.voyager.chase.game.skill.SkillsPool;
 import com.voyager.chase.mqtt.Topics;
 import com.voyager.chase.mqtt.event.MqttCallbackEvent;
 import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
+import com.voyager.chase.mqtt.payload.GameInfoPayload;
 import com.voyager.chase.mqtt.payload.GameStatusPayload;
 import com.voyager.chase.mqtt.payload.WorldEffectPayload;
 import com.voyager.chase.utility.MqttIssueActionUtility;
@@ -88,15 +92,17 @@ public class GameActivity extends BaseActivity {
     TextView mTextViewWaiting;
     @BindView(R.id.chase_activity_game_linearlayout_processing)
     LinearLayout mLinearLayoutProcessing;
+
     private SkillsAdapter mSkillsAdapter;
+    private GameInfoAdapter mGameInfoAdapter;
 
     private LevelRenderer mLevelRenderer;
     private HashMap<TurnState, TurnStateHandler> mTurnStateHandlerMap;
     private TurnState mCurrentState;
-    private boolean isGameStarted = false;
     private AlertDialog mForfeitGameConfirmationDialog;
     private AlertDialog mEndTurnConfirmationDialog;
     private String mGameSessionId;
+    private boolean isGameStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +168,9 @@ public class GameActivity extends BaseActivity {
     }
 
     private void initializeViews() {
+        mGameInfoAdapter = new GameInfoAdapter(this);
+        mListViewInfo.setAdapter(mGameInfoAdapter);
+
         mSkillsAdapter = new SkillsAdapter(this, new SkillsAdapter.OnClickListener() {
             @Override
             public void onClick(Skill skill) {
@@ -321,6 +330,9 @@ public class GameActivity extends BaseActivity {
                 case ViewChangeEvent.TOAST_NO_VALID_TARGETS:
                     Toast.makeText(GameActivity.this, "No valid targets for the selected skill", Toast.LENGTH_SHORT).show();
                     break;
+                case ViewChangeEvent.GAME_INFO_UPDATE:
+                    MqttIssueActionUtility.publish(Topics.getSessionInfoTopic(mGameSessionId), viewChangeEvent.getGameInfoUpdate(), false);
+                    break;
             }
         }
     }
@@ -383,17 +395,19 @@ public class GameActivity extends BaseActivity {
 
     @Override
     protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
+        Gson gson;
         switch (mqttCallbackEvent.getMessageCallbackType()) {
             case MqttCallbackEvent.ARRIVED_MESSAGE_CALLBACK_TYPE:
+                gson = new Gson();
+
                 if (Topics.getSessionWorldUpdateTopic(mGameSessionId)
                         .equals(mqttCallbackEvent.getTopic())) {
                     String worldEffectJson = mqttCallbackEvent.getMessagePayload();
-                    Gson gson = new Gson();
                     WorldEffectPayload worldEffectPayload = gson.fromJson(worldEffectJson, WorldEffectPayload.class);
                     if (worldEffectPayload.getSenderRole() != null &&
                             !World.getUserPlayer().getRole().equals(worldEffectPayload.getSenderRole())) {
-                        World.getInstance().addWorldEffectToQueue(worldEffectPayload.getWorldEffect());
 
+                        World.getInstance().addWorldEffectToQueue(worldEffectPayload.getWorldEffect());
                         TurnStateEvent turnStateEvent = new TurnStateEvent();
                         turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
                         turnStateEvent.setAction(InactivePendingStateHandler.ACTION_UPDATE);
@@ -405,23 +419,25 @@ public class GameActivity extends BaseActivity {
                         .equals(mqttCallbackEvent.getTopic())) {
                     Timber.d("HANDLING SESSION STATUS MESSAGE: %s", mqttCallbackEvent.getMessagePayload());
                     handleSessionTopicMessageReceived(mqttCallbackEvent.getMessagePayload());
+                } else if (Topics.getSessionInfoTopic(mGameSessionId).equals(mqttCallbackEvent.getTopic())) {
+                    String rawGameInfoPayload = mqttCallbackEvent.getMessagePayload();
+                    GameInfoPayload gameInfoPayload = gson.fromJson(rawGameInfoPayload, GameInfoPayload.class);
+                    GameInfo gameInfo = new GameInfo();
+                    String senderRole = gameInfoPayload.getSenderRole();
+                    if (World.getUserPlayer().getRole().equals(senderRole) && !TextUtils.isEmpty(gameInfoPayload.getSenderMessage())) {
+                        gameInfo.setInfo(gameInfoPayload.getSenderMessage());
+                    } else if (!World.getUserPlayer().getRole().equals(senderRole) && !TextUtils.isEmpty(gameInfoPayload.getNonSenderMessage())) {
+                        gameInfo.setInfo(gameInfoPayload.getNonSenderMessage());
+                    } else {
+                        break;
+                    }
+                    gameInfo.setSenderRole(senderRole);
+                    gameInfo.setTimestamp(System.currentTimeMillis());
+                    mGameInfoAdapter.addToGameInfoArrayList(gameInfo);
                 }
                 break;
             case MqttCallbackEvent.DELIVERED_MESSAGE_CALLBACK_TYPE:
-                if (mqttCallbackEvent.getTopic().equals(Topics.getSessionStatusTopic(mGameSessionId))) {
-                    try {
-                        String rawPayload = new String(mqttCallbackEvent.getMqttDeliveryToken()
-                                .getMessage().getPayload(), "UTF-8");
-                        Gson gson = new Gson();
-                        GameStatusPayload gameStatusPayload = gson.fromJson(rawPayload, GameStatusPayload.class);
-                        if (GameStatusPayload.DISCONNECTED.equals(gameStatusPayload.getAction())) {
-                            MqttIssueActionUtility.disconnect();
-                            //TODO show loss results page
-                        }
-                    } catch (MqttException | UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
+                break;
         }
 
     }

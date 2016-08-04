@@ -4,7 +4,7 @@ import com.voyager.chase.R;
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.worldeffect.WorldEffect;
 
 /**
  * Created by miguellysanchez on 8/3/16.
@@ -16,10 +16,11 @@ public class TeleporterEntryConstruct extends Construct {
     private int targetY;
 
     public TeleporterEntryConstruct(String targetRoom, int targetX, int targetY) {
+        mConstructName = "TELEPORTER ENTRY";
         renderDrawableId = R.drawable.chase_ic_construct_teleporter_entry;
         isObstacle = false;
         isInvulnerable = true;
-        isUntargetable = true;
+        isLocked = true;
         spyVisibility = GLOBALLY_VISIBLE;
         sentryVisibility = GLOBALLY_VISIBLE;
 

@@ -5,16 +5,21 @@ import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Renderable;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.event.ViewChangeEvent;
+import com.voyager.chase.game.worldeffect.WorldEffect;
+import com.voyager.chase.mqtt.payload.GameInfoPayload;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by miguellysanchez on 7/29/16.
  */
 public class MineConstruct extends Construct {
     protected MineConstruct() {
+        mConstructName = "MINE";
         renderDrawableId = R.drawable.chase_drawable_ic_construct_mine;
         isObstacle = false;
-        isUntargetable = false;
+        isLocked = false;
         isInvulnerable = false;
         spyVisibility = Renderable.GLOBALLY_VISIBLE;
         sentryVisibility = Renderable.HIDDEN;
@@ -33,6 +38,15 @@ public class MineConstruct extends Construct {
             destroySelfEffect.setEffectType(WorldEffect.REMOVE_CONSTRUCT);
             destroySelfEffect.setAffectedUUID(uuidString);
             World.getInstance().addWorldEffectToQueue(destroySelfEffect);
+
+            GameInfoPayload payload = new GameInfoPayload();
+            payload.setSenderRole(player.getRole());
+            payload.setSenderMessage("You have stepped on a mine. You lost a life");
+
+            ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
+            viewChangeEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);
+            viewChangeEvent.setGameInfoUpdate(payload.toJson());
+            EventBus.getDefault().post(viewChangeEvent);
             return true;
         }
         return false;
@@ -49,7 +63,6 @@ public class MineConstruct extends Construct {
     @Override
     public void onRemovedFromTile() {
         World.getInstance().removeAllWorldItemLocations(uuidString);
-
         //TODO add info message
     }
 }

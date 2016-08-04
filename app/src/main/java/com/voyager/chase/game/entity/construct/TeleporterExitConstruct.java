@@ -1,9 +1,7 @@
 package com.voyager.chase.game.entity.construct;
 
 import com.voyager.chase.R;
-import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.mods.WorldEffect;
 
 /**
  * Created by miguellysanchez on 8/3/16.
@@ -11,10 +9,11 @@ import com.voyager.chase.game.mods.WorldEffect;
 public class TeleporterExitConstruct extends Construct {
 
     public TeleporterExitConstruct() {
+        mConstructName = "TELEPORTER EXIT";
         renderDrawableId = R.drawable.chase_ic_construct_teleporter_exit;
         isObstacle = true;
         isInvulnerable = true;
-        isUntargetable = true;
+        isLocked = true;
         spyVisibility = GLOBALLY_VISIBLE;
         sentryVisibility = GLOBALLY_VISIBLE;
     }

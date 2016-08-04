@@ -3,7 +3,7 @@ package com.voyager.chase.game.event;
 import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.worldeffect.WorldEffect;
 import com.voyager.chase.game.skill.Skill;
 
 /**
@@ -18,10 +18,6 @@ public class TurnStateEvent {
     private Tile targetTile;
     private WorldEffect worldEffect;
 
-    public TurnStateEvent() {
-    }
-
-    //
     public TurnState getTargetState() {
         return mTargetState;
     }

@@ -37,10 +37,10 @@
         <item>2</item>
     </integer-array>
     <string-array name="chase_array_skill_select_description_sentry">
-        <item>Drop an alarm trap in current position that shows position of other player within 5x5 area. Other player is notified that this trap has been triggered.</item>
+        <item>Drop an alarm trap in current position that shows position of other player within 5x5 area. Other player is notified that this trap has been triggered. Effect does not stop until alarm trap is destroyed.</item>
         <item>Gain an extra life, but ends current turn.</item>
         <item>Place a stun next in any tile next to current position. Other player will end current turn and skip next turn when tile with net is stepped on.</item>
-        <item>Set up a motion sensor in a 3x3 area from current position, that notifies you of the other player\'s position. Note, this will not notify the other player of its trigger.</item>
+        <item>Set up a motion sensor in a 3x3 area from current position, that notifies you of the other player\'s position(This will not notify the other player of its trigger, and can only be triggered once.)</item>
         <item>Drop a beacon in current position that shows all constructs in the room and position of players to all players. Visibility is returned to normal upon destroying beacon.</item>
         <item>Destroy all constructs, yours and other player\'s, in all adjacent tiles from target tile. Also, damages all players by 1 in the area of effect</item>
         <item>Reveal position of all objects and other player in current position to you.</item>

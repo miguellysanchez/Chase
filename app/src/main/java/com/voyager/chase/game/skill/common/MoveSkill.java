@@ -4,7 +4,7 @@ import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.worldeffect.WorldEffect;
 import com.voyager.chase.game.skill.Skill;
 
 import java.util.ArrayList;

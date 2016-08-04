@@ -116,9 +116,9 @@ public class Tile {
         return mPlayer != null;
     }
 
-    public boolean isUntargetable(){
+    public boolean isLocked(){
         for (Construct construct : mConstructsMultimap.values()) {
-            if (construct.isUntargetable()) {
+            if (construct.isLocked()) {
                 return true;
             }
         }

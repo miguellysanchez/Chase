@@ -1,14 +1,15 @@
-package com.voyager.chase.game;
+package com.voyager.chase.game.worldeffect;
 
 import android.content.Context;
 
+import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.entity.construct.Construct;
 import com.voyager.chase.game.entity.construct.ConstructsPool;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.worldeffect.WorldEffect;
 
 import java.util.Collection;
 
@@ -75,6 +76,7 @@ public class EffectInterpreter {
                 player.recoverLife();
                 break;
             case WorldEffect.SKIP_PLAYER_TURN:
+                player.setActionPoints(0);
                 player.setIsTurnSkipped(true);
                 break;
         }

@@ -20,9 +20,11 @@ public class ViewChangeEvent {
     public static final String HIDE_TARGET_HIGHLIGHTS = "hide_target_highlights";
     public static final String TOAST_NO_VALID_TARGETS = "toast_no_valid_targets'";
     public static final String WAITING_FOR_OTHER_PLAYER = "waiting_for_other_player";
+    public static final String GAME_INFO_UPDATE = "game_info_update";
 
     private ArrayList<String> viewChangeTypeList;
     private ArrayList<Tile> tileArrayList;
+    private String gameInfoUpdate;
 
     public ViewChangeEvent() {
         viewChangeTypeList = new ArrayList<>();
@@ -42,5 +44,13 @@ public class ViewChangeEvent {
 
     public void setTileArrayList(ArrayList<Tile> tileArrayList) {
         this.tileArrayList = tileArrayList;
+    }
+
+    public String getGameInfoUpdate() {
+        return gameInfoUpdate;
+    }
+
+    public void setGameInfoUpdate(String gameInfoUpdate) {
+        this.gameInfoUpdate = gameInfoUpdate;
     }
 }

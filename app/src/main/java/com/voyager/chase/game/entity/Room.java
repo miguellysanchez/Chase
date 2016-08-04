@@ -63,7 +63,7 @@ public class Room {
         return mTiles2DArray;
     }
 
-    public List<Tile> getAllTiles() {
+    public ArrayList<Tile> getAllTiles() {
         ArrayList<Tile> allTilesList = new ArrayList<>();
         for (Tile[] tilesArray : mTiles2DArray) {
             allTilesList.addAll(Arrays.asList(tilesArray));

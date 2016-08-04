@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
-import com.voyager.chase.game.mods.WorldEffect;
+import com.voyager.chase.game.worldeffect.WorldEffect;
 
 import java.util.ArrayList;
 import java.util.Collection;
