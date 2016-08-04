@@ -103,7 +103,7 @@
         <item>Gain an extra life, but will skip current and next turn. Very long cooldown</item>
         <item>Place a barrier obstacle in any adjacent tile. Can be destroyed.</item>
         <item>Place a beacon in current position</item>
-        <item>Choose a target tile. If other player is in that tile, it deals 1 damage to him.</item>
+        <item>Choose a target tile. If other player is in that tile, it deals 1 damage to him. Notifies you if other player was hit.</item>
         <item>Deal 1 damage to all players within any 5x5 grid with target tile as center</item>
         <item>Deal 1 damage to the other player if he is within 7x7 area, with current tile as center</item>
         <item>Reveal current position to the other player</item>

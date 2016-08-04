@@ -38,7 +38,7 @@ public class ShockGrenadeSkill extends Skill {
 
                         GameInfoPayload gameInfoPayload = new GameInfoPayload();
                         gameInfoPayload.setSenderRole(mSkillOwner.getRole());
-                        gameInfoPayload.setSenderMessage("You have shocked the other player.");
+                        gameInfoPayload.setSenderMessage("Your SHOCK GRENADE seems like it has shocked the other player.");
                         gameInfoPayload.setNonSenderMessage("You have been shocked by the other player's SHOCK GRENADE. Your next turn will be skipped.");
 
                         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();

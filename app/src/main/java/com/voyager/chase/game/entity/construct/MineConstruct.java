@@ -41,7 +41,7 @@ public class MineConstruct extends Construct {
 
             GameInfoPayload payload = new GameInfoPayload();
             payload.setSenderRole(player.getRole());
-            payload.setSenderMessage("You have stepped on a mine. You lost a life");
+            payload.setSenderMessage("You have stepped on a MINE. You lost a life");
 
             ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
             viewChangeEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);
