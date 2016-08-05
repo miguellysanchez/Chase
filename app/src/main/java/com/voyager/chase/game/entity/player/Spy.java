@@ -18,8 +18,8 @@ public class Spy extends Player {
         mRole = Player.SPY_ROLE;
         mLife = 1;
         mMaxLife = 2;
-        mActionPointsRecovery = 4;
-        renderDrawableId = R.drawable.chase_drawable_ic_player_spy;
+        mActionPointsRecovery = 20;
+        renderDrawableId = R.drawable.chase_ic_player_spy;
         sentryVisibility = DEFAULT_SENTRY_VISIBILITY;
         spyVisibility = DEFAULT_SPY_VISIBILITY;
     }
@@ -46,6 +46,6 @@ public class Spy extends Player {
     }
 
     public void reduceObjectivesRemaining() {
-        objectivesRemaining = objectivesRemaining -1;
+        objectivesRemaining = objectivesRemaining - 1;
     }
 }

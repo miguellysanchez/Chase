@@ -6,19 +6,11 @@ import com.voyager.chase.R;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
-import com.voyager.chase.game.skill.sentry.RoomIlluminationBeaconSkill;
-import com.voyager.chase.game.skill.sentry.SurveillanceBugSkill;
-import com.voyager.chase.game.skill.spy.PlantDecoySkill;
 
 /**
  * Created by miguellysanchez on 7/29/16.
  */
 public class ConstructsPool {
-    public static final String ALARM_TRAP_CONSTRUCT = "alarm_trap_construct";
-    public static final String STUN_NET_CONSTRUCT = "stun_net_construct";
-    public static final String MINE_CONSTRUCT = "mine_construct";
-
-
     public static Construct getConstruct(Context context, String constructName, String ownerRole, String constructUUID) {
         Construct construct = null;
         final String[] sentryConstructNames = context.getResources().getStringArray(R.array.chase_array_skill_select_name_sentry);
@@ -58,7 +50,7 @@ public class ConstructsPool {
         }
 
         if (construct != null) {
-            construct.setUUID(constructUUID);
+            construct.setId(constructUUID);
             construct.setOwner(owner);
         }
         return construct;

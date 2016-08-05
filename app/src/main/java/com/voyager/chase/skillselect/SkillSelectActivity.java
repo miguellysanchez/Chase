@@ -226,9 +226,6 @@ public class SkillSelectActivity extends BaseActivity {
                 }
                 break;
             case MqttResolvedActionEvent.SUBSCRIBE_ACTION_TYPE:
-                if (!mqttResolvedActionEvent.isSuccess()) {
-                    subscribeToGameSessionTopics();
-                }
                 break;
             case MqttResolvedActionEvent.PUBLISH_ACTION_TYPE:
                 if (!mqttResolvedActionEvent.isSuccess()) {

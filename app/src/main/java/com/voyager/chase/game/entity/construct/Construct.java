@@ -7,7 +7,7 @@ import com.voyager.chase.game.entity.player.Player;
  * Created by miguellysanchez on 7/5/16.
  */
 public abstract class Construct extends Renderable {
-    protected String uuidString = "UUID";
+    protected String idString = "UUID";
     protected Player mOwner;
     protected String mConstructName = "Construct";
     protected boolean isReusable = false;
@@ -37,12 +37,12 @@ public abstract class Construct extends Renderable {
         return isInvulnerable;
     }
 
-    public String getUUID() {
-        return uuidString;
+    public String getId() {
+        return idString;
     }
 
-    public void setUUID(String uuidString) {
-        this.uuidString = uuidString;
+    public void setId(String uuidString) {
+        this.idString = uuidString;
     }
 
     public Player getOwner() {

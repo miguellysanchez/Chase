@@ -72,7 +72,7 @@ public class Tile {
     }
 
     public void addConstruct(Construct construct) {
-        mConstructsMultimap.put(construct.getUUID(), construct);
+        mConstructsMultimap.put(construct.getId(), construct);
         setLocationToRenderable(construct);
         construct.onAddedToTile();
     }
@@ -87,8 +87,8 @@ public class Tile {
 
     public void removeItem(String uuid) {
         for (Construct construct : mConstructsMultimap.get(uuid)) {
-            removeLocationFromRenderable(construct);
             construct.onRemovedFromTile();
+            removeLocationFromRenderable(construct);
         }
         mConstructsMultimap.removeAll(uuid);
         mTriggersMap.remove(uuid);

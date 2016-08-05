@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.voyager.chase.R;
 import com.voyager.chase.common.BaseActivity;
 import com.voyager.chase.game.entity.Tile;
+import com.voyager.chase.game.entity.construct.ObjectiveConstruct;
 import com.voyager.chase.game.entity.construct.TeleporterEntryConstruct;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
@@ -49,12 +50,10 @@ import com.voyager.chase.mqtt.payload.GameStatusPayload;
 import com.voyager.chase.mqtt.payload.WorldEffectPayload;
 import com.voyager.chase.utility.MqttIssueActionUtility;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -152,16 +151,16 @@ public class GameActivity extends BaseActivity {
             throw new IllegalStateException("Must have a game role assigned at this point. Cannot construct skills list");
         }
         ArrayList<String> yourSkillsSelected = getIntent().getStringArrayListExtra(SkillsPool.YOUR_SKILLS_SELECTED);
-        HashMap<String, Skill> equippedSkills = new HashMap<>();
+        ArrayList<Skill> equippedSkills = new ArrayList<>();
         Timber.d("Your skills selected: %s", yourSkillsSelected.toString());
 
         for (String skillName : yourSkillsSelected) {
             Skill skill = SkillsPool.getSkillForName(this, skillName, World.getUserPlayer());
-            equippedSkills.put(skillName, skill);
+            equippedSkills.add(skill);
         }
         World.getUserPlayer().setSkills(equippedSkills);
 
-        initializeGameState();
+        initializeSampleGameState();
 
         mLevelRenderer = new LevelRenderer(mLinearLayoutLevel);
         mLevelRenderer.render();
@@ -254,7 +253,7 @@ public class GameActivity extends BaseActivity {
         mTurnStateHandlerMap.put(TurnState.INACTIVE_RENDER_STATE, new InactiveRenderStateHandler());
     }
 
-    private void initializeGameState() {
+    private void initializeSampleGameState() {
         World world = World.getInstance();
         Spy spy = Spy.getInstance();
         Sentry sentry = Sentry.getInstance();
@@ -262,11 +261,38 @@ public class GameActivity extends BaseActivity {
         world.getRoom("A").getTileAtCoordinates(2, 3).setPlayer(spy);
         world.getRoom("A").getTileAtCoordinates(3, 3).setPlayer(sentry);
 
-        world.getRoom("A").getTileAtCoordinates(1, 1).addConstruct(new TeleporterEntryConstruct("B", 9, 9));
-        world.getRoom("B").getTileAtCoordinates(7, 8).addConstruct(new TeleporterEntryConstruct("A", 4, 4));
+        Tile teleporterTile;
+        TeleporterEntryConstruct teleporterEntryConstruct;
 
-//        world.getRoom("A").getTileAtCoordinates(5, 6).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
-//        world.getRoom("A").getTileAtCoordinates(3, 3).addVisibilityModifier(UUID.randomUUID().toString(), Tile.GLOBAL_VISIBILITY);
+        teleporterTile = world.getRoom("A").getTileAtCoordinates(2, 1);
+        teleporterEntryConstruct = new TeleporterEntryConstruct("TELEPORTER 1", "B", 6, 1);
+        teleporterTile.addConstruct(teleporterEntryConstruct);
+        world.addWorldItemLocation(teleporterEntryConstruct.getId(), teleporterTile);
+
+        teleporterTile = world.getRoom("B").getTileAtCoordinates(1, 7);
+        teleporterEntryConstruct = new TeleporterEntryConstruct("TELEPORTER 2", "A", 5, 7);
+        teleporterTile.addConstruct(teleporterEntryConstruct);
+        world.addWorldItemLocation(teleporterEntryConstruct.getId(), teleporterTile);
+
+
+        Tile objectiveTile;
+        ObjectiveConstruct objectiveConstruct;
+
+        objectiveConstruct = new ObjectiveConstruct("OBJECTIVE A");
+        objectiveTile = world.getRoom("A").getTileAtCoordinates(1, 2);
+        objectiveTile.addConstruct(objectiveConstruct);
+        world.addWorldItemLocation(objectiveConstruct.getId(), objectiveTile);
+
+        objectiveConstruct = new ObjectiveConstruct("OBJECTIVE B");
+        objectiveTile = world.getRoom("B").getTileAtCoordinates(0, 5);
+        objectiveTile.addConstruct(objectiveConstruct);
+        world.addWorldItemLocation(objectiveConstruct.getId(), objectiveTile);
+
+        objectiveConstruct = new ObjectiveConstruct("OBJECTIVE C");
+        objectiveTile = world.getRoom("A").getTileAtCoordinates(9, 9);
+        objectiveTile.addConstruct(objectiveConstruct);
+        world.addWorldItemLocation(objectiveConstruct.getId(), objectiveTile);
+
     }
 
     @Override
@@ -434,6 +460,7 @@ public class GameActivity extends BaseActivity {
                     gameInfo.setSenderRole(senderRole);
                     gameInfo.setTimestamp(System.currentTimeMillis());
                     mGameInfoAdapter.addToGameInfoArrayList(gameInfo);
+                    mListViewInfo.setSelection(0);
                 }
                 break;
             case MqttCallbackEvent.DELIVERED_MESSAGE_CALLBACK_TYPE:

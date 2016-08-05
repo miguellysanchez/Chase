@@ -15,7 +15,8 @@ public class TeleporterEntryConstruct extends Construct {
     private int targetX;
     private int targetY;
 
-    public TeleporterEntryConstruct(String targetRoom, int targetX, int targetY) {
+    public TeleporterEntryConstruct(String id, String targetRoom, int targetX, int targetY) {
+        idString = id;
         mConstructName = "TELEPORTER ENTRY";
         renderDrawableId = R.drawable.chase_ic_construct_teleporter_entry;
         isObstacle = false;
@@ -47,11 +48,11 @@ public class TeleporterEntryConstruct extends Construct {
 
     @Override
     public void onAddedToTile() {
-        TeleporterExitConstruct teleporterExitConstruct = new TeleporterExitConstruct();
+        TeleporterExitConstruct teleporterExitConstruct = new TeleporterExitConstruct(idString);
         Tile currentTile = World.getInstance().getRoom(getCurrentRoomName())
                 .getTileAtCoordinates(getCurrentTileXCoordinate(), getCurrentTileYCoordinate());
-        currentTile.addTrigger(uuidString, new Trigger(this));
-        World.getInstance().addWorldItemLocation(uuidString, currentTile);
+        currentTile.addTrigger(idString, new Trigger(this));
+        World.getInstance().addWorldItemLocation(idString, currentTile);
         World.getInstance().getRoom(targetRoom).getTileAtCoordinates(targetX, targetY).addConstruct(teleporterExitConstruct);
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by miguellysanchez on 7/25/16.
  */
-public class ShockGrenadeSkill extends Skill {
+public class ShockRocketSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         return World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getAllTiles();
@@ -38,8 +38,8 @@ public class ShockGrenadeSkill extends Skill {
 
                         GameInfoPayload gameInfoPayload = new GameInfoPayload();
                         gameInfoPayload.setSenderRole(mSkillOwner.getRole());
-                        gameInfoPayload.setSenderMessage("Your SHOCK GRENADE seems like it has shocked the other player.");
-                        gameInfoPayload.setNonSenderMessage("You have been shocked by the other player's SHOCK GRENADE. Your next turn will be skipped.");
+                        gameInfoPayload.setSenderMessage("Your SHOCK ROCKET seems like it has shocked the other player.");
+                        gameInfoPayload.setNonSenderMessage("You have been shocked by the other player's SHOCK ROCKET. Your next turn will be skipped.");
 
                         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
                         viewChangeEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);

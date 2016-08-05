@@ -6,6 +6,7 @@ import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.worldeffect.WorldEffect;
 import com.voyager.chase.game.skill.Skill;
+import com.voyager.chase.utility.TileUtility;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ public class MoveSkill extends Skill {
 
     private Tile checkTileAtCoordinates(String roomName, int x, int y) {
         Tile checkingTile;
-        if (x >= 0 && x < Room.ROOM_WIDTH && y >= 0 && y < Room.ROOM_HEIGHT) {
+        if (TileUtility.isWithinRoom(x,y)) {
             checkingTile = World.getInstance().getRoom(roomName).getTileAtCoordinates(x, y);
             if(checkingTile!=null && !checkingTile.containsObstacle() && !checkingTile.containsPlayer()){
                 return checkingTile;

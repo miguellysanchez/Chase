@@ -14,7 +14,7 @@ import com.voyager.chase.game.skill.sentry.MotionSensorSkill;
 import com.voyager.chase.game.skill.sentry.RecoverSkill;
 import com.voyager.chase.game.skill.sentry.RoomIlluminationBeaconSkill;
 import com.voyager.chase.game.skill.sentry.SearchDroneSkill;
-import com.voyager.chase.game.skill.sentry.ShockGrenadeSkill;
+import com.voyager.chase.game.skill.sentry.ShockRocketSkill;
 import com.voyager.chase.game.skill.sentry.StunNetSkill;
 import com.voyager.chase.game.skill.sentry.SurveillanceBugSkill;
 import com.voyager.chase.game.skill.spy.BaitSkill;
@@ -137,7 +137,7 @@ public class SkillsPool {
                 returnedSkill = new SurveillanceBugSkill();
                 skillIndex = 6;
             } else if (sentryRoleSkillNames[7].equals(skillName)) {
-                returnedSkill = new ShockGrenadeSkill();
+                returnedSkill = new ShockRocketSkill();
                 skillIndex = 7;
             } else if (sentryRoleSkillNames[8].equals(skillName)) {
                 returnedSkill = new SearchDroneSkill();
@@ -159,7 +159,8 @@ public class SkillsPool {
         if (returnedSkill != null) { // assign skill name and the corresponding owner of that skill
             returnedSkill.setOwner(player);
             returnedSkill.setSkillName(skillName);
-            returnedSkill.setSkillCooldown(skillCooldown);
+            returnedSkill.setSkillCooldown(0);
+//            returnedSkill.setSkillCooldown(skillCooldown);
             returnedSkill.setDescription(description);
         }
 

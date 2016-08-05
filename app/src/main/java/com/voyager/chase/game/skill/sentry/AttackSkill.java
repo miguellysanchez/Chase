@@ -1,7 +1,6 @@
 package com.voyager.chase.game.skill.sentry;
 
 import com.voyager.chase.game.World;
-import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.construct.Construct;
@@ -61,7 +60,7 @@ public class AttackSkill extends Skill {
             if (!construct.isInvulnerable()) {
                 WorldEffect removeConstructEffect = new WorldEffect();
                 removeConstructEffect.setEffectType(WorldEffect.REMOVE_CONSTRUCT);
-                removeConstructEffect.setAffectedUUID(construct.getUUID());
+                removeConstructEffect.setAffectedUUID(construct.getId());
                 World.getInstance().addWorldEffectToQueue(removeConstructEffect);
 
                 constructDestroyedInfo = new GameInfoPayload();

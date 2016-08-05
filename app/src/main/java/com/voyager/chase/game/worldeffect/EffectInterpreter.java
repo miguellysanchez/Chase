@@ -9,7 +9,6 @@ import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
 import com.voyager.chase.game.entity.construct.Construct;
 import com.voyager.chase.game.entity.construct.ConstructsPool;
-import com.voyager.chase.game.worldeffect.WorldEffect;
 
 import java.util.Collection;
 
@@ -53,7 +52,7 @@ public class EffectInterpreter {
 
                 Construct construct = ConstructsPool.getConstruct(context, worldEffect.getEffectContent(), worldEffect.getAffectedRole(), worldEffect.getAffectedUUID());
                 Tile targetTile = World.getInstance().getRoom(worldEffect.getAffectedRoom()).getTileAtCoordinates( worldEffect.getAffectedX(), worldEffect.getAffectedY());
-                World.getInstance().addWorldItemLocation(construct.getUUID(),targetTile);
+                World.getInstance().addWorldItemLocation(construct.getId(),targetTile);
                 targetTile.addConstruct(construct);
                 break;
             case WorldEffect.REMOVE_CONSTRUCT:

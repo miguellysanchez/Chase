@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 public class MineConstruct extends Construct {
     protected MineConstruct() {
         mConstructName = "MINE";
-        renderDrawableId = R.drawable.chase_drawable_ic_construct_mine;
+        renderDrawableId = R.drawable.chase_ic_construct_mine;
         isObstacle = false;
         isLocked = false;
         isInvulnerable = false;
@@ -36,7 +36,7 @@ public class MineConstruct extends Construct {
 
             WorldEffect destroySelfEffect = new WorldEffect();
             destroySelfEffect.setEffectType(WorldEffect.REMOVE_CONSTRUCT);
-            destroySelfEffect.setAffectedUUID(uuidString);
+            destroySelfEffect.setAffectedUUID(idString);
             World.getInstance().addWorldEffectToQueue(destroySelfEffect);
 
             GameInfoPayload payload = new GameInfoPayload();
@@ -56,13 +56,12 @@ public class MineConstruct extends Construct {
     public void onAddedToTile() {
         Tile currentTile = World.getInstance().getRoom(getCurrentRoomName())
                 .getTileAtCoordinates(getCurrentTileXCoordinate(), getCurrentTileYCoordinate());
-        currentTile.addTrigger(uuidString, new Trigger(this));
-        World.getInstance().addWorldItemLocation(uuidString, currentTile);
+        currentTile.addTrigger(idString, new Trigger(this));
+        World.getInstance().addWorldItemLocation(idString, currentTile);
     }
 
     @Override
     public void onRemovedFromTile() {
-        World.getInstance().removeAllWorldItemLocations(uuidString);
-        //TODO add info message
+        World.getInstance().removeAllWorldItemLocations(idString);
     }
 }

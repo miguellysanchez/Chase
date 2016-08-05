@@ -4,8 +4,6 @@ import com.voyager.chase.game.entity.Renderable;
 import com.voyager.chase.game.skill.Skill;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by miguellysanchez on 7/5/16.
@@ -15,7 +13,7 @@ public abstract class Player extends Renderable {
     public static final String SENTRY_ROLE = "SENTRY";
     public static final String SPY_ROLE = "SPY";
 
-    private HashMap<String, Skill> mSkillsMap;
+    private ArrayList<Skill> mSkillsList;
     protected int mLife = 1;
     protected int mMaxLife = 2;
     protected int mActionPoints = 0;
@@ -46,15 +44,12 @@ public abstract class Player extends Renderable {
     }
 
     public ArrayList<Skill> getSkillsList() {
-        return new ArrayList<>(mSkillsMap.values());
+        return mSkillsList;
     }
 
-    public void setSkills(HashMap<String, Skill> skillsMap) {
-        mSkillsMap = skillsMap;
-        for (Map.Entry<String, Skill> entry : skillsMap.entrySet()) {
-            Skill skill = entry.getValue();
-            skill.setOwner(this);
-        }
+    public void setSkills(ArrayList<Skill> skillsList) {
+        mSkillsList = skillsList;
+
     }
 
     public void recoverActionPoints() {
