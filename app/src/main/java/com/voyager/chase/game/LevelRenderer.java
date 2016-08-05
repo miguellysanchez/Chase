@@ -139,20 +139,20 @@ public class LevelRenderer {
 //        if(true) {
 //            return true;
 //        }
-        if (tile.getVisibilityModifierList().contains(Tile.GLOBAL_VISIBILITY)) {
+        if (tile.getVisibilityModifierList().contains(Tile.GLOBAL_VISIBILITY_MOD)) {
             return true;
         }
 
         int renderableVisibility = Renderable.HIDDEN;
         if (Player.SPY_ROLE.equals(userPlayer.getRole())) {
-            if (tile.getVisibilityModifierList().contains(Tile.SPY_ONLY_GLOBAL_VISIBILITY)) {
+            if (tile.getVisibilityModifierList().contains(Tile.SPY_ONLY_GLOBAL_VISIBILITY_MOD)) {
                 return true;
             }
             if (renderable != null) {
                 renderableVisibility = renderable.getSpyVisibility();
             }
         } else if (Player.SENTRY_ROLE.equals(userPlayer.getRole())) {
-            if (tile.getVisibilityModifierList().contains(Tile.SENTRY_ONLY_GLOBAL_VISIBILITY)) {
+            if (tile.getVisibilityModifierList().contains(Tile.SENTRY_ONLY_GLOBAL_VISIBILITY_MOD)) {
                 return true;
             }
             if (renderable != null) {

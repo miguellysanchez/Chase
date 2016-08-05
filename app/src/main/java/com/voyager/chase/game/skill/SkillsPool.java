@@ -12,7 +12,7 @@ import com.voyager.chase.game.skill.sentry.AttackSkill;
 import com.voyager.chase.game.skill.sentry.FragGrenadeSkill;
 import com.voyager.chase.game.skill.sentry.MotionSensorSkill;
 import com.voyager.chase.game.skill.sentry.RecoverSkill;
-import com.voyager.chase.game.skill.sentry.RoomIlluminationBeaconSkill;
+import com.voyager.chase.game.skill.sentry.LuxGeneratorSkill;
 import com.voyager.chase.game.skill.sentry.SearchDroneSkill;
 import com.voyager.chase.game.skill.sentry.ShockRocketSkill;
 import com.voyager.chase.game.skill.sentry.StunNetSkill;
@@ -60,7 +60,7 @@ public class SkillsPool {
             description = "Destroys all constructs/objective in any adjacent tile. Destroy all objectives to win!";
         } else if (ATTACK_SKILL_NAME.equals(skillName)) {
             returnedSkill = new AttackSkill();
-            description = "Damage other player and destroy all skill items (including yours) in any tile to the left, right, above or below the current position";
+            description = "Damage other player and destroy all constructs (including yours) in any tile to the left, right, above or below the current position";
         } else if (Player.SPY_ROLE.equals(player.getRole())) {
             int[] spyCooldownArray = context.getResources().getIntArray(R.array.chase_array_skill_select_cooldown_spy);
             String[] spyDescriptionArray = context.getResources().getStringArray(R.array.chase_array_skill_select_description_spy);
@@ -128,7 +128,7 @@ public class SkillsPool {
                 returnedSkill = new MotionSensorSkill();
                 skillIndex = 3;
             } else if (sentryRoleSkillNames[4].equals(skillName)) {
-                returnedSkill = new RoomIlluminationBeaconSkill();
+                returnedSkill = new LuxGeneratorSkill();
                 skillIndex = 4;
             } else if (sentryRoleSkillNames[5].equals(skillName)) {
                 returnedSkill = new FragGrenadeSkill();

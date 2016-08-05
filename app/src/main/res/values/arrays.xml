@@ -5,7 +5,7 @@
         <item>Recover</item>
         <item>Stun Net</item>
         <item>Motion Sensor</item>
-        <item>Room Illumination Beacon</item>
+        <item>Lux Generator</item>
         <item>Frag Grenade</item>
         <item>Surveillance Bug</item>
         <item>Shock Rocket</item>
@@ -41,7 +41,7 @@
         <item>Gain an extra life.</item>
         <item>Place a stun next in any tile next to current position. Other player will end current turn and skip next turn when tile with net is stepped on.</item>
         <item>Set up a motion sensor in a 3x3 area from current position, that notifies you of the other player\'s position(This will not notify the other player of its trigger, and can only be triggered once.)</item>
-        <item>Drop a beacon in current position that shows all constructs in the room and position of players to all players. Visibility is returned to normal upon destroying beacon.</item>
+        <item>Drop a light-emitting generator at current position. This shows all constructs in the room and position of players to all players. Visibility is returned to normal upon destroying generator.</item>
         <item>Destroy all constructs, yours and other player\'s, in all adjacent tiles from target tile. Also, damages all players by 1 in the area of effect. Range is up to two tiles away from user</item>
         <item>Reveal position of all objects and other player in current position to you.</item>
         <item>Target any tile in room. If other player is in a 5x5 area from target tile, he skips his next turn.</item>
@@ -100,9 +100,9 @@
         <item>Place a mine in current tile. Deals 1 damage to other when stepping on tile. Longer cooldown.</item>
         <item>Place a mine in current tile. Deals 1 damage to other when stepping on tile. Longest cooldown.</item>
         <item>Deploy a decoy in any adjacent tile. Decoy is visible to both players in the room.</item>
-        <item>Gain an extra life, but will skip current and next turn. Very long cooldown</item>
+        <item>Gain an extra life, but will skip current and next turn. Very long cooldown.</item>
         <item>Place a barrier obstacle in any adjacent tile. Can be destroyed.</item>
-        <item>Place a beacon in current position</item>
+        <item>Place an illumination beacon in current position or any adjacent tile. Shows all constructs and players to all within a 5x5 grid. Once beacon is destroyed, visibility is returned to normal</item>
         <item>Choose a target tile. If other player is in that tile, it deals 1 damage to him. Notifies you if other player was hit.</item>
         <item>Deal 1 damage to all players within any 5x5 grid with target tile as center</item>
         <item>Deal 1 damage to the other player if he is within 7x7 area, with current tile as center</item>

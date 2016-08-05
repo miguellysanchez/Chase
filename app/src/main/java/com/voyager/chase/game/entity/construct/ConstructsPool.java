@@ -11,6 +11,7 @@ import com.voyager.chase.game.entity.player.Spy;
  * Created by miguellysanchez on 7/29/16.
  */
 public class ConstructsPool {
+
     public static Construct getConstruct(Context context, String constructName, String ownerRole, String constructUUID) {
         Construct construct = null;
         final String[] sentryConstructNames = context.getResources().getStringArray(R.array.chase_array_skill_select_name_sentry);
@@ -32,7 +33,7 @@ public class ConstructsPool {
         } else if (constructName.equals(sentryConstructNames[3])) {
 //            construct = new MotionSensorConstruct();
         } else if (constructName.equals(sentryConstructNames[4])) {
-//            construct = new RoomIlluminationBeaconConstruct();
+            construct = new LuxGeneratorConstruct();
         } else if (constructName.equals(sentryConstructNames[6])) {
 //                construct = new SurveillanceBugConstruct();
         } else if (constructName.equals(spyConstructNames[1])) {
@@ -46,7 +47,7 @@ public class ConstructsPool {
         } else if (constructName.equals(spyConstructNames[6])) {
 //            construct = new BarrierConstruct();
         } else if (constructName.equals(spyConstructNames[7])) {
-//            construct = new IlluminationBeaconConstruct();
+            construct = new IlluminationBeaconConstruct();
         }
 
         if (construct != null) {

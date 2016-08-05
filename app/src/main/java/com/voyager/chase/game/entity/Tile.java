@@ -14,9 +14,9 @@ import java.util.HashMap;
  * Created by miguellysanchez on 7/4/16.
  */
 public class Tile {
-    public static final String GLOBAL_VISIBILITY = "global_visibility";
-    public static final String SPY_ONLY_GLOBAL_VISIBILITY = "spy_only_global_visibility";
-    public static final String SENTRY_ONLY_GLOBAL_VISIBILITY = "sentry_only_global_visibility";
+    public static final String GLOBAL_VISIBILITY_MOD = "global_visibility";
+    public static final String SPY_ONLY_GLOBAL_VISIBILITY_MOD = "spy_only_global_visibility";
+    public static final String SENTRY_ONLY_GLOBAL_VISIBILITY_MOD = "sentry_only_global_visibility";
 
     private String mRoomName;
     private int xCoordinate;
