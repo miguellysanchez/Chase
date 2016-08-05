@@ -20,7 +20,7 @@ public class SnipeSkill extends Skill {
         ArrayList<Tile> selectableTiles = new ArrayList<>();
         ArrayList<Tile> roomTileArrayList = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getAllTiles();
         for (Tile tile : roomTileArrayList) {
-            if (tile.getXCoordinate() != mSkillOwner.getCurrentTileXCoordinate() || tile.getYCoordinate() != mSkillOwner.getCurrentTileYCoordinate()) {
+            if (tile.getXCoordinate() != mSkillOwner.getCurrentTileX() || tile.getYCoordinate() != mSkillOwner.getCurrentTileY()) {
                 selectableTiles.add(tile);
             }
         }

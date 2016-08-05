@@ -1,7 +1,6 @@
 package com.voyager.chase.game.skill.common;
 
 import com.voyager.chase.game.World;
-import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.worldeffect.WorldEffect;
@@ -20,8 +19,8 @@ public class MoveSkill extends Skill {
         ArrayList<Tile> selectableTilesList = new ArrayList<>();
         Player player = World.getUserPlayer();
         String roomName = player.getCurrentRoomName();
-        int currentTileX = player.getCurrentTileXCoordinate();
-        int currentTileY = player.getCurrentTileYCoordinate();
+        int currentTileX = player.getCurrentTileX();
+        int currentTileY = player.getCurrentTileY();
 
         safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX+1, currentTileY));
         safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX-1, currentTileY));

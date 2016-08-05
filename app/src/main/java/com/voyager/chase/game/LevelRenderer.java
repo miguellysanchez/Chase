@@ -83,15 +83,15 @@ public class LevelRenderer {
 
     private void renderTileToView(Tile tile, TileView tileView, Player userPlayer) {
         if (tile.getRoomName().equals(userPlayer.getCurrentRoomName())
-                && tile.getXCoordinate() == userPlayer.getCurrentTileXCoordinate()
-                && tile.getYCoordinate() == userPlayer.getCurrentTileYCoordinate()) {
+                && tile.getXCoordinate() == userPlayer.getCurrentTileX()
+                && tile.getYCoordinate() == userPlayer.getCurrentTileY()) {
             tileView.getFrameLayoutPlayerIndicator().setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_yellow));
         } else {
             tileView.getFrameLayoutPlayerIndicator().setBackgroundColor(ContextCompat.getColor(mContext, R.color.lighter_gray));
         }
 
         boolean willRenderFog = true;
-        if (TileUtility.isWithinRange(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate(), tile.getXCoordinate(), tile.getYCoordinate(), 2, 2)) {
+        if (TileUtility.isWithinRange(userPlayer.getCurrentTileX(), userPlayer.getCurrentTileY(), tile.getXCoordinate(), tile.getYCoordinate(), 2, 2)) {
             willRenderFog = false;
         }
 
@@ -164,7 +164,7 @@ public class LevelRenderer {
             case Renderable.HIDDEN:
                 return false;
             case Renderable.PROXIMITY_VISIBLE:
-                if (TileUtility.isWithinRange(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate(), tile.getXCoordinate(), tile.getYCoordinate(), 2, 2)) {
+                if (TileUtility.isWithinRange(userPlayer.getCurrentTileX(), userPlayer.getCurrentTileY(), tile.getXCoordinate(), tile.getYCoordinate(), 2, 2)) {
                     return true;
                 }
                 break;

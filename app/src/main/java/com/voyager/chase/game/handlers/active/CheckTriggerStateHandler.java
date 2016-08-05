@@ -29,7 +29,7 @@ public class CheckTriggerStateHandler extends TurnStateHandler {
 
         Player userPlayer = World.getUserPlayer();
         Tile currentTile = World.getInstance().getRoom(userPlayer.getCurrentRoomName())
-                .getTileAtCoordinates(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate());
+                .getTileAtCoordinates(userPlayer.getCurrentTileX(), userPlayer.getCurrentTileY());
         triggeredTilesList.add(currentTile);
 
         TurnStateEvent turnStateEvent = new TurnStateEvent();

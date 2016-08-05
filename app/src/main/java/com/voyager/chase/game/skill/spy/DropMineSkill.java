@@ -16,7 +16,7 @@ public class DropMineSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         Tile currentTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName())
-                .getTileAtCoordinates(mSkillOwner.getCurrentTileXCoordinate(), mSkillOwner.getCurrentTileYCoordinate());
+                .getTileAtCoordinates(mSkillOwner.getCurrentTileX(), mSkillOwner.getCurrentTileY());
         if(currentTile.isLocked()){
             return new ArrayList<>();
         } else {

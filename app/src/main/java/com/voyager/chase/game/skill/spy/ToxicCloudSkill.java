@@ -23,7 +23,7 @@ public class ToxicCloudSkill extends Skill {
 
     @Override
     public void useSkillOnTile(Tile tile) {
-        Tile currentTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getTileAtCoordinates(mSkillOwner.getCurrentTileXCoordinate(), mSkillOwner.getCurrentTileYCoordinate());
+        Tile currentTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getTileAtCoordinates(mSkillOwner.getCurrentTileX(), mSkillOwner.getCurrentTileY());
         for (int x = currentTile.getXCoordinate() - 3; x <= currentTile.getXCoordinate() + 3; x++) {
             for (int y = currentTile.getXCoordinate() - 3; y <= currentTile.getYCoordinate() + 3; y++) {
                 if (TileUtility.isWithinRoom(x, y)) {

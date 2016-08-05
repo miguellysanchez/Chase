@@ -47,7 +47,7 @@ public class ObjectiveConstruct extends Construct {
         if(World.getUserPlayer().getRole().equals(Spy.getInstance().getRole())){
             payload.setSenderMessage(String.format("One of your target OBJECTIVES was destroyed! %d objectives remaining", Spy.getInstance().getObjectivesRemaining()));
         } else {
-            payload.setNonSenderMessage(String.format("The OBJECTIVE in Room<%s> [%d,%d] was destroyed!!", getCurrentRoomName(), getCurrentTileXCoordinate(), getCurrentTileYCoordinate()));
+            payload.setNonSenderMessage(String.format("The OBJECTIVE in Room<%s> [%d,%d] was destroyed!!", getCurrentRoomName(), getCurrentTileX(), getCurrentTileY()));
         }
 
         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();

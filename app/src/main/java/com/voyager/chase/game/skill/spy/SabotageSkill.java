@@ -21,10 +21,10 @@ public class SabotageSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         ArrayList<Tile> selectableTilesList = new ArrayList<>();
-        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileXCoordinate() - 1, mSkillOwner.getCurrentTileYCoordinate());
-        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileXCoordinate() + 1, mSkillOwner.getCurrentTileYCoordinate());
-        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileXCoordinate(), mSkillOwner.getCurrentTileYCoordinate() - 1);
-        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileXCoordinate(), mSkillOwner.getCurrentTileYCoordinate() + 1);
+        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileX() - 1, mSkillOwner.getCurrentTileY());
+        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileX() + 1, mSkillOwner.getCurrentTileY());
+        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileX(), mSkillOwner.getCurrentTileY() - 1);
+        addSelectableTiles(selectableTilesList, mSkillOwner.getCurrentTileX(), mSkillOwner.getCurrentTileY() + 1);
         return selectableTilesList;
     }
 

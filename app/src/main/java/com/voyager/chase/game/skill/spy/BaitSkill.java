@@ -27,8 +27,8 @@ public class BaitSkill extends Skill {
         gameInfoPayload.setNonSenderMessage(
                 String.format("A flare was fired from another tile. It came from Room <%s>, at tile[%d,%d]",
                         mSkillOwner.getCurrentRoomName(),
-                        mSkillOwner.getCurrentTileXCoordinate(),
-                        mSkillOwner.getCurrentTileYCoordinate()));
+                        mSkillOwner.getCurrentTileX(),
+                        mSkillOwner.getCurrentTileY()));
 
         ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
         viewChangeEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);

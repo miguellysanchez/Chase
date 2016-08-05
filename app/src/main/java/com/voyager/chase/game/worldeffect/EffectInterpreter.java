@@ -31,7 +31,7 @@ public class EffectInterpreter {
                     throw new IllegalStateException("No player matched for the world effect.");
                 }
                 World.getInstance().getRoom(player.getCurrentRoomName())
-                        .getTileAtCoordinates(player.getCurrentTileXCoordinate(), player.getCurrentTileYCoordinate()).removePlayer();
+                        .getTileAtCoordinates(player.getCurrentTileX(), player.getCurrentTileY()).removePlayer();
                 World.getInstance().getRoom(worldEffect.getAffectedRoom())
                         .getTileAtCoordinates(worldEffect.getAffectedX(), worldEffect.getAffectedY()).setPlayer(player);
                 break;

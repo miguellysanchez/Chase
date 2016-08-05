@@ -23,8 +23,8 @@ public class AttackSkill extends Skill {
         ArrayList<Tile> selectableTilesList = new ArrayList<>();
         Player player = World.getUserPlayer();
         String roomName = player.getCurrentRoomName();
-        int currentTileX = player.getCurrentTileXCoordinate();
-        int currentTileY = player.getCurrentTileYCoordinate();
+        int currentTileX = player.getCurrentTileX();
+        int currentTileY = player.getCurrentTileY();
 
         safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX + 1, currentTileY));
         safeAddToSelectableTiles(selectableTilesList, checkTileAtCoordinates(roomName, currentTileX - 1, currentTileY));

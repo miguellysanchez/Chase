@@ -36,8 +36,8 @@ public class TargetSelectionStateHandler extends TurnStateHandler {
                 ArrayList<Tile> selectableTiles = selectedSkill.getSelectableTiles();
                 if(selectableTiles == null){//when skill does not need a target
                     Player userPlayer = World.getUserPlayer();
-                    Tile currentTile = World.getInstance().getRoom(userPlayer.getCurrentRoomName()).getTileAtCoordinates(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate());
-                    Timber.d(">>>>>CURRENT TILE: %s | %s|%s" , userPlayer.getCurrentRoomName(), ""+userPlayer.getCurrentTileXCoordinate(), ""+userPlayer.getCurrentTileYCoordinate());
+                    Tile currentTile = World.getInstance().getRoom(userPlayer.getCurrentRoomName()).getTileAtCoordinates(userPlayer.getCurrentTileX(), userPlayer.getCurrentTileY());
+                    Timber.d(">>>>>CURRENT TILE: %s | %s|%s" , userPlayer.getCurrentRoomName(), ""+userPlayer.getCurrentTileX(), ""+userPlayer.getCurrentTileY());
                     goToResolveSkillState(currentTile);
                 } else if(selectableTiles.isEmpty()){ // when no valid targets
                     viewChangeEvent = new ViewChangeEvent();

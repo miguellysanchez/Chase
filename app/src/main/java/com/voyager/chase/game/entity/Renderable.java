@@ -37,7 +37,7 @@ public class Renderable {
         this.mCurrentRoomName = mCurrentRoomName;
     }
 
-    public int getCurrentTileXCoordinate() {
+    public int getCurrentTileX() {
         return mCurrentTileXCoordinate;
     }
 
@@ -45,7 +45,7 @@ public class Renderable {
         this.mCurrentTileXCoordinate = mCurrentTileXCoordinate;
     }
 
-    public int getCurrentTileYCoordinate() {
+    public int getCurrentTileY() {
         return mCurrentTileYCoordinate;
     }
 

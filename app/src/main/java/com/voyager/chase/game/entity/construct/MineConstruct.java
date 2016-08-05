@@ -55,7 +55,7 @@ public class MineConstruct extends Construct {
     @Override
     public void onAddedToTile() {
         Tile currentTile = World.getInstance().getRoom(getCurrentRoomName())
-                .getTileAtCoordinates(getCurrentTileXCoordinate(), getCurrentTileYCoordinate());
+                .getTileAtCoordinates(getCurrentTileX(), getCurrentTileY());
         currentTile.addTrigger(idString, new Trigger(this));
         World.getInstance().addWorldItemLocation(idString, currentTile);
     }

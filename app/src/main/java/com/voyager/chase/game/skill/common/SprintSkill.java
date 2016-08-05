@@ -15,8 +15,8 @@ public class SprintSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         ArrayList<Tile> selectableTileArrayList = new ArrayList<>();
-        for (int x = mSkillOwner.getCurrentTileXCoordinate() - 2; x <= mSkillOwner.getCurrentTileXCoordinate() + 2; x++) {
-            for (int y = mSkillOwner.getCurrentTileYCoordinate() - 2; y <= mSkillOwner.getCurrentTileYCoordinate() + 2; y++) {
+        for (int x = mSkillOwner.getCurrentTileX() - 2; x <= mSkillOwner.getCurrentTileX() + 2; x++) {
+            for (int y = mSkillOwner.getCurrentTileY() - 2; y <= mSkillOwner.getCurrentTileY() + 2; y++) {
                 if (TileUtility.isWithinRoom(x, y)) {
                     Tile targetableTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getTileAtCoordinates(x, y);
                     if (!targetableTile.containsObstacle()) {

@@ -25,7 +25,7 @@ public class SearchDroneSkill extends Skill {
         GameInfoPayload gameInfoPayload = new GameInfoPayload();
         gameInfoPayload.setSenderRole(mSkillOwner.getRole());
         gameInfoPayload.setSenderMessage(String.format("SEARCH DRONE located SPY in Room: <%s> at tile [%d,%d]",
-                spy.getCurrentRoomName(), spy.getCurrentTileXCoordinate(), spy.getCurrentTileYCoordinate()));
+                spy.getCurrentRoomName(), spy.getCurrentTileX(), spy.getCurrentTileY()));
 
         ViewChangeEvent searchDroneEffect = new ViewChangeEvent();
         searchDroneEffect.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);

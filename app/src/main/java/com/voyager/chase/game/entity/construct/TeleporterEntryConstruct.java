@@ -50,7 +50,7 @@ public class TeleporterEntryConstruct extends Construct {
     public void onAddedToTile() {
         TeleporterExitConstruct teleporterExitConstruct = new TeleporterExitConstruct(idString);
         Tile currentTile = World.getInstance().getRoom(getCurrentRoomName())
-                .getTileAtCoordinates(getCurrentTileXCoordinate(), getCurrentTileYCoordinate());
+                .getTileAtCoordinates(getCurrentTileX(), getCurrentTileY());
         currentTile.addTrigger(idString, new Trigger(this));
         World.getInstance().addWorldItemLocation(idString, currentTile);
         World.getInstance().getRoom(targetRoom).getTileAtCoordinates(targetX, targetY).addConstruct(teleporterExitConstruct);
