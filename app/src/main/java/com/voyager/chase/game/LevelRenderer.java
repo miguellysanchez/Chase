@@ -86,7 +86,6 @@ public class LevelRenderer {
                 && tile.getXCoordinate() == userPlayer.getCurrentTileXCoordinate()
                 && tile.getYCoordinate() == userPlayer.getCurrentTileYCoordinate()) {
             tileView.getFrameLayoutPlayerIndicator().setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_yellow));
-
         } else {
             tileView.getFrameLayoutPlayerIndicator().setBackgroundColor(ContextCompat.getColor(mContext, R.color.lighter_gray));
         }
@@ -103,6 +102,8 @@ public class LevelRenderer {
                 tileView.getImageViewPlayer().setVisibility(View.VISIBLE);
                 tileView.getImageViewPlayer().setImageResource(tile.getPlayer().getRenderDrawableId());
                 willRenderFog = false;
+            } else {
+                tileView.getImageViewPlayer().setVisibility(View.GONE);
             }
         }
 
@@ -134,7 +135,7 @@ public class LevelRenderer {
         tileView.getViewFog().setVisibility(willRenderFog ? View.VISIBLE : View.GONE);
     }
 
-    private boolean shouldRender(Renderable renderable, Tile tile, Player player) {
+    private boolean shouldRender(Renderable renderable, Tile tile, Player userPlayer) {
 //        if(true) {
 //            return true;
 //        }
@@ -143,14 +144,14 @@ public class LevelRenderer {
         }
 
         int renderableVisibility = Renderable.HIDDEN;
-        if (Player.SPY_ROLE.equals(player.getRole())) {
+        if (Player.SPY_ROLE.equals(userPlayer.getRole())) {
             if (tile.getVisibilityModifierList().contains(Tile.SPY_ONLY_GLOBAL_VISIBILITY)) {
                 return true;
             }
             if (renderable != null) {
                 renderableVisibility = renderable.getSpyVisibility();
             }
-        } else if (Player.SENTRY_ROLE.equals(player.getRole())) {
+        } else if (Player.SENTRY_ROLE.equals(userPlayer.getRole())) {
             if (tile.getVisibilityModifierList().contains(Tile.SENTRY_ONLY_GLOBAL_VISIBILITY)) {
                 return true;
             }
@@ -158,11 +159,12 @@ public class LevelRenderer {
                 renderableVisibility = renderable.getSentryVisibility();
             }
         }
+
         switch (renderableVisibility) {
             case Renderable.HIDDEN:
                 return false;
             case Renderable.PROXIMITY_VISIBLE:
-                if (TileUtility.isWithinRange(player.getCurrentTileXCoordinate(), player.getCurrentTileYCoordinate(), tile.getXCoordinate(), tile.getYCoordinate(), 2, 2)) {
+                if (TileUtility.isWithinRange(userPlayer.getCurrentTileXCoordinate(), userPlayer.getCurrentTileYCoordinate(), tile.getXCoordinate(), tile.getYCoordinate(), 2, 2)) {
                     return true;
                 }
                 break;
