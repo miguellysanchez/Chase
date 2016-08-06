@@ -169,6 +169,16 @@ public class GameActivity extends BaseActivity {
     private void initializeViews() {
         mGameInfoAdapter = new GameInfoAdapter(this);
         mListViewInfo.setAdapter(mGameInfoAdapter);
+        View headerView = getLayoutInflater().inflate(R.layout.chase_view_info_header, null);
+        headerView.findViewById(R.id.chase_view_info_header_imagebutton_clear).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mGameInfoAdapter.removeAllGameInfo();
+                    }
+                }
+        );
+        mListViewInfo.addHeaderView(headerView);
 
         mSkillsAdapter = new SkillsAdapter(this, new SkillsAdapter.OnClickListener() {
             @Override
@@ -460,7 +470,7 @@ public class GameActivity extends BaseActivity {
                     gameInfo.setSenderRole(senderRole);
                     gameInfo.setTimestamp(System.currentTimeMillis());
                     mGameInfoAdapter.addToGameInfoArrayList(gameInfo);
-                    mListViewInfo.setSelection(0);
+                    mListViewInfo.setSelectionAfterHeaderView();
                 }
                 break;
             case MqttCallbackEvent.DELIVERED_MESSAGE_CALLBACK_TYPE:

@@ -89,6 +89,11 @@ public class GameInfoAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void removeAllGameInfo() {
+        mGameInfoArrayList.clear();
+        notifyDataSetChanged();
+    }
+
     static class ViewHolder {
         @BindView(R.id.chase_listitem_game_info_linearlayout_container)
         LinearLayout linearLayoutContainer;

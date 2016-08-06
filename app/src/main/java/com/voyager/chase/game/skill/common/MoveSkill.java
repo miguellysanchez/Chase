@@ -60,5 +60,4 @@ public class MoveSkill extends Skill {
         }
     }
 
-
 }

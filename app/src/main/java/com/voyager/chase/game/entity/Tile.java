@@ -86,11 +86,11 @@ public class Tile {
     }
 
     public void removeItem(String uuid) {
-        for (Construct construct : mConstructsMultimap.get(uuid)) {
+        for (Construct construct : mConstructsMultimap.removeAll(uuid)) {
             construct.onRemovedFromTile();
             removeLocationFromRenderable(construct);
         }
-        mConstructsMultimap.removeAll(uuid);
+
         mTriggersMap.remove(uuid);
         mVisibilityModifierMap.remove(uuid);
     }

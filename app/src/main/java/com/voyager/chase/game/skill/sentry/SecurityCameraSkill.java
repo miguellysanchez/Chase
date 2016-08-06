@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * Created by miguellysanchez on 7/25/16.
+ * Created by miguellysanchez on 7/17/16.
  */
-public class SurveillanceBugSkill extends Skill {
+public class SecurityCameraSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         Tile currentTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName())
@@ -25,16 +25,16 @@ public class SurveillanceBugSkill extends Skill {
 
     @Override
     public void useSkillOnTile(Tile selectedTile) {
-        WorldEffect surveillanceEffect = new WorldEffect();
-        surveillanceEffect.setEffectType(WorldEffect.ADD_CONSTRUCT);
+        WorldEffect securityCameraEffect = new WorldEffect();
+        securityCameraEffect.setEffectType(WorldEffect.ADD_CONSTRUCT);
 
-        surveillanceEffect.setEffectContent(getSkillName());
-        surveillanceEffect.setAffectedUUID(UUID.randomUUID().toString());
-        surveillanceEffect.setAffectedRole(World.getUserPlayer().getRole());
-        surveillanceEffect.setAffectedRoom(selectedTile.getRoomName());
-        surveillanceEffect.setAffectedX(selectedTile.getXCoordinate());
-        surveillanceEffect.setAffectedY(selectedTile.getYCoordinate());
-        World.getInstance().addWorldEffectToQueue(surveillanceEffect);
+        securityCameraEffect.setEffectContent(getSkillName());
+        securityCameraEffect.setAffectedUUID(UUID.randomUUID().toString());
+        securityCameraEffect.setAffectedRole(World.getUserPlayer().getRole());
+        securityCameraEffect.setAffectedRoom(selectedTile.getRoomName());
+        securityCameraEffect.setAffectedX(selectedTile.getXCoordinate());
+        securityCameraEffect.setAffectedY(selectedTile.getYCoordinate());
+        World.getInstance().addWorldEffectToQueue(securityCameraEffect);
     }
 
 }

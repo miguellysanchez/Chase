@@ -27,15 +27,15 @@ public class ConstructsPool {
         }
 
         if (constructName.equals(sentryConstructNames[0])) {
-//            construct = new AlarmTrapConstruct();
+            construct = new SecurityCameraConstruct();
         } else if (constructName.equals(sentryConstructNames[2])) {
 //            construct = new StunNetConstruct();
         } else if (constructName.equals(sentryConstructNames[3])) {
-//            construct = new MotionSensorConstruct();
+            construct = new MotionSensorConstruct();
         } else if (constructName.equals(sentryConstructNames[4])) {
             construct = new LuxGeneratorConstruct();
         } else if (constructName.equals(sentryConstructNames[6])) {
-//                construct = new SurveillanceBugConstruct();
+            construct = new SurveillanceBugConstruct();
         } else if (constructName.equals(spyConstructNames[1])) {
             construct = new MineConstruct();
         } else if (constructName.equals(spyConstructNames[2])) {
@@ -43,9 +43,9 @@ public class ConstructsPool {
         } else if (constructName.equals(spyConstructNames[3])) {
             construct = new MineConstruct();
         } else if (constructName.equals(spyConstructNames[4])) {
-//            construct = new DecoyConstruct();
+            construct = new DecoyConstruct();
         } else if (constructName.equals(spyConstructNames[6])) {
-//            construct = new BarrierConstruct();
+            construct = new BarrierConstruct();
         } else if (constructName.equals(spyConstructNames[7])) {
             construct = new IlluminationBeaconConstruct();
         }

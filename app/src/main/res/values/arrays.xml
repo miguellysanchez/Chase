@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="chase_array_skill_select_name_sentry">
-        <item>Alarm Trap</item>
+        <item>Security Camera</item>
         <item>Recover</item>
         <item>Stun Net</item>
         <item>Motion Sensor</item>
@@ -13,7 +13,7 @@
         <item>Sprint</item>
     </string-array>
     <integer-array name="chase_array_skill_select_cooldown_sentry">
-        <item>5</item>
+        <item>6</item>
         <item>20</item>
         <item>3</item>
         <item>4</item>
@@ -21,29 +21,29 @@
         <item>8</item>
         <item>4</item>
         <item>5</item>
-        <item>13</item>
+        <item>11</item>
         <item>2</item>
     </integer-array>
     <integer-array name="chase_array_skill_select_cost_sentry">
-        <item>3</item>
-        <item>5</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
         <item>7</item>
-        <item>2</item>
-        <item>5</item>
-        <item>5</item>
-        <item>2</item>
+        <item>10</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>13</item>
+        <item>9</item>
+        <item>8</item>
+        <item>10</item>
+        <item>3</item>
     </integer-array>
     <string-array name="chase_array_skill_select_description_sentry">
-        <item>Drop an alarm trap in current position that shows position of other player within 5x5 area. Other player is notified that this trap has been triggered. Effect does not stop until alarm trap is destroyed.</item>
+        <item>Drop a security camera in current position that notifies you of position of other player within 7x7 area. The camera is visible to the other player within his proximity range. Effect does not stop until camera is destroyed.</item>
         <item>Gain an extra life.</item>
         <item>Place a stun next in any tile next to current position. Other player will end current turn and skip next turn when tile with net is stepped on.</item>
-        <item>Set up a motion sensor in a 3x3 area from current position, that notifies you of the other player\'s position(This will not notify the other player of its trigger, and can only be triggered once.)</item>
+        <item>Set up a motion sensor in any adjacent tile. The sensor covers an area that is walkable up to 2 tiles away  from its current position, and is triggered each time other player move within its range. The sensor notifies you of the other player\'s position and also notify the other player of its trigger. Location of motion sensor is hidden until destroyed</item>
         <item>Drop a light-emitting generator at current position. This shows all constructs in the room and position of players to all players. Visibility is returned to normal upon destroying generator.</item>
-        <item>Destroy all constructs, yours and other player\'s, in all adjacent tiles from target tile. Also, damages all players by 1 in the area of effect. Range is up to two tiles away from user</item>
-        <item>Reveal position of all objects and other player in current position to you.</item>
+        <item>Destroy all constructs, yours and other player\'s, in all adjacent tiles from target tile. Also, damages all players by 1 in the area of effect. Throwing range is within 5x5 grid with current position in center.</item>
+        <item>Place a bug in current position that reveals all objects and the other player to you when in that location.</item>
         <item>Target any tile in room. If other player is in a 5x5 area from target tile, he skips his next turn.</item>
         <item>Reveals current position of other player in from any tile and any room.</item>
         <item>Move to any tile within a 5x5 area with current position as center. This move will fail if target tile is an obstacle</item>
@@ -63,6 +63,7 @@
         <item>Toxic Cloud</item>
         <item>Bait</item>
         <item>Sprint</item>
+        <item>Surveillance Bug</item>
     </string-array>
     <integer-array name="chase_array_skill_select_cooldown_spy">
         <item>5</item>
@@ -78,21 +79,23 @@
         <item>10</item>
         <item>0</item>
         <item>2</item>
+        <item>5</item>
     </integer-array>
     <integer-array name="chase_array_skill_select_cost_spy">
-        <item>4</item>
-        <item>3</item>
-        <item>3</item>
-        <item>3</item>
-        <item>1</item>
+        <item>8</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>2</item>
+        <item>9</item>
+        <item>7</item>
+        <item>6</item>
         <item>5</item>
-        <item>4</item>
-        <item>3</item>
+        <item>9</item>
+        <item>10</item>
         <item>2</item>
         <item>4</item>
-        <item>5</item>
-        <item>1</item>
-        <item>2</item>
+        <item>4</item>
     </integer-array>
     <string-array name="chase_array_skill_select_description_spy">
         <item>Removes all constructs in any target tile in the room, and all tiles to its left, to its right, above and below.</item>
@@ -108,6 +111,7 @@
         <item>Deal 1 damage to the other player if he is within 7x7 area, with current tile as center</item>
         <item>Reveal current position to the other player</item>
         <item>Move to any tile within a 5x5 area with current position as center. This move will fail if target tile contains an obstacle.</item>
+        <item>Place a bug in current position that reveals all objects and the other player to you when in that location.</item>
     </string-array>
 
 </resources>

@@ -30,7 +30,7 @@ public class IlluminationBeaconConstruct extends Construct {
     @Override
     public void onAddedToTile() {
         for (int x = getCurrentTileX() - 2; x <= getCurrentTileX() + 2; x++) {
-            for (int y = getCurrentTileY() - 2; y < getCurrentTileY() + 2; y++) {
+            for (int y = getCurrentTileY() - 2; y <= getCurrentTileY() + 2; y++) {
                 if (TileUtility.isWithinRoom(x, y)) {
                     Tile tile = World.getInstance().getRoom(getCurrentRoomName()).getTileAtCoordinates(x, y);
                     tile.addVisibilityModifier(idString, Tile.GLOBAL_VISIBILITY_MOD);

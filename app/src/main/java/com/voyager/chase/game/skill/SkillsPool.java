@@ -7,7 +7,7 @@ import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.skill.common.EndTurnSkill;
 import com.voyager.chase.game.skill.common.MoveSkill;
 import com.voyager.chase.game.skill.common.SprintSkill;
-import com.voyager.chase.game.skill.sentry.AlarmTrapSkill;
+import com.voyager.chase.game.skill.sentry.SecurityCameraSkill;
 import com.voyager.chase.game.skill.sentry.AttackSkill;
 import com.voyager.chase.game.skill.sentry.FragGrenadeSkill;
 import com.voyager.chase.game.skill.sentry.MotionSensorSkill;
@@ -64,7 +64,7 @@ public class SkillsPool {
         } else if (Player.SPY_ROLE.equals(player.getRole())) {
             int[] spyCooldownArray = context.getResources().getIntArray(R.array.chase_array_skill_select_cooldown_spy);
             String[] spyDescriptionArray = context.getResources().getStringArray(R.array.chase_array_skill_select_description_spy);
-            
+
             int skillIndex = -1;
             if (spyRoleSkillNames[0].equals(skillName)) {
                 returnedSkill = new EMPBlastSkill();
@@ -105,8 +105,11 @@ public class SkillsPool {
             } else if (spyRoleSkillNames[12].equals(skillName)) {
                 returnedSkill = new SprintSkill();
                 skillIndex = 12;
+            } else if (spyRoleSkillNames[13].equals(skillName)) {
+                returnedSkill = new SurveillanceBugSkill();
+                skillIndex = 13;
             }
-            if(skillIndex>=0) {
+            if (skillIndex >= 0) {
                 skillCooldown = spyCooldownArray[skillIndex];
                 description = spyDescriptionArray[skillIndex];
             }
@@ -116,7 +119,7 @@ public class SkillsPool {
 
             int skillIndex = -1;
             if (sentryRoleSkillNames[0].equals(skillName)) {
-                returnedSkill = new AlarmTrapSkill();
+                returnedSkill = new SecurityCameraSkill();
                 skillIndex = 0;
             } else if (sentryRoleSkillNames[1].equals(skillName)) {
                 returnedSkill = new RecoverSkill();
@@ -147,7 +150,7 @@ public class SkillsPool {
                 skillIndex = 9;
             }
 
-            if(skillIndex>=0) {
+            if (skillIndex >= 0) {
                 skillCooldown = sentryCooldownArray[skillIndex];
                 description = sentryDescriptionArray[skillIndex];
             }
