@@ -33,7 +33,7 @@ public class World {
     public static World getInstance() {
         if (sWorld == null) {
             //TODO auto generating world return sampleWorld()
-            return sampleCreateWorld();
+            return createInstance();
         }
         return sWorld;
     }
@@ -52,7 +52,7 @@ public class World {
         return sWorld;
     }
 
-    public static World sampleCreateWorld() {
+    public static World createInstance() {
         sWorld = new World();
         String[] roomNames = new String[]{"A", "B", "C", "D", "E", "F"};
 

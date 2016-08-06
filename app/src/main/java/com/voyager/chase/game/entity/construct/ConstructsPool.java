@@ -29,7 +29,7 @@ public class ConstructsPool {
         if (constructName.equals(sentryConstructNames[0])) {
             construct = new SecurityCameraConstruct();
         } else if (constructName.equals(sentryConstructNames[2])) {
-//            construct = new StunNetConstruct();
+            construct = new StunTrapConstruct();
         } else if (constructName.equals(sentryConstructNames[3])) {
             construct = new MotionSensorConstruct();
         } else if (constructName.equals(sentryConstructNames[4])) {

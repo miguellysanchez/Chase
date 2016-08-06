@@ -28,10 +28,10 @@ public class SurveillanceBugConstruct extends Construct {
         super.setOwner(mOwner);
         if (Player.SPY_ROLE.equals(mOwner.getRole())) {
             spyVisibility = Renderable.GLOBALLY_VISIBLE;
-            renderDrawableId = R.drawable.chase_ic_surveillance_bug_spy;
+            renderDrawableId = R.drawable.chase_ic_construct_surveillance_bug_spy;
         } else if (Player.SENTRY_ROLE.equals(mOwner.getRole())) {
             sentryVisibility = Renderable.GLOBALLY_VISIBLE;
-            renderDrawableId = R.drawable.chase_ic_surveillance_bug_sentry;
+            renderDrawableId = R.drawable.chase_ic_construct_surveillance_bug_sentry;
         }
     }
 
@@ -44,11 +44,11 @@ public class SurveillanceBugConstruct extends Construct {
     public void onAddedToTile() {
         Tile tile = World.getInstance().getRoom(getCurrentRoomName()).getTileAtCoordinates(getCurrentTileX(), getCurrentTileY());
         if (Player.SENTRY_ROLE.equals(mOwner.getRole())) {
-            tile.addVisibilityModifier(idString, Tile.SENTRY_ONLY_GLOBAL_VISIBILITY_MOD);
+            tile.addVisibilityModifier(mIdString, Tile.SENTRY_ONLY_GLOBAL_VISIBILITY_MOD);
         } else if (Player.SPY_ROLE.equals(mOwner.getRole())) {
-            tile.addVisibilityModifier(idString, Tile.SPY_ONLY_GLOBAL_VISIBILITY_MOD);
+            tile.addVisibilityModifier(mIdString, Tile.SPY_ONLY_GLOBAL_VISIBILITY_MOD);
         }
-        World.getInstance().addWorldItemLocation(idString, tile);
+        World.getInstance().addWorldItemLocation(mIdString, tile);
     }
 
     @Override
@@ -62,6 +62,6 @@ public class SurveillanceBugConstruct extends Construct {
             viewChangeEvent.setGameInfoUpdate(gameInfoPayload.toJson());
             EventBus.getDefault().post(viewChangeEvent);
         }
-        World.getInstance().removeAllWorldItemLocations(idString);
+        World.getInstance().removeAllWorldItemLocations(mIdString);
     }
 }

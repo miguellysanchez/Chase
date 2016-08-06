@@ -12,27 +12,27 @@ import com.voyager.chase.mqtt.payload.GameInfoPayload;
 import org.greenrobot.eventbus.EventBus;
 
 /**
- * Created by miguellysanchez on 7/29/16.
+ * Created by miguellysanchez on 8/6/16.
  */
-public class MineConstruct extends Construct {
-    protected MineConstruct() {
-        mConstructName = "MINE";
-        renderDrawableId = R.drawable.chase_ic_construct_mine;
+public class StunTrapConstruct extends Construct {
+    public StunTrapConstruct() {
+        mConstructName = "STUN TRAP";
+        renderDrawableId = R.drawable.chase_ic_construct_stun_trap;
         isObstacle = false;
         isLocked = false;
         isInvulnerable = false;
-        spyVisibility = Renderable.GLOBALLY_VISIBLE;
-        sentryVisibility = Renderable.HIDDEN;
+        spyVisibility = Renderable.HIDDEN;
+        sentryVisibility = Renderable.GLOBALLY_VISIBLE;
     }
 
     @Override
     protected boolean onTriggered(Player player) {
-        if(!mOwner.getRole().equals(player.getRole())){
-            WorldEffect damagePlayerEffect = new WorldEffect();
-            damagePlayerEffect.setEffectType(WorldEffect.MODIFY_PLAYER);
-            damagePlayerEffect.setAffectedRole(player.getRole());
-            damagePlayerEffect.setEffectContent(WorldEffect.REDUCE_PLAYER_LIFE);
-            World.getInstance().addWorldEffectToQueue(damagePlayerEffect);
+        if (!mOwner.getRole().equals(player.getRole())) {
+            WorldEffect skipPlayerTurn = new WorldEffect();
+            skipPlayerTurn.setEffectType(WorldEffect.MODIFY_PLAYER);
+            skipPlayerTurn.setAffectedRole(player.getRole());
+            skipPlayerTurn.setEffectContent(WorldEffect.SKIP_PLAYER_TURN);
+            World.getInstance().addWorldEffectToQueue(skipPlayerTurn);
 
             WorldEffect destroySelfEffect = new WorldEffect();
             destroySelfEffect.setEffectType(WorldEffect.REMOVE_CONSTRUCT);
@@ -41,7 +41,8 @@ public class MineConstruct extends Construct {
 
             GameInfoPayload payload = new GameInfoPayload();
             payload.setSenderRole(player.getRole());
-            payload.setSenderMessage("You have stepped on a MINE. You lost a life");
+            payload.setSenderMessage("Triggered a STUN TRAP. End current turn and skip your next turn.");
+            payload.setNonSenderMessage(String.format("Your STUN TRAP in Room <%s>, Tile [%d,%d] was triggered", getCurrentRoomName(), getCurrentTileX(), getCurrentTileY()));
 
             ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
             viewChangeEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);

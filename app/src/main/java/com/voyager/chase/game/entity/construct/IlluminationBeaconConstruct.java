@@ -33,8 +33,8 @@ public class IlluminationBeaconConstruct extends Construct {
             for (int y = getCurrentTileY() - 2; y <= getCurrentTileY() + 2; y++) {
                 if (TileUtility.isWithinRoom(x, y)) {
                     Tile tile = World.getInstance().getRoom(getCurrentRoomName()).getTileAtCoordinates(x, y);
-                    tile.addVisibilityModifier(idString, Tile.GLOBAL_VISIBILITY_MOD);
-                    World.getInstance().addWorldItemLocation(idString, tile);
+                    tile.addVisibilityModifier(mIdString, Tile.GLOBAL_VISIBILITY_MOD);
+                    World.getInstance().addWorldItemLocation(mIdString, tile);
                 }
             }
         }
@@ -42,6 +42,6 @@ public class IlluminationBeaconConstruct extends Construct {
 
     @Override
     public void onRemovedFromTile() {
-        World.getInstance().removeAllWorldItemLocations(idString);
+        World.getInstance().removeAllWorldItemLocations(mIdString);
     }
 }

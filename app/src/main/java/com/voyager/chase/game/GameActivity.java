@@ -17,6 +17,7 @@ import com.voyager.chase.common.BaseActivity;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.construct.ObjectiveConstruct;
 import com.voyager.chase.game.entity.construct.TeleporterEntryConstruct;
+import com.voyager.chase.game.entity.construct.WallConstruct;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
@@ -139,8 +140,6 @@ public class GameActivity extends BaseActivity {
     }
 
     private void constructGameWorld() {
-        //TODO construct game session object, contains world, mqtt handler
-        World world = World.getInstance();
         Spy spy = Spy.createInstance();
         Sentry sentry = Sentry.createInstance();
         if (Player.SPY_ROLE.equals(getPreferenceUtility().getGameRole())) {
@@ -160,7 +159,7 @@ public class GameActivity extends BaseActivity {
         }
         World.getUserPlayer().setSkills(equippedSkills);
 
-        initializeSampleGameState();
+        DemoInitialization.initializeSampleGameState();
 
         mLevelRenderer = new LevelRenderer(mLinearLayoutLevel);
         mLevelRenderer.render();

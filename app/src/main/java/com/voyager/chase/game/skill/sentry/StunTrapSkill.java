@@ -1,4 +1,4 @@
-package com.voyager.chase.game.skill.spy;
+package com.voyager.chase.game.skill.sentry;
 
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
@@ -12,13 +12,13 @@ import java.util.UUID;
 /**
  * Created by miguellysanchez on 7/25/16.
  */
-public class PlantDecoySkill extends Skill {
+public class StunTrapSkill extends Skill {
     @Override
     public ArrayList<Tile> getSelectableTiles() {
         ArrayList<Tile> selectableTileArrayList = new ArrayList<>();
         for (int x = mSkillOwner.getCurrentTileX() - 1; x <= mSkillOwner.getCurrentTileX() + 1; x++) {
             for (int y = mSkillOwner.getCurrentTileY() - 1; y <= mSkillOwner.getCurrentTileY() + 1; y++) {
-                if (TileUtility.isWithinRoom(x, y) && !(x == mSkillOwner.getCurrentTileX() && y == mSkillOwner.getCurrentTileY())) {
+                if (TileUtility.isWithinRoom(x, y)) {
                     Tile selectableTile = World.getInstance().getRoom(mSkillOwner.getCurrentRoomName()).getTileAtCoordinates(x, y);
                     if (!selectableTile.isLocked() && !selectableTile.containsPlayer()) {
                         selectableTileArrayList.add(selectableTile);
@@ -31,16 +31,16 @@ public class PlantDecoySkill extends Skill {
 
     @Override
     public void useSkillOnTile(Tile selectedTile) {
-        WorldEffect decoySkill = new WorldEffect();
-        decoySkill.setEffectType(WorldEffect.ADD_CONSTRUCT);
+        WorldEffect stunTrapEffect = new WorldEffect();
+        stunTrapEffect.setEffectType(WorldEffect.ADD_CONSTRUCT);
 
-        decoySkill.setEffectContent(getSkillName());
-        decoySkill.setAffectedUUID(UUID.randomUUID().toString());
-        decoySkill.setAffectedRole(World.getUserPlayer().getRole());
-        decoySkill.setAffectedRoom(selectedTile.getRoomName());
-        decoySkill.setAffectedX(selectedTile.getXCoordinate());
-        decoySkill.setAffectedY(selectedTile.getYCoordinate());
-        World.getInstance().addWorldEffectToQueue(decoySkill);
+        stunTrapEffect.setEffectContent(getSkillName());
+        stunTrapEffect.setAffectedUUID(UUID.randomUUID().toString());
+        stunTrapEffect.setAffectedRole(World.getUserPlayer().getRole());
+        stunTrapEffect.setAffectedRoom(selectedTile.getRoomName());
+        stunTrapEffect.setAffectedX(selectedTile.getXCoordinate());
+        stunTrapEffect.setAffectedY(selectedTile.getYCoordinate());
+        World.getInstance().addWorldEffectToQueue(stunTrapEffect);
     }
 
 }

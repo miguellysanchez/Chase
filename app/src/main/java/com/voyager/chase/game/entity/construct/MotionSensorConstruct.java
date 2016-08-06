@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 public class MotionSensorConstruct extends Construct {
     protected MotionSensorConstruct() {
         mConstructName = "MOTION SENSOR";
-        renderDrawableId = R.drawable.chase_ic_construct_lux_generator;
+        renderDrawableId = R.drawable.chase_ic_construct_motion_sensor;
         isObstacle = false;
         isLocked = false;
         isInvulnerable = false;
@@ -59,14 +59,14 @@ public class MotionSensorConstruct extends Construct {
     private void addTriggerToTile(int x, int y) {
         if (TileUtility.isWithinRoom(x, y)) {
             Tile tile = World.getInstance().getRoom(getCurrentRoomName()).getTileAtCoordinates(x, y);
-            tile.addTrigger(idString, new Trigger(this));
-            World.getInstance().addWorldItemLocation(idString, tile);
+            tile.addTrigger(mIdString, new Trigger(this));
+            World.getInstance().addWorldItemLocation(mIdString, tile);
         }
     }
 
     @Override
     public void onRemovedFromTile() {
-        World.getInstance().removeAllWorldItemLocations(idString);
+        World.getInstance().removeAllWorldItemLocations(mIdString);
 
         if(World.getUserPlayer().getRole().equals(mOwner.getRole())) {
             GameInfoPayload gameInfoPayload = new GameInfoPayload();

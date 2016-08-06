@@ -15,7 +15,7 @@ import com.voyager.chase.game.skill.sentry.RecoverSkill;
 import com.voyager.chase.game.skill.sentry.LuxGeneratorSkill;
 import com.voyager.chase.game.skill.sentry.SearchDroneSkill;
 import com.voyager.chase.game.skill.sentry.ShockRocketSkill;
-import com.voyager.chase.game.skill.sentry.StunNetSkill;
+import com.voyager.chase.game.skill.sentry.StunTrapSkill;
 import com.voyager.chase.game.skill.sentry.SurveillanceBugSkill;
 import com.voyager.chase.game.skill.spy.BaitSkill;
 import com.voyager.chase.game.skill.spy.DeployBarrierSkill;
@@ -125,7 +125,7 @@ public class SkillsPool {
                 returnedSkill = new RecoverSkill();
                 skillIndex = 1;
             } else if (sentryRoleSkillNames[2].equals(skillName)) {
-                returnedSkill = new StunNetSkill();
+                returnedSkill = new StunTrapSkill();
                 skillIndex = 2;
             } else if (sentryRoleSkillNames[3].equals(skillName)) {
                 returnedSkill = new MotionSensorSkill();

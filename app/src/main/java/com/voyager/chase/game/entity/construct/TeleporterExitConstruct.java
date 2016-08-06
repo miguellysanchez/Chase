@@ -3,15 +3,13 @@ package com.voyager.chase.game.entity.construct;
 import com.voyager.chase.R;
 import com.voyager.chase.game.entity.player.Player;
 
-import java.util.UUID;
-
 /**
  * Created by miguellysanchez on 8/3/16.
  */
 public class TeleporterExitConstruct extends Construct {
 
     public TeleporterExitConstruct(String id) {
-        idString = id;
+        mIdString = id;
         mConstructName = "TELEPORTER EXIT";
         renderDrawableId = R.drawable.chase_ic_construct_teleporter_exit;
         isObstacle = true;

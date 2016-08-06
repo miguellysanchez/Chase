@@ -2,6 +2,8 @@ package com.voyager.chase.utility;
 
 import com.voyager.chase.game.entity.Room;
 
+import timber.log.Timber;
+
 /**
  * Created by miguellysanchez on 7/25/16.
  */

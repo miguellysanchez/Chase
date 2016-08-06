@@ -8,9 +8,10 @@ import com.voyager.chase.game.entity.player.Player;
  * Created by miguellysanchez on 8/6/16.
  */
 public class WallConstruct extends Construct {
-    public WallConstruct() {
+    public WallConstruct(String id) {
+        mIdString = id;
         mConstructName = "WALL";
-        renderDrawableId = R.drawable.chase_ic_construct_illumination_beacon;
+        renderDrawableId = R.drawable.chase_ic_construct_wall;
         isObstacle = true;
         isLocked = true;
         isInvulnerable = true;

@@ -19,7 +19,7 @@ public class ObjectiveConstruct extends Construct {
     public static final String OBJECTIVE_CONSTRUCT_NAME = "OBJECTIVE_CONSTRUCT";
 
     public ObjectiveConstruct(String id) {
-        idString = id;
+        mIdString = id;
         mOwner = Sentry.getInstance();
         mConstructName = OBJECTIVE_CONSTRUCT_NAME;
         renderDrawableId = R.drawable.chase_ic_construct_objective;

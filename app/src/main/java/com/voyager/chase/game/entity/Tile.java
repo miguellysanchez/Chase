@@ -136,4 +136,8 @@ public class Tile {
         renderable.setCurrentTileXCoordinate(-1);
         renderable.setCurrentTileYCoordinate(-1);
     }
+
+    public boolean containsConstruct() {
+        return !mConstructsMultimap.isEmpty();
+    }
 }

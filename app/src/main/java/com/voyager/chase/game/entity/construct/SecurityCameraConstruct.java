@@ -18,7 +18,7 @@ public class SecurityCameraConstruct extends Construct {
 
     protected SecurityCameraConstruct() {
         mConstructName = "SECURITY CAMERA";
-        renderDrawableId = R.drawable.chase_ic_construct_illumination_beacon;
+        renderDrawableId = R.drawable.chase_ic_construct_security_camera;
         isObstacle = false;
         isLocked = false;
         isInvulnerable = false;
@@ -49,8 +49,8 @@ public class SecurityCameraConstruct extends Construct {
             for (int y = getCurrentTileY() - 3; y <= getCurrentTileY() + 3; y++) {
                 if (TileUtility.isWithinRoom(x, y)) {
                     Tile tile = World.getInstance().getRoom(getCurrentRoomName()).getTileAtCoordinates(x, y);
-                    tile.addTrigger(idString, new Trigger(this));
-                    World.getInstance().addWorldItemLocation(idString, tile);
+                    tile.addTrigger(mIdString, new Trigger(this));
+                    World.getInstance().addWorldItemLocation(mIdString, tile);
                 }
             }
         }
@@ -58,7 +58,7 @@ public class SecurityCameraConstruct extends Construct {
 
     @Override
     public void onRemovedFromTile() {
-        World.getInstance().removeAllWorldItemLocations(idString);
+        World.getInstance().removeAllWorldItemLocations(mIdString);
 
         if(World.getUserPlayer().getRole().equals(mOwner.getRole())) {
             GameInfoPayload gameInfoPayload = new GameInfoPayload();

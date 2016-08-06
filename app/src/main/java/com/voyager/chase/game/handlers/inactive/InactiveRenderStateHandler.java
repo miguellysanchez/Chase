@@ -17,7 +17,7 @@ public class InactiveRenderStateHandler extends TurnStateHandler {
         post(viewChangeEvent);
 
         try {
-            Thread.sleep(300);
+            Thread.sleep(150);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

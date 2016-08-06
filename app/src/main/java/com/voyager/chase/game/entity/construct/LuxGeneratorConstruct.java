@@ -29,13 +29,13 @@ public class LuxGeneratorConstruct extends Construct {
     @Override
     public void onAddedToTile() {
         for (Tile tile : World.getInstance().getRoom(getCurrentRoomName()).getAllTiles()) {
-            tile.addVisibilityModifier(idString, Tile.GLOBAL_VISIBILITY_MOD);
-            World.getInstance().addWorldItemLocation(idString, tile);
+            tile.addVisibilityModifier(mIdString, Tile.GLOBAL_VISIBILITY_MOD);
+            World.getInstance().addWorldItemLocation(mIdString, tile);
         }
     }
 
     @Override
     public void onRemovedFromTile() {
-        World.getInstance().removeAllWorldItemLocations(idString);
+        World.getInstance().removeAllWorldItemLocations(mIdString);
     }
 }
