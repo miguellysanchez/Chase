@@ -60,7 +60,7 @@ public class ResultsActivity extends AppCompatActivity {
         switch (result) {
             case RESULT_SPY_WINNER_SABOTEUR:
                 if (Player.SENTRY_ROLE.equals(userRole)) {
-                    viewResults("You LOSE!!", R.drawable.chase_drawable_tile_highlighted, "You have failed to protect the objectives. As a SENTRY you are a disgrace. Play again?");
+                    viewResults("You LOSE!!", R.drawable.chase_ic_sabotaged, "You have failed to protect the objectives. As a SENTRY you are a disgrace. Play again?");
                 } else if (Player.SPY_ROLE.equals(userRole)) {
                     viewResults("You WIN!!", R.drawable.chase_ic_winner, "Nice job on the victory SPY. You managed to destroy your objectives and avoid the SENTRY. Play again?");
                 }
@@ -87,7 +87,7 @@ public class ResultsActivity extends AppCompatActivity {
                 }
                 break;
             case RESULT_PARTNER_FORFEIT:
-                viewResults("You WIN!!", R.drawable.chase_ic_game_over, "Congratulations, " + userRole + "!! Your partner has forfeited. Play again?");
+                viewResults("You WIN!!", R.drawable.chase_ic_winner, "Congratulations, " + userRole + "!! Your partner has forfeited. Play again?");
                 break;
             case RESULT_PARTNER_DISCONNECTED:
                 viewResults("GAME OVER!!", R.drawable.chase_ic_game_over, "Sorry, your partner has suddenly disconnected. Play again?");
