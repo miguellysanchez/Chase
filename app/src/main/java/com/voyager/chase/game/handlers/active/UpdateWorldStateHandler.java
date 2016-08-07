@@ -2,6 +2,7 @@ package com.voyager.chase.game.handlers.active;
 
 import android.content.Context;
 
+import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.worldeffect.EffectInterpreter;
 import com.voyager.chase.game.TurnState;
 import com.voyager.chase.game.event.TurnStateEvent;
@@ -26,6 +27,7 @@ public class UpdateWorldStateHandler extends TurnStateHandler {
 
         TurnStateEvent turnStateEvent = new TurnStateEvent();
         turnStateEvent.setTargetState(TurnState.RENDER_WORLD_STATE);
+        turnStateEvent.setAction(RenderStateHandler.ACTION_WAITING);
         post(turnStateEvent);
     }
 }

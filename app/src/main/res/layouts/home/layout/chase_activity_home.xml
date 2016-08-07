@@ -12,19 +12,23 @@
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:textSize="48sp"
-        android:text="Title" />
+        android:layout_marginBottom="28dp"
+        android:text="CHASE" />
 
 
     <TextView
         android:id="@+id/chase_activity_home_textview_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="32dp"
         android:text="Username"/>
 
     <Button
         android:id="@+id/chase_activity_home_button_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:text="Play"/>
     <Button
         android:id="@+id/chase_activity_home_button_quit"

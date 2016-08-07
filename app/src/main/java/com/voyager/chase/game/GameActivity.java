@@ -330,6 +330,11 @@ public class GameActivity extends BaseActivity {
             switch (viewChangeType) {
                 case ViewChangeEvent.RENDER_WORLD:
                     mLevelRenderer.render();
+                    if (mCurrentState == TurnState.RENDER_WORLD_STATE) {
+                        onRenderFinished(true);
+                    } else {
+                        onRenderFinished(false);
+                    }
                     break;
                 case ViewChangeEvent.START_GAME:
                     mLinearlayoutSettingUp.setVisibility(View.GONE);
@@ -370,6 +375,18 @@ public class GameActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    private void onRenderFinished(boolean isActivePlayer) {
+        TurnStateEvent turnStateEvent = new TurnStateEvent();
+        if (isActivePlayer) {
+            turnStateEvent.setTargetState(TurnState.RENDER_WORLD_STATE);
+            turnStateEvent.setAction(RenderStateHandler.ACTION_RENDER_DONE);
+        } else {
+            turnStateEvent.setTargetState(TurnState.INACTIVE_RENDER_STATE);
+            turnStateEvent.setAction(InactiveRenderStateHandler.ACTION_RENDER_DONE);
+        }
+        EventBus.getDefault().post(turnStateEvent);
     }
 
     private void revealSkillSelectionView() {
@@ -442,10 +459,10 @@ public class GameActivity extends BaseActivity {
                     if (worldEffectPayload.getSenderRole() != null &&
                             !World.getUserPlayer().getRole().equals(worldEffectPayload.getSenderRole())) {
 
-                        World.getInstance().addWorldEffectToQueue(worldEffectPayload.getWorldEffect());
                         TurnStateEvent turnStateEvent = new TurnStateEvent();
                         turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
                         turnStateEvent.setAction(InactivePendingStateHandler.ACTION_UPDATE);
+                        turnStateEvent.setWorldEffect(worldEffectPayload.getWorldEffect());
                         EventBus.getDefault().post(turnStateEvent);
                     } else {
                         Timber.i("Ignoring message from self");

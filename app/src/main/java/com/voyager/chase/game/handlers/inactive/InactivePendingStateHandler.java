@@ -7,6 +7,8 @@ import com.voyager.chase.game.event.ViewChangeEvent;
 import com.voyager.chase.game.handlers.TurnStateHandler;
 import com.voyager.chase.game.worldeffect.WorldEffect;
 
+import timber.log.Timber;
+
 /**
  * Created by miguellysanchez on 8/1/16.
  */
@@ -20,6 +22,8 @@ public class InactivePendingStateHandler extends TurnStateHandler {
 
     @Override
     public synchronized void handleTurnStateEvent(TurnStateEvent event) {
+        Timber.d("On handle INACTIVE_PENDING turn state event");
+
         switch (event.getAction()) {
             case ACTION_WAITING:
                 ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
@@ -27,6 +31,9 @@ public class InactivePendingStateHandler extends TurnStateHandler {
                 post(viewChangeEvent);
                 break;
             case ACTION_UPDATE:
+                if(event.getWorldEffect()!=null){
+                    World.getInstance().addWorldEffectToQueue(event.getWorldEffect());
+                }
                 checkToAdvanceTurn();
                 break;
             case ACTION_OTHER_PLAYER_FINISHED:

@@ -7,7 +7,7 @@ import com.voyager.chase.R;
  */
 public class Sentry extends Player {
 
-    public static final int STARTING_SKILL_POINTS = 100;
+    public static final int STARTING_SKILL_POINTS = 20;
     private static final int DEFAULT_SENTRY_VISIBILITY = GLOBALLY_VISIBLE;
     private static final int DEFAULT_SPY_VISIBILITY = PROXIMITY_VISIBLE;
     private static Sentry sSentry;
