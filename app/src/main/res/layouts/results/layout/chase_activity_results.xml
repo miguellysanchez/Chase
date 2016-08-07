@@ -3,22 +3,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/chase_activity_results_imageview_role"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/chase_ic_player_spy" />
 
     <TextView
-        android:id="@+id/chase_activity_results_title"
+        android:id="@+id/chase_activity_results_textview_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TITLE" />
+        android:layout_marginTop="16dp"
+        android:text="RESULT TITLE!!"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-
-    <Space
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/chase_activity_results_imageview_icon"
+        android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1"/>
-    <Button
-        android:id="@+id/chae_activity_results_button_ok"
+        android:layout_weight="1"
+        android:scaleType="fitStart"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/chase_activity_results_textview_subtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="You have won!" />
+
+    <Button
+        android:id="@+id/chase_activity_results_button_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="PLAY AGAIN" />
 </LinearLayout>
