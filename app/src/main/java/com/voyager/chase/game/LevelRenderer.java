@@ -13,6 +13,7 @@ import com.voyager.chase.game.entity.Renderable;
 import com.voyager.chase.game.entity.Room;
 import com.voyager.chase.game.entity.construct.Construct;
 import com.voyager.chase.game.entity.Tile;
+import com.voyager.chase.game.entity.construct.TeleporterEntryConstruct;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
@@ -112,6 +113,15 @@ public class LevelRenderer {
             ArrayList<Drawable> layersList = new ArrayList<>();
             for (int i = 0; i < constructsList.size(); i++) {
                 Construct construct = constructsList.get(i);
+                if(construct instanceof TeleporterEntryConstruct){
+                    TeleporterEntryConstruct teleporterEntryConstruct = (TeleporterEntryConstruct) construct;
+                    tileView.getTextViewDestination().setText(teleporterEntryConstruct.getTargetRoom());
+                    tileView.getTextViewDestination().setVisibility(View.VISIBLE);
+                } else {
+                    tileView.getTextViewDestination().setText("");
+                    tileView.getTextViewDestination().setVisibility(View.GONE);
+                }
+
                 if (shouldRender(construct, tile, userPlayer)) {
                     layersList.add(ContextCompat.getDrawable(mContext, construct.getRenderDrawableId()));
                 }
@@ -126,6 +136,8 @@ public class LevelRenderer {
             }
         } else {
             tileView.getImageViewConstructs().setImageResource(android.R.color.transparent);
+            tileView.getTextViewDestination().setText("");
+            tileView.getTextViewDestination().setVisibility(View.GONE);
         }
 
         if (shouldRender(null, tile, userPlayer)) {

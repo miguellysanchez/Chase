@@ -31,7 +31,8 @@
                 android:id="@+id/chase_activity_lobby_button_create_game"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CREATE GAME" />
+                android:textAllCaps="false"
+                android:text="Be the SPY" />
 
 
             <LinearLayout
@@ -44,13 +45,14 @@
                     android:id="@+id/chase_activity_lobby_edittext_join_id_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Input client id" />
+                    android:hint="Input SPY id" />
 
                 <Button
                     android:id="@+id/chase_activity_lobby_button_join_game"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="JOIN GAME" />
+                    android:textAllCaps="false"
+                    android:text="Be the SENTRY. Find the spy." />
 
             </LinearLayout>
 

@@ -1,16 +1,22 @@
 package com.voyager.chase.game.entity.construct;
 
+import android.view.View;
+
 import com.voyager.chase.R;
 import com.voyager.chase.game.World;
 import com.voyager.chase.game.entity.Tile;
 import com.voyager.chase.game.entity.player.Player;
+import com.voyager.chase.game.event.ViewChangeEvent;
+import com.voyager.chase.game.gameinfo.GameInfo;
 import com.voyager.chase.game.worldeffect.WorldEffect;
+import com.voyager.chase.mqtt.payload.GameInfoPayload;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by miguellysanchez on 8/3/16.
  */
 public class TeleporterEntryConstruct extends Construct {
-
     private String targetRoom;
     private int targetX;
     private int targetY;
@@ -42,6 +48,15 @@ public class TeleporterEntryConstruct extends Construct {
             teleportPlayerEffect.setAffectedY(targetY);
             World.getInstance().addWorldEffectToQueue(teleportPlayerEffect);
             return true;
+        } else {
+            GameInfoPayload payload = new GameInfoPayload();
+            payload.setSenderRole(player.getRole());
+            payload.setSenderMessage("Unable to use TELEPORTER. Other player is still on the other side.");
+
+            ViewChangeEvent viewChangeEvent = new ViewChangeEvent();
+            viewChangeEvent.addViewChangeType(ViewChangeEvent.GAME_INFO_UPDATE);
+            viewChangeEvent.setGameInfoUpdate(payload.toJson());
+            EventBus.getDefault().post(viewChangeEvent);
         }
         return false;
     }
@@ -58,6 +73,9 @@ public class TeleporterEntryConstruct extends Construct {
 
     @Override
     public void onRemovedFromTile() {
+    }
 
+    public String getTargetRoom() {
+        return targetRoom;
     }
 }

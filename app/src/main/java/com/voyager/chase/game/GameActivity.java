@@ -2,6 +2,7 @@ package com.voyager.chase.game;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,9 +16,6 @@ import com.google.gson.Gson;
 import com.voyager.chase.R;
 import com.voyager.chase.common.BaseActivity;
 import com.voyager.chase.game.entity.Tile;
-import com.voyager.chase.game.entity.construct.ObjectiveConstruct;
-import com.voyager.chase.game.entity.construct.TeleporterEntryConstruct;
-import com.voyager.chase.game.entity.construct.WallConstruct;
 import com.voyager.chase.game.entity.player.Player;
 import com.voyager.chase.game.entity.player.Sentry;
 import com.voyager.chase.game.entity.player.Spy;
@@ -49,6 +47,7 @@ import com.voyager.chase.mqtt.event.MqttResolvedActionEvent;
 import com.voyager.chase.mqtt.payload.GameInfoPayload;
 import com.voyager.chase.mqtt.payload.GameStatusPayload;
 import com.voyager.chase.mqtt.payload.WorldEffectPayload;
+import com.voyager.chase.results.ResultsActivity;
 import com.voyager.chase.utility.MqttIssueActionUtility;
 
 import org.greenrobot.eventbus.EventBus;
@@ -140,6 +139,7 @@ public class GameActivity extends BaseActivity {
     }
 
     private void constructGameWorld() {
+        World.createInstance();
         Spy spy = Spy.createInstance();
         Sentry sentry = Sentry.createInstance();
         if (Player.SPY_ROLE.equals(getPreferenceUtility().getGameRole())) {
@@ -246,7 +246,7 @@ public class GameActivity extends BaseActivity {
         mCurrentState = TurnState.NULL_STATE;
         mTurnStateHandlerMap = new HashMap<>();
         mTurnStateHandlerMap.put(TurnState.START_STATE, new StartStateHandler());
-        mTurnStateHandlerMap.put(TurnState.UPKEEP_STATE, new UpkeepStateHandler());
+        mTurnStateHandlerMap.put(TurnState.UPKEEP_STATE, new UpkeepStateHandler(this));
         mTurnStateHandlerMap.put(TurnState.SELECT_SKILL_STATE, new SelectSkillStateHandler());
         mTurnStateHandlerMap.put(TurnState.TARGET_SELECTION_STATE, new TargetSelectionStateHandler());
         mTurnStateHandlerMap.put(TurnState.RESOLVE_SKILL_STATE, new ResolveSkillStateHandler());
@@ -260,48 +260,6 @@ public class GameActivity extends BaseActivity {
         mTurnStateHandlerMap.put(TurnState.INACTIVE_PENDING_STATE, new InactivePendingStateHandler());
         mTurnStateHandlerMap.put(TurnState.INACTIVE_UPDATE_WORLD_STATE, new InactiveUpdateWorldStateHandler(this));
         mTurnStateHandlerMap.put(TurnState.INACTIVE_RENDER_STATE, new InactiveRenderStateHandler());
-    }
-
-    private void initializeSampleGameState() {
-        World world = World.getInstance();
-        Spy spy = Spy.getInstance();
-        Sentry sentry = Sentry.getInstance();
-        //TODO sample
-        world.getRoom("A").getTileAtCoordinates(2, 3).setPlayer(spy);
-        world.getRoom("A").getTileAtCoordinates(3, 3).setPlayer(sentry);
-
-        Tile teleporterTile;
-        TeleporterEntryConstruct teleporterEntryConstruct;
-
-        teleporterTile = world.getRoom("A").getTileAtCoordinates(2, 1);
-        teleporterEntryConstruct = new TeleporterEntryConstruct("TELEPORTER 1", "B", 6, 1);
-        teleporterTile.addConstruct(teleporterEntryConstruct);
-        world.addWorldItemLocation(teleporterEntryConstruct.getId(), teleporterTile);
-
-        teleporterTile = world.getRoom("B").getTileAtCoordinates(1, 7);
-        teleporterEntryConstruct = new TeleporterEntryConstruct("TELEPORTER 2", "A", 5, 7);
-        teleporterTile.addConstruct(teleporterEntryConstruct);
-        world.addWorldItemLocation(teleporterEntryConstruct.getId(), teleporterTile);
-
-
-        Tile objectiveTile;
-        ObjectiveConstruct objectiveConstruct;
-
-        objectiveConstruct = new ObjectiveConstruct("OBJECTIVE A");
-        objectiveTile = world.getRoom("A").getTileAtCoordinates(1, 2);
-        objectiveTile.addConstruct(objectiveConstruct);
-        world.addWorldItemLocation(objectiveConstruct.getId(), objectiveTile);
-
-        objectiveConstruct = new ObjectiveConstruct("OBJECTIVE B");
-        objectiveTile = world.getRoom("B").getTileAtCoordinates(0, 5);
-        objectiveTile.addConstruct(objectiveConstruct);
-        world.addWorldItemLocation(objectiveConstruct.getId(), objectiveTile);
-
-        objectiveConstruct = new ObjectiveConstruct("OBJECTIVE C");
-        objectiveTile = world.getRoom("A").getTileAtCoordinates(9, 9);
-        objectiveTile.addConstruct(objectiveConstruct);
-        world.addWorldItemLocation(objectiveConstruct.getId(), objectiveTile);
-
     }
 
     @Override
@@ -434,11 +392,24 @@ public class GameActivity extends BaseActivity {
     }
 
     private void forfeitGame() {
+        Timber.d(">>>>>>>YOU HAVE QUIT THE GAME");
+
         GameStatusPayload forfeitGamePayload = new GameStatusPayload();
         forfeitGamePayload.setSenderRole(getPreferenceUtility().getGameRole());
         forfeitGamePayload.setAction(GameStatusPayload.DISCONNECTED);
         forfeitGamePayload.setDisconnectionGraceful(true);
         MqttIssueActionUtility.publish(Topics.getSessionStatusTopic(mGameSessionId), forfeitGamePayload.toJson(), false);
+        MqttIssueActionUtility.disconnect();
+
+        showResultsActivity(ResultsActivity.RESULT_USER_FORFEIT);
+    }
+
+
+    private void showResultsActivity(String result) {
+        finish();
+        Intent intent = new Intent(this, ResultsActivity.class);
+        intent.putExtra(ResultsActivity.KEY_RESULT, result);
+        startActivity(intent);
     }
 
     @Override
@@ -449,6 +420,10 @@ public class GameActivity extends BaseActivity {
     protected void executeMqttCallback(MqttCallbackEvent mqttCallbackEvent) {
         Gson gson;
         switch (mqttCallbackEvent.getMessageCallbackType()) {
+            case MqttCallbackEvent.CONNECTION_LOST_CALLBACK_TYPE:
+                Timber.d(">>>>>>>YOU WERE DISCONNECTED UNEXPECTEDLY");
+                showResultsActivity(ResultsActivity.RESULT_USER_DISCONNECTED);
+                break;
             case MqttCallbackEvent.ARRIVED_MESSAGE_CALLBACK_TYPE:
                 gson = new Gson();
 
@@ -498,28 +473,33 @@ public class GameActivity extends BaseActivity {
     private void handleSessionTopicMessageReceived(String message) {
         Gson gson = new Gson();
         GameStatusPayload gameStatusPayload = gson.fromJson(message, GameStatusPayload.class);
-        if (!getPreferenceUtility().getGameRole().equals(gameStatusPayload.getSenderRole())) {
-            switch (gameStatusPayload.getAction()) {
-                case GameStatusPayload.TURN_FINISHED:
-                    if (GameStatusPayload.TURN_FINISHED.equals(gameStatusPayload.getAction())) {
-                        TurnStateEvent turnStateEvent = new TurnStateEvent();
-                        turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
-                        turnStateEvent.setAction(InactivePendingStateHandler.ACTION_OTHER_PLAYER_FINISHED);
-                        EventBus.getDefault().post(turnStateEvent);
-                    }
-                    break;
-                case GameStatusPayload.DISCONNECTED:
-                    MqttIssueActionUtility.disconnect();
+
+        switch (gameStatusPayload.getAction()) {
+            case GameStatusPayload.TURN_FINISHED:
+                if (!getPreferenceUtility().getGameRole().equals(gameStatusPayload.getSenderRole())) {
+                    TurnStateEvent turnStateEvent = new TurnStateEvent();
+                    turnStateEvent.setTargetState(TurnState.INACTIVE_PENDING_STATE);
+                    turnStateEvent.setAction(InactivePendingStateHandler.ACTION_OTHER_PLAYER_FINISHED);
+                    EventBus.getDefault().post(turnStateEvent);
+                }
+                break;
+            case GameStatusPayload.DISCONNECTED:
+                MqttIssueActionUtility.disconnect();
+                if (!getPreferenceUtility().getGameRole().equals(gameStatusPayload.getSenderRole())) {
                     if (gameStatusPayload.isDisconnectionGraceful()) {
-                        //TODO Show dialog that partner has forfeited match. Show win game screen afterwards.
+                        Timber.d(">>>>>>>PARTNER HAS FORFEITED THE GAME");
+                        showResultsActivity(ResultsActivity.RESULT_PARTNER_FORFEIT);
                     } else {
-                        //TODO Show dialog that partner was disconnected;
+                        Timber.d(">>>>>>>PARTNER WAS DISCONNECTED UNEXPECTEDLY");
+                        showResultsActivity(ResultsActivity.RESULT_PARTNER_DISCONNECTED);
                     }
-                    break;
-                case GameStatusPayload.SHOW_RESULTS:
-                    //TODO show resultActivity with payload results
-                    break;
-            }
+                }
+                break;
+            case GameStatusPayload.SHOW_RESULTS:
+                Timber.d(">>>>>>>GAME RESOLVED SHOWING RESPECTIVE RESULTS SCREEN");
+                showResultsActivity(gameStatusPayload.getResults());
+                break;
         }
+
     }
 }

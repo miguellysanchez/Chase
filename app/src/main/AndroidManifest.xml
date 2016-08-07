@@ -32,7 +32,11 @@
         <activity
             android:name=".skillselect.SkillSelectActivity"
             android:screenOrientation="portrait" />
-        <service android:name=".mqtt.MqttService"/>
+        <activity
+            android:name=".results.ResultsActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".mqtt.MqttService" />
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.voyager.chase.R;
 
@@ -19,6 +20,7 @@ public class TileView extends LinearLayout {
     FrameLayout frameLayoutPlayerIndicator;
     ImageView imageViewPlayer;
     ImageView imageViewConstructs;
+    TextView textViewDestination;
     View viewFog;
 
     public TileView(Context context) {
@@ -37,9 +39,9 @@ public class TileView extends LinearLayout {
         frameLayoutPlayerIndicator = (FrameLayout) findViewById(R.id.chase_tileview_framelayout_player_indicator);
         imageViewPlayer = (ImageView) findViewById(R.id.chase_tileview_imageview_player);
         imageViewConstructs = (ImageView) findViewById(R.id.chase_tileview_imageview_item);
+        textViewDestination = (TextView) findViewById(R.id.chase_tileview_textview_destination);
         viewFog = findViewById(R.id.chase_tileview_view_fog);
     }
-
 
     public LinearLayout getLinearLayoutContainer() {
         return linearLayoutContainer;
@@ -53,24 +55,12 @@ public class TileView extends LinearLayout {
         return imageViewPlayer;
     }
 
-    public void setImageViewPlayer(ImageView imageViewPlayer) {
-        this.imageViewPlayer = imageViewPlayer;
-    }
-
     public ImageView getImageViewConstructs() {
         return imageViewConstructs;
     }
 
-    public void setImageViewConstructs(ImageView imageViewConstructs) {
-        this.imageViewConstructs = imageViewConstructs;
-    }
-
     public View getViewFog() {
         return viewFog;
-    }
-
-    public void setViewFog(View viewFog) {
-        this.viewFog = viewFog;
     }
 
     public void setHighlightBackground(boolean isHighlighted) {
@@ -79,5 +69,9 @@ public class TileView extends LinearLayout {
         } else {
             linearLayoutContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black));
         }
+    }
+
+    public TextView getTextViewDestination(){
+        return textViewDestination;
     }
 }

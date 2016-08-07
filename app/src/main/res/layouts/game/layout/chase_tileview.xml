@@ -19,6 +19,15 @@
             android:layout_height="match_parent"
             android:background="@color/transparent"/>
 
+        <TextView
+            android:id="@+id/chase_tileview_textview_destination"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="A"/>
+
         <ImageView
             android:id="@+id/chase_tileview_imageview_player"
             android:layout_width="match_parent"

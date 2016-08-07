@@ -162,8 +162,7 @@ public class SkillsPool {
         if (returnedSkill != null) { // assign skill name and the corresponding owner of that skill
             returnedSkill.setOwner(player);
             returnedSkill.setSkillName(skillName);
-            returnedSkill.setSkillCooldown(0);
-//            returnedSkill.setSkillCooldown(skillCooldown);
+            returnedSkill.setSkillCooldown(skillCooldown);
             returnedSkill.setDescription(description);
         }
 

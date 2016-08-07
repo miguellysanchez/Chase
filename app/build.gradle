@@ -45,6 +45,7 @@ android {
                 'src/main/res/drawables/common',
                 'src/main/res/drawables/game',
                 'src/main/res/drawables/home',
+                'src/main/res/drawables/results',
 
                 'src/main/res/drawablexml/common',
                 'src/main/res/drawablexml/game',
@@ -54,6 +55,7 @@ android {
                 'src/main/res/layouts/home',
                 'src/main/res/layouts/common',
                 'src/main/res/layouts/skillselect',
+                'src/main/res/layouts/results',
 
 
                 'src/main/res/drawables',

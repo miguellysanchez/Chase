@@ -18,6 +18,8 @@ public class GameStatusPayload {
     private String action;
     @SerializedName("disconnection_graceful")
     private boolean disconnectionGraceful = false;
+    @SerializedName("results")
+    private String results;
 
     public String getSenderRole() {
         return senderRole;
@@ -47,4 +49,12 @@ public class GameStatusPayload {
     public void setDisconnectionGraceful(boolean disconnectionGraceful) {
         this.disconnectionGraceful = disconnectionGraceful;
     }
+
+    public String getResults() {
+        return results;
+    }
+    public void setResults(String results) {
+        this.results = results;
+    }
+
 }
