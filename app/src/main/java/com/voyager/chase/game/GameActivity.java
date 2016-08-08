@@ -500,6 +500,5 @@ public class GameActivity extends BaseActivity {
                 showResultsActivity(gameStatusPayload.getResults());
                 break;
         }
-
     }
 }

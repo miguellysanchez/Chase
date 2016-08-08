@@ -29,37 +29,32 @@ public class DemoInitialization {
         generateTeleporter("B", 2, 3, "E", 8, 9);
         generateTeleporter("B", 4, 9, "A", 2, 0);
         generateTeleporter("B", 5, 9, "B", 1, 2);
-        generateTeleporter("B", 6, 1, "F", 9, 8);
+//        generateTeleporter("B", 6, 1, "F", 9, 8);
         generateTeleporter("B", 7, 1, "B", 5, 8);
         
-        generateTeleporter("C", 1, 6, "F", 9, 1);
+//        generateTeleporter("C", 1, 6, "F", 9, 1);
         generateTeleporter("C", 4, 9, "A", 2, 4);
         generateTeleporter("C", 5, 0, "C", 9, 6);
         generateTeleporter("C", 9, 4, "E", 1, 8);
         
         generateTeleporter("D", 3, 2, "A", 9, 9);
-        generateTeleporter("D", 4, 7, "F", 9, 4);
+//        generateTeleporter("D", 4, 7, "F", 9, 4);
         generateTeleporter("D", 9, 0, "D", 0, 9);
         
         generateTeleporter("E", 2, 1, "D", 8, 1);
         generateTeleporter("E", 7, 9, "B", 1, 3);
         
-        generateTeleporter("F", 2, 4, "E", 8, 1);
-        generateTeleporter("F", 8, 2, "C", 0, 4);
-        generateTeleporter("F", 8, 5, "D", 3, 9);
+//        generateTeleporter("F", 2, 4, "E", 8, 1);
+//        generateTeleporter("F", 8, 2, "C", 0, 4);
+//        generateTeleporter("F", 8, 5, "D", 3, 9);
     }
 
     private static void initializeObjectives() {
         //TODO SAMPLE
-//        generateObjective("A", 0, 3);
-//        generateObjective("A", 0, 4);
-//        generateObjective("A", 0, 5);
-
-//        generateObjective("B", 9, 9);
         generateObjective("B", 9, 7);
         generateObjective("C", 4, 4);
         generateObjective("D", 0, 0);
-        generateObjective("F", 0, 6);
+        generateObjective("E", 0, 5);
     }
 
     private static void initializeWalls() {
@@ -151,23 +146,23 @@ public class DemoInitialization {
         generateWall("E", 8, 5);
         generateWall("E", 9, 3);
 
-        generateWall("F", 0, 3);
-        generateWall("F", 0, 4);
-        generateWall("F", 1, 7);
-        generateWall("F", 2, 2);
-        generateWall("F", 2, 9);
-        generateWall("F", 3, 5);
-        generateWall("F", 4, 0);
-        generateWall("F", 4, 7);
-        generateWall("F", 5, 0);
-        generateWall("F", 5, 3);
-        generateWall("F", 5, 7);
-        generateWall("F", 6, 3);
-        generateWall("F", 6, 6);
-        generateWall("F", 6, 7);
-        generateWall("F", 7, 3);
-        generateWall("F", 7, 6);
-        generateWall("F", 7, 7);
+//        generateWall("F", 0, 3);
+//        generateWall("F", 0, 4);
+//        generateWall("F", 1, 7);
+//        generateWall("F", 2, 2);
+//        generateWall("F", 2, 9);
+//        generateWall("F", 3, 5);
+//        generateWall("F", 4, 0);
+//        generateWall("F", 4, 7);
+//        generateWall("F", 5, 0);
+//        generateWall("F", 5, 3);
+//        generateWall("F", 5, 7);
+//        generateWall("F", 6, 3);
+//        generateWall("F", 6, 6);
+//        generateWall("F", 6, 7);
+//        generateWall("F", 7, 3);
+//        generateWall("F", 7, 6);
+//        generateWall("F", 7, 7);
     }
 
     private static void initializePlayers() {

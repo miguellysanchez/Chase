@@ -54,7 +54,9 @@ public class World {
 
     public static World createInstance() {
         sWorld = new World();
-        String[] roomNames = new String[]{"A", "B", "C", "D", "E", "F"};
+        String[] roomNames = new String[]{"A", "B", "C", "D", "E"
+//                ,"F"
+        };
 
         for (String roomName : roomNames) {
             ArrayList<Tile> tilesArrayList = new ArrayList<>();
