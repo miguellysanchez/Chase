@@ -168,7 +168,7 @@ public class DemoInitialization {
     private static void initializePlayers() {
         Spy spy = Spy.getInstance();
         Sentry sentry = Sentry.getInstance();
-        World.getInstance().getRoom("A").getTileAtCoordinates(2, 8).setPlayer(spy);
+        World.getInstance().getRoom("A").getTileAtCoordinates(1, 8).setPlayer(spy);
         World.getInstance().getRoom("C").getTileAtCoordinates(4, 1).setPlayer(sentry);
     }
 
