@@ -14,9 +14,9 @@ public class Sentry extends Player {
 
     private Sentry() {
         mRole = Player.SENTRY_ROLE;
-        mMaxLife = 4;
-        mLife = 3;
-        mActionPointsRecovery = 3;
+        mMaxLife = 5;
+        mLife = 4;
+        mActionPointsRecovery = 4;
         renderDrawableId = R.drawable.chase_ic_player_sentry;
         sentryVisibility = DEFAULT_SENTRY_VISIBILITY;
         spyVisibility = DEFAULT_SPY_VISIBILITY;

@@ -64,6 +64,7 @@
         <item>Bait</item>
         <item>Sprint</item>
         <item>Surveillance Bug</item>
+        <item>Smoke Screen</item>
     </string-array>
     <integer-array name="chase_array_skill_select_cooldown_spy">
         <item>5</item>
@@ -71,7 +72,7 @@
         <item>5</item>
         <item>6</item>
         <item>4</item>
-        <item>30</item>
+        <item>25</item>
         <item>0</item>
         <item>7</item>
         <item>4</item>
@@ -80,6 +81,7 @@
         <item>0</item>
         <item>2</item>
         <item>5</item>
+        <item>12</item>
     </integer-array>
     <integer-array name="chase_array_skill_select_cost_spy">
         <item>8</item>
@@ -96,6 +98,7 @@
         <item>2</item>
         <item>4</item>
         <item>4</item>
+        <item>6</item>
     </integer-array>
     <string-array name="chase_array_skill_select_description_spy">
         <item>Removes all constructs in any target tile in the room, and all tiles to its left, to its right, above and below.</item>
@@ -112,6 +115,7 @@
         <item>Reveal current position to the other player</item>
         <item>Move to any tile within a 5x5 area with current position as center. This move will fail if target tile contains an obstacle.</item>
         <item>Place a bug in current position that reveals all objects and the other player to you when in that location.</item>
+        <item>Throw smoke screen in current position. Other player\'s turn is skipped if he is within visible range</item>
     </string-array>
 
 </resources>

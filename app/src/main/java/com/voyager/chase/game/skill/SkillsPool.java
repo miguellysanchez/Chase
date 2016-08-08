@@ -26,6 +26,7 @@ import com.voyager.chase.game.skill.spy.IlluminationBeaconSkill;
 import com.voyager.chase.game.skill.spy.PlantDecoySkill;
 import com.voyager.chase.game.skill.spy.SabotageSkill;
 import com.voyager.chase.game.skill.spy.ShrapnelBlastSkill;
+import com.voyager.chase.game.skill.spy.SmokeScreenSkill;
 import com.voyager.chase.game.skill.spy.SnipeSkill;
 import com.voyager.chase.game.skill.spy.ToxicCloudSkill;
 
@@ -108,6 +109,9 @@ public class SkillsPool {
             } else if (spyRoleSkillNames[13].equals(skillName)) {
                 returnedSkill = new SurveillanceBugSkill();
                 skillIndex = 13;
+            } else if (spyRoleSkillNames[14].equals(skillName)) {
+                returnedSkill = new SmokeScreenSkill();
+                skillIndex = 14;
             }
             if (skillIndex >= 0) {
                 skillCooldown = spyCooldownArray[skillIndex];

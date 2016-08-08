@@ -16,9 +16,9 @@ public class Spy extends Player {
 
     private Spy() {
         mRole = Player.SPY_ROLE;
-        mLife = 1;
-        mMaxLife = 2;
-        mActionPointsRecovery = 2;
+        mLife = 2;
+        mMaxLife = 3;
+        mActionPointsRecovery = 3;
         renderDrawableId = R.drawable.chase_ic_player_spy;
         sentryVisibility = DEFAULT_SENTRY_VISIBILITY;
         spyVisibility = DEFAULT_SPY_VISIBILITY;

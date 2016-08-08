@@ -51,9 +51,9 @@ public class DemoInitialization {
 
     private static void initializeObjectives() {
         //TODO SAMPLE
-        generateObjective("A", 0, 3);
-        generateObjective("A", 0, 4);
-        generateObjective("A", 0, 5);
+//        generateObjective("A", 0, 3);
+//        generateObjective("A", 0, 4);
+//        generateObjective("A", 0, 5);
 
 //        generateObjective("B", 9, 9);
         generateObjective("B", 9, 7);
@@ -168,14 +168,13 @@ public class DemoInitialization {
         generateWall("F", 7, 3);
         generateWall("F", 7, 6);
         generateWall("F", 7, 7);
-
     }
 
     private static void initializePlayers() {
         Spy spy = Spy.getInstance();
         Sentry sentry = Sentry.getInstance();
-        World.getInstance().getRoom("A").getTileAtCoordinates(2, 3).setPlayer(spy);
-        World.getInstance().getRoom("A").getTileAtCoordinates(3, 3).setPlayer(sentry);
+        World.getInstance().getRoom("A").getTileAtCoordinates(2, 8).setPlayer(spy);
+        World.getInstance().getRoom("C").getTileAtCoordinates(4, 1).setPlayer(sentry);
     }
 
     private static void generateTeleporter(String sourceRoom, int sourceX, int sourceY, String targetRoom, int targetX, int targetY) {
